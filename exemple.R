@@ -6,4 +6,6 @@ install.packages("usethis")
 library("usethis")
 usethis::use_git_config(
   user.name="mariabrice-lab",
-  user.mail="maria.brice@gmail.com")
+  user.email="maria.brice@gmail.com"
+  )
+3+3
