@@ -1,0 +1,29 @@
+---
+title: "brouillon"
+author: "Maria Brice"
+format: 
+ html: default
+ pdf: default
+editor: visual
+---
+
+## Paracou 6
+
+### Biodiversité
+
+Nombres d'espèces dans la parcelle :
+
+```{r}
+library("divent")
+div_richness(paracou_6_abd, estimator = "naive")
+```
+
+(diversité d'ordre 0 = diversité d'espèces).
+
+(1 c'est shanon, 2 =simpsons)
+
+
+```{r}
+autoplot(paracou_6_abd)
+```
+
