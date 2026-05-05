@@ -5,9 +5,10 @@ format:
  html: default
  pdf: default
 editor: visual
+bibliography: references.bib
 ---
 
-## Paracou 6
+# experimentation
 
 ### Biodiversité
 
@@ -22,8 +23,173 @@ div_richness(paracou_6_abd, estimator = "naive")
 
 (1 c'est shanon, 2 =simpsons)
 
-
 ```{r}
 autoplot(paracou_6_abd)
 ```
 
+tp sur maniment de R
+
+```{r}
+div_richness(paracou_6_abd, estimator="naive")
+
+```
+
+les calculs
+
+```{r}
+paracou_6_abd %>% 
+  metacommunity(name= "Paracou_6") ->
+  paracou_6
+#fonction metacommunauté à rassemblé les 4 carré de paracou
+#estimer "naive" compte betement et n'essaye pas d'estimer
+
+autoplot(paracou_6)
+
+#standard
+div_richness(paracou_6, estimator="naive")
+#Numerique
+(div_richness(paracou_6, estimator="naive", as_numeric =TRUE))
+
+#shanon
+paracou_6 %>% 
+  ent_shannon(estimator = "naive")
+#nombre de hill
+div_hill(paracou_6, q=1, estimator = "naive")
+# ->interpretation, c'est comme si on avait 101 sp qui aurait la meme d'abondance
+#irl on a 300sp.
+
+#simpson
+paracou_6 %>% 
+  ent_simpson(estimator="naive")
+#interpretation : proba qu'on tombe sur 2sp different en tirant au hazard
+#nbr de hill simpson
+div_hill(paracou_6, q=2, estimator="naive")
+
+
+
+```
+
+#### Profil de diversité
+
+```{r}
+profile_hill(paracou_6, estimator="naive") %>% 
+  autoplot() +
+  theme(legend.position="none")
+#legend du tableau, 0= richesse psécifique, 1=shanon et 2=simpson
+#ordre de la diversité, plus il est grand moins les espèce rare comptent.
+
+
+```
+
+interet des courbes pour comparer deux parcelles, voire si des courbes se croisent ou non, en fonction de l'ordre de diversité choisi,
+
+si elles se croisent pas alors pas de soucis, y'a une parcelle qui est forcement plus diversifié que l'autre peu importe l'ordre de div choisi. Donne des info sur les proportion d'espèces rares.
+
+interessant pour la conservation, qui svt choissisent le plus grand nbr d'especes. (pas forcement judicieux car les especes rare sont fragiles et vont probablement disparaitre.
+
+diversité d'ordre infini (indice de burger-parker). La courbe va descendre jusqu' une asymptopte, correspond à l'abondance l'espece la #plus representée (10% d'épicéa on obtient : ...)
+
+### statistique spatiales
+
+manipulation d'un wmpp
+
+```{r}
+library("tidyverse")
+paracou_6_wmppp %>% 
+  autoplot() +
+  labs(color="Espece",size= "Surface terrière" )
+
+
+```
+
+on veut un plot avec seulement 1 type de plante
+
+```{r}
+#creation d'un vecteur avec seulement les sp
+paracou_6_wmppp$marks$PointType->espece
+
+est_wapa<-(espece=="Lecith")
+
+paracou_6_wmppp[est_wapa] %>% 
+  autoplot()
+
+```
+
+K de @ripley1976
+
+```{r}
+library("dbmss")
+paracou_6_wmppp %>% 
+  Khat() %>% 
+  autoplot(./(pi*r^2)~r) + 
+  scale_y_continuous(limits=c(0,2))
+
+#Kenveloppe rajoute une intervalle de conf (il fait des simulation de distrib loi #poisson)
+paracou_6_wmppp %>% 
+  KEnvelope() %>% 
+  autoplot(./(pi*r^2)~r) + 
+  scale_y_continuous(limits=c(0.9,1.1))
+```
+
+nb : 60m determiné par R par rapport à la taille de la fenetre(ici 250m).
+
+on divise par lambda pi r2 pour avoir une valeur 1= respecte loi poisson
+
+interpretation : on voit que la courbe a petit distance est en dessu de l'attendu. A petite distance, les arbres ont tendance à se repousser (pas surprenant, les arbres ne sont pas des points)
+
+Si on fait l'experience sur les wapa, repoussage à petite distance puis "agrégats"-\> sauf que hypothèse nulle est mauvaise, on ne peut pas les trouver partout, ils aimes pas avoir les pieds dans l'eau, on aurait besoin d'autre tests plus élaborés qui on tune hypothèse differents
+
+- pour palier à ce pb, on elimine les parties qui n'ont pas de wapa
+
+- on choisi des espece presente partout
+
+- autre stat mais pas possible avec le cas de ripley
+
+## Annexes
+
+### crash test
+
+```{r}
+profile_hill(paracou_6_abd, estimator="naive") %>% 
+  autoplot() +
+  theme(legend.position="none")
+```
+
+NB : Si on doit choisir on sacrifie la violette.
+
+```{r}
+#creation d'un vecteur avec seulement les sp
+paracou_6_wmppp$marks$PointType->espece
+
+#toutes les wapa
+Bigwapa<-str_detect(espece,"Fabaceae_Eperua_")
+
+paracou_6_wmppp[Bigwapa] %>% 
+  autoplot()
+
+
+#la 2E plante la plus repandue
+plant2<-str_detect(espece,"Lecythidaceae_")
+
+paracou_6_wmppp[plant2] %>% 
+  autoplot() + scale_color_brewer(type = "qual")
+```
+
+### tuto de R
+
+#### manipulation d'un vecteur
+
+```{r}
+
+#on fait des tests
+a<- 11:20
+(a %% 2)== 0->
+  est_pair
+# %% =fonction modulo = division euclidienne
+
+#selection des valeurs pour lequelles le test était vrai
+a[est_pair]
+
+#methode rapide
+a[(a%%2)==0]
+```
