@@ -218,3 +218,16 @@ a[est_pair]
 #methode rapide
 a[(a%%2)==0]
 ```
+
+#### processus ponctuel
+
+simulation de poisson
+
+```{r}
+#Définition de la fonction de densité lambda 
+lamda <- function(x,y) {x* y*.3 / log(x+1) / log(y+1)} 
+#Création d’un semis de point de densité lambda, dans une fenêtre carrée de 10x10
+pp <- rpoispp(lamda, win=owin(c(0,10), c(0,10))) 
+#Affichage 
+plot(pp)
+```
