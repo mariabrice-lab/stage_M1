@@ -175,6 +175,31 @@ paracou_6_wmppp[plant2] %>%
   autoplot() + scale_color_brewer(type = "qual")
 ```
 
+#### les angeliques
+
+```{r}
+#langelique
+angel<-str_detect(espece,"Dicorynia_guianensis")
+
+paracou_6_wmppp[angel] %>% 
+  autoplot() + scale_color_brewer(type = "qual")
+
+```
+
+44angeliques dans notre data
+
+Eperua falcata
+
+```{r}
+#langelique et eperua
+
+eperua<-str_detect(espece, "Dicorynia_guianensis|Eperua_falcata")
+
+
+paracou_6_wmppp[eperua] %>% 
+  autoplot() + scale_color_brewer(type = "qual")
+```
+
 ### tuto de R
 
 #### manipulation d'un vecteur
