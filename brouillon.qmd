@@ -221,13 +221,22 @@ a[(a%%2)==0]
 
 #### processus ponctuel
 
-simulation de poisson
+code r pour simulation de processus
 
 ```{r}
+#simulation poisson
 #Définition de la fonction de densité lambda 
 lamda <- function(x,y) {x* y*.3 / log(x+1) / log(y+1)} 
 #Création d’un semis de point de densité lambda, dans une fenêtre carrée de 10x10
 pp <- rpoispp(lamda, win=owin(c(0,10), c(0,10))) 
 #Affichage 
 plot(pp)
+
+# Simulation d’un processus de Matérn 
+ppm <- rMatClust(0.2, 0.3, 10, win = owin(c(0,10),c(0,10))) 
+plot(ppm)
+
+# Simulation d’un processus de Thomas 
+ppt <- rThomas (0.1, 0.5, 10, win = owin(c(0,10),c(0,10))) 
+plot(ppt)
 ```
