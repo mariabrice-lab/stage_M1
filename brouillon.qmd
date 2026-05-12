@@ -196,8 +196,13 @@ l'accumulation est elle + lente que sous l'hypothèse de
 accum_sp_hill(g,
               order=0,
               r=seq(0, .5, .05),
-              h0="binomial") %>% 
+              h0="binomial"
+              )->
+  richesse_distance_h0
+
+richesse_distance_h0 %>% 
   autoplot()
+
 
 ```
 
@@ -266,11 +271,18 @@ yey
 
 
 
+#calcul de l'hypothèse nulle de l'isar
+richesse_distance_h0$accumulation 
 
+#dans accumulation plusieur couches, valeur observée + valeruthéoriques+ bas/haut de l'intrevalle
+#donc il suffit d'afficher la courbe et son intervalle dans notre plot original 
+#rajouter un h0 = localisation aléatoire de tout les pts sauf l'espece de reference pour prendre en compte sa structure spatiale. 
 
 ```
 
 objectif rendre plus fluide, peut-être ecrire un fonction qu'on appellerai "ISAR", avec argurment d'entrée = richesse distance.
+
+quelles sont les especes attractives, et calculer leur isar
 
 # Annexes
 
