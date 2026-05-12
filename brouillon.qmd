@@ -10,7 +10,7 @@ bibliography: references.bib
 
 # experimentation
 
-### Biodiversité
+## Biodiversité
 
 Nombres d'espèces dans la parcelle :
 
@@ -89,7 +89,7 @@ interessant pour la conservation, qui svt choissisent le plus grand nbr d'espece
 
 diversité d'ordre infini (indice de burger-parker). La courbe va descendre jusqu' une asymptopte, correspond à l'abondance l'espece la #plus representée (10% d'épicéa on obtient : ...)
 
-### statistique spatiales
+## statistique spatiales
 
 manipulation d'un wmpp
 
@@ -115,7 +115,7 @@ paracou_6_wmppp[est_wapa] %>%
 
 ```
 
-K de @ripley1976
+##### K de @ripley1976
 
 ```{r}
 library("dbmss")
@@ -145,9 +145,136 @@ Si on fait l'experience sur les wapa, repoussage à petite distance puis "agrég
 
 - autre stat mais pas possible avec le cas de ripley
 
-## Annexes
+##### le K intertype
 
-### crash test
+*(à recupérer sur github de Eric)*
+
+```{r}
+#inutile de filtrer l'espece
+paracou_6_wmppp %>% 
+  KEnvelope(
+    ReferenceType = ""
+    NeighborType
+  )
+```
+
+## Diversité à distance
+
+### modèle de base
+
+```{r}
+#generate a random community
+g<- rspcommunity(1, size=50, species_number = 3)
+autoplot(g)
+
+#calculate the accumulation richness
+accum_n<-accum_sp_hill(g)
+autoplot(accum_n, q=0)
+
+#a long distance
+accum_r<- accum_sp_hill(g,
+                        order=0, 
+                        r=seq(0, .5, .05)#buug,
+                        #correction= "extrapolation"
+                        )
+autoplot(accum_r, q=0)
+```
+
+ici on compte l'individu central, à distance 0 on a 1 sp (diversité à distance). Mais diversité en fonction de nbr de voisin *(ca ne nous intéresse pas)* ne prends pas en compte cet indiv central.
+
+peut-être modifer le code pour eliminer l'individu central si il ne font pas ça dans la bibliographie. eperua\<-str_detect(espece, "Dicorynia_guianensis\|Eperua_falcata")
+
+arguments de la fonction :
+
+correction des cercles qui sortent de la zone d'étude, soit "none" soit "extrapolation" \>\>enfait y'a un bug
+
+### comparaison avec hypothèse nulle
+
+l'accumulation est elle + lente que sous l'hypothèse de
+
+```{r}
+accum_sp_hill(g,
+              order=0,
+              r=seq(0, .5, .05),
+              h0="binomial") %>% 
+  autoplot()
+
+```
+
+parfois avec poisson il mets des arbres à des endroit ou il n'y en a pas (genre ds une rivère).
+
+h0= "random location" garde les position des arbres mais modifie les intesités.
+
+processu binomial = processus de poisson ou le nombre d'arbre est fixé .
+
+order = change la diversité
+
+###### pour marlène
+
+pour avoir shimatanie, accum_sp\_?? et orders=2 *(mais lui il a pas fait comme ca, autre methode de correction entre autre).*
+
+la fonction de ent_sp_simpson (shimatani) ne fait pas les rayons des cercles mais une somme de K de ripley.
+
+### les ISAR
+
+###### *(à coder)*
+
+il nous faudrait avoir une coubre d'accumulation uniquement pour une espèces
+
+```{r}
+accum_sp_hill(g,
+              order=0,
+              r=seq(0, .5, .05),
+              individual= TRUE,
+             ) ->
+  richesse_distance
+
+#contenu de l'objet accumulation spatiale
+richesse_distance$g %>% autoplot()
+
+richesse_distance$accumulation
+
+#ce code ne marche paas, prendre celui du prof, enfait si ca va
+#enfait non dans la colone "q" il manque le 1 en plus du 0
+
+#calcul des voisinages pour ensuite calculer les ISAR
+richesse_distance$neighborhoods
+
+#retrouver à quelle espece correspond chaques points
+#creation de vecteur espece 1
+est_sp_1<-( g$marks$PointType=="sp_1")
+
+#Voisinage des points de l'espece 1, richesse
+richesse_distance$neighborhoods[1, , est_sp_1] %>% 
+  rowMeans()-> 
+  isar_sp1
+
+tibble(
+  distance = names(isar_sp1),
+  richesse = isar_sp1
+) %>% 
+  ggplot(aes(x=distance, y =richesse))+
+  geom_point()+
+  
+
+#voici l'isar de l'espece 1
+yey
+
+
+#ca fonctionne paaaaaas, enfait jsp
+
+
+
+
+
+
+```
+
+objectif rendre plus fluide, peut-être ecrire un fonction qu'on appellerai "ISAR", avec argurment d'entrée = richesse distance.
+
+# Annexes
+
+## crash test
 
 ```{r}
 profile_hill(paracou_6_abd, estimator="naive") %>% 
@@ -198,9 +325,18 @@ eperua<-str_detect(espece, "Dicorynia_guianensis|Eperua_falcata")
 
 paracou_6_wmppp[eperua] %>% 
   autoplot() + scale_color_brewer(type = "qual")
+
+
+
+#eperua et grandiflora
+grandi<-str_detect(espece, "Eperua_grandiflora|Eperua_falcata")
+paracou_6_wmppp[grandi] %>% 
+  autoplot() + scale_color_brewer(type = "qual")
+
+
 ```
 
-### tuto de R
+## tuto de R
 
 #### manipulation d'un vecteur
 
