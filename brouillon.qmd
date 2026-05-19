@@ -113,6 +113,7 @@ est_wapa<-(espece=="Lecith")
 paracou_6_wmppp[est_wapa] %>% 
   autoplot()
 
+
 ```
 
 ##### K de @ripley1976
@@ -284,6 +285,82 @@ objectif rendre plus fluide, peut-être ecrire un fonction qu'on appellerai "ISA
 
 quelles sont les especes attractives, et calculer leur isar
 
+# traitement des données
+
+### mise en forme
+
+chargement des données
+
+les colones qui nous interresse sont cirCorr et spe
+
+```{r}
+paracou_2015<-read_csv2(file = "data/Paracou2015.csv") 
+
+#modification de tableau
+paracou_2015 %>% 
+  #filtrer la parcelle6
+  filter(Plot==6) %>% 
+  #selection de colones
+  select(idTree, Xfield, Yfield, Family, Genus, BinomialName, CircCorr ) %>% 
+  #calcul de la surface terrière en metre carré
+  mutate(G=pi*(CircCorr / pi/2)^2/10000)->
+  paracou2015_6
+
+#creation d'un wmpp
+paracou2015_6 %>% 
+  #renommer les colones 
+  rename(
+    X=Xfield,
+    Y= Yfield,
+    PointType= BinomialName,
+    PointWeight = G
+    ) %>% 
+  wmppp(
+    window = owin(xrange= c(0, 250), yrange = c(0,250)), 
+    unitname = c("metre", "metres")
+  ) %>% 
+  #deplacement des pts pour eviter les chevauchements
+  rjitter(radius = 0.01)->
+  paracou2015_6_wmppp
+
+
+```
+
+manipulation des données
+
+```{r}
+paracou2015_6 %>% 
+  #regroupement par sp et calcul de le surface terrière et comptage
+  group_by(BinomialName) %>% 
+  summarise(nombre= n(), surface_terrière = mean(G)) %>% 
+  #trier par abondance decroissante
+  arrange(desc(nombre))
+```
+
+####  création d'un objet spp
+
+```{r}
+library("ads")
+paracou2015_6_spp<- spp(
+  x = paracou2015_6_wmppp$x,
+  y = paracou2015_6_wmppp$y,
+  window = owin2swin (paracou2015_6_wmppp$window),
+  marks = paracou2015_6_wmppp$marks$PointType
+  )
+
+#calcul de k de Ripley
+paracou2015_6_spp %>% 
+  kfun(upto = 100, by = 10) %>% 
+  plot()
+```
+
+####   les point superposés
+
+```{r}
+paracou2015_6_wmppp %>% 
+  rjitter()
+```
+
 # Annexes
 
 ## crash test
@@ -387,4 +464,8 @@ plot(ppm)
 # Simulation d’un processus de Thomas 
 ppt <- rThomas (0.1, 0.5, 10, win = owin(c(0,10),c(0,10))) 
 plot(ppt)
+```
+
+```{r}
+npoints(paracou_6_wmppp)
 ```
