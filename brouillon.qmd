@@ -225,13 +225,14 @@ la fonction de ent_sp_simpson (shimatani) ne fait pas les rayons des cercles mai
 
 ###### *(à coder)*
 
-il nous faudrait avoir une coubre d'accumulation uniquement pour une espèces
+il nous faudrait avoir une coubre d'accumulation uniquement pour une espèce
 
 ```{r}
 accum_sp_hill(g,
               order=0,
               r=seq(0, .5, .05),
               individual= TRUE,
+              #ici on fait une courbe par personne
              ) ->
   richesse_distance
 
@@ -285,6 +286,64 @@ objectif rendre plus fluide, peut-être ecrire un fonction qu'on appellerai "ISA
 
 quelles sont les especes attractives, et calculer leur isar
 
+création de la fonction Isar
+
+```{r}
+cotes<- function(
+    aire,
+    facteur_de_forme){
+  largeur<- sqrt(aire/facteur_de_forme)
+  longeur<- largeur*facteur_de_forme
+  return(list(longeur=longeur, largeur=largeur))
+  
+}
+
+cotes(45,5)
+
+#
+
+#fonction ISAr de Eric
+accum_sp_hill(
+  g, 
+  # Richesse
+  orders = c(0, 1),
+  # Distances
+  r = seq(0, .5, .05),
+  individual = TRUE
+) ->
+  richesse_distance
+# Jeu de points
+richesse_distance$X %>% autoplot()
+# Valeurs en fonction de q et r
+richesse_distance$accumulation
+# Voisinages (deux premiers points)
+richesse_distance$neighborhoods[, , 1:2]
+
+# Vecteur de sélection
+est_sp1 <- (richesse_distance$X$marks$PointType == "sp_1")
+#on creer un vecteur contenant que l'sp.1
+#il faut que quand on tape la fonction l'argument 1 soit cette sp. 
+
+# Voisinages des points de l'espèce 1, richesse seulement
+richesse_distance$neighborhoods[1, , est_sp1] %>% 
+  rowMeans() -> 
+  isar_sp1
+
+tibble(
+  distance = names(isar_sp1),
+  richesse = isar_sp1
+) %>% 
+  ggplot(aes(x = distance, y  = richesse)) +
+  geom_point()
+
+richesse_distance_h0$accumulation
+
+
+
+###########
+
+```
+
 # traitement des données
 
 ### mise en forme
@@ -337,7 +396,7 @@ paracou2015_6 %>%
   arrange(desc(nombre))
 ```
 
-####  création d'un objet spp
+#### création d'un objet spp
 
 ```{r}
 library("ads")
@@ -354,7 +413,7 @@ paracou2015_6_spp %>%
   plot()
 ```
 
-####   les point superposés
+#### les point superposés
 
 ```{r}
 paracou2015_6_wmppp %>% 
@@ -468,4 +527,120 @@ plot(ppt)
 
 ```{r}
 npoints(paracou_6_wmppp)
+```
+
+#### création d'un fonction
+
+```{r}
+#fonction de base
+produit<- function(
+  x,
+  y){
+  resultat<-x*y
+  return(resultat)
+}
+
+produit(2,3)
+#bonne pratique c'est de nommer les arguments commme on fait pour tout les #fonctions
+#avoir des valeurs par défaut cohérentes, donc il faut les écrires nous mêmes
+produit<- function(
+  x,
+  y=1){
+  #ici valeur par defaut de y est 1
+  resultat<-x*y
+  return(resultat)
+}
+
+produit(12)
+
+# on ajoute une variable
+produit<- function(
+  x,
+  y=1){
+  resultat<-x*y+ toto
+  return(resultat)
+}
+resultat<-100
+toto<-10
+#ici on à utiliser une variable interne qui existe à l'exterieur !! mauvaise pratique 
+# eviter d'utiliser des fonctions qui sont à l'exterieur
+
+produit(12)
+
+produit<- function(
+  x,
+  y=1){
+  resultat<-x*y
+  return(resultat)
+}
+
+x<-2
+y<-3
+#sintacte à éviter aussi, j'ai pas bien compris pourquoi
+
+produit(x=x,y=y)
+
+```
+
+imaginons qu'on écrive un fonction qui dep d'un jeux de pts X, le premier argument s'appelle X, donc on se retrouve avec la situation ci-dessus (car notre jeux de pts s'appelle X aussi)
+
+Si on modif à l'intérieur de la fonction x, pas de modif à l’extérieur de x. R arrête de travailler avec l'objet d'origine et créer un objet temporaire interne à la fonction.
+
+si on écrit pas de "return" la dernière valeur produit est retournée. on appel simplement "résultat" pas besoin de créer la variable interne "résultat"
+
+```{r}
+produit<- function(
+  x,
+  y){
+  x*y
+}
+#version courte
+
+
+
+produit(2,3)
+
+```
+
+nouvelle fonction
+
+On a un rectangle ou la longeur est x\*la largeur
+
+```{r}
+
+cotes<- function(
+    aire,
+    facteur_de_forme){
+  largeur<- sqrt(aire/facteur_de_forme)
+  longeur<- largeur*facteur_de_forme
+  return(c(largeur, longeur))
+  #ici on fait un vecteur parce qu'une fonction ne peut revoyer qu'un seul resultat
+}
+
+cotes(45,5)
+
+#revoyer des argument plus complexe
+#on fait une liste
+cotes<- function(
+    aire,
+    facteur_de_forme){
+  largeur<- sqrt(aire/facteur_de_forme)
+  longeur<- largeur*facteur_de_forme
+  return(list(longeur=longeur, largeur=largeur))
+  
+}
+
+cotes(45,5)
+
+#on peut aussi revoyer un tableau
+cotes<- function(
+    aire,
+    facteur_de_forme){
+  largeur<- sqrt(aire/facteur_de_forme)
+  longeur<- largeur*facteur_de_forme
+  return(tibble(longeur=longeur, largeur=largeur))
+  
+}
+
+cotes(45,5)
 ```
