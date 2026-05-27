@@ -341,7 +341,7 @@ accum_sp_hill(
 ###bon on s'est arreter la parce que 16min de simulation, ... GROS LOL
 ```
 
-##### tentative
+##### V1
 
 ```{r}
 #exemple de creation de fonction
@@ -390,8 +390,68 @@ isar<-function(
 
 #crash teeeest
 isar(mini_test, "Eschweilera sagotiana")
+#ca à marchééééé la fete
 
 
+
+
+
+
+```
+
+##### V2
+
+amélioration de la fonction
+
+- ? decider du r ou l'adapter a bcp plus de pts
+
+- pouvoir changer le q
+
+- comparaison avec l'hypothèse h0 *(attendre d'avoir un ordi plus puissant)*
+
+- voir si ca fonction sur un dataframe de parcou directement
+
+```{r}
+isar2<-function(
+    #arguments de la fonction
+    wmppp,
+    sp_name,
+    r,
+    q){
+  
+  #devellopement de la fonction
+  #calcul des CA individuelles
+  rich_dist<-accum_sp_hill(
+    wmppp,
+    r = r,
+    q = q,
+    individual = TRUE)
+  
+  #selection de l'espèce voulue
+  is_sp <- (rich_dist$X$marks$PointType == sp_name)
+  
+  #creation de l'isar seulement pour l'esp1
+  isar_sp<- rowMeans(rich_dist$neighborhoods[1, , is_sp] )
+  
+  #tableau summary
+  tableau<- tibble(
+    distance = as.numeric(names(isar_sp)),
+    richesse = as.numeric(isar_sp))
+  
+  #creation du plot
+  magnifique_isar<- ggplot(tableau, aes(x = distance, y = richesse)) +
+    geom_point() +
+    geom_line()
+  
+  #sortie de la fonction
+  return(magnifique_isar)
+}
+
+isar2(wmppp =paracou_6_wmppp,
+      sp_name ="Ambelania_acida",
+      r = seq(0, 20, 1 ),
+      q = 0
+)
 
 
 ```
