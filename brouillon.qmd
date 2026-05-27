@@ -375,12 +375,12 @@ isar<-function(
   isar_sp<- rowMeans(rich_dist$neighborhoods[1, , is_sp] )
   
   #tableau summary
-  tableaubleau<- tibble(
+  tableau<- tibble(
     distance = as.numeric(names(isar_sp)),
     richesse = as.numeric(isar_sp))
   
   #creation du plot
-  magnifique_isar<-- ggplot(tableautableau, aes(x = distance, y = richesse)) +
+  magnifique_isar<- ggplot(tableau, aes(x = distance, y = richesse)) +
     geom_point() +
     geom_line()
   
