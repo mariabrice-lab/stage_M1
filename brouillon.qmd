@@ -382,7 +382,9 @@ isar<-function(
   #creation du plot
   magnifique_isar<- ggplot(tableau, aes(x = distance, y = richesse)) +
     geom_point() +
-    geom_line()
+    geom_line() +
+    labs(title = sp_name)
+  
   
   #sortie de la fonction
   return(magnifique_isar)
@@ -391,7 +393,7 @@ isar<-function(
 #crash teeeest
 isar(mini_test, "Eschweilera sagotiana")
 #ca à marchééééé la fete
-
+isar(mini_test, "Bocoa prouacensis")
 
 
 
@@ -424,7 +426,7 @@ isar2<-function(
   rich_dist<-accum_sp_hill(
     wmppp,
     r = r,
-    q = q,
+    orders = q,
     individual = TRUE)
   
   #selection de l'espèce voulue
@@ -453,7 +455,7 @@ isar2(wmppp =paracou_6_wmppp,
       q = 0
 )
 
-
+#attendre un ordi plus puissant
 ```
 
 # traitement des données
