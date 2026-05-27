@@ -278,14 +278,15 @@ accum_sp_hill(
   richesse_distance
 
 
-
-
+################################################
+#description des données (pas trop utile)
 # Jeu de points
 richesse_distance$X %>% autoplot()
 # Valeurs en fonction de q et r
 richesse_distance$accumulation
 # Voisinages (deux premiers points)
 richesse_distance$neighborhoods[, , 1:2]
+####################################################
 
 # Vecteur de sélection
 est_sp1 <- (richesse_distance$X$marks$PointType == "Eschweilera sagotiana")
@@ -321,6 +322,8 @@ tibble(
 
 maintenant comparaison avec un hypothèse nulle de dispersition de poisson homogène
 
+-\> à reprendre plus tard avec un *ordi puissant*
+
 ```{r}
 
 #fonction ISAr de Eric
@@ -341,13 +344,53 @@ accum_sp_hill(
 ##### tentative
 
 ```{r}
-
+#exemple de creation de fonction
 cotes<- function(
     aire,
     facteur_de_forme){
   largeur<- sqrt(aire/facteur_de_forme)
   longeur<- largeur*facteur_de_forme
-  return(c(largeur, longeur))
+  return(c(largeur, longeur))}
+
+  
+#création de la fonction Isar
+#cette fonction prend un nom d'espece et nous rends une courbe d'accumulation
+
+isar<-function(
+    #arguments de la fonction
+    wmppp,
+    sp_name){
+  
+  #devellopement de la fonction
+  #calcul des CA individuelles
+  rich_dist<-accum_sp_hill(
+    wmppp,
+    r = seq(0, 150,10 ),
+    individual = TRUE)
+  
+  #selection de l'espèce voulue
+  is_sp <- (rich_dist$X$marks$PointType == sp_name)
+  
+  #creation de l'isar seulement pour l'esp1
+  isar_sp<- rowMeans(rich_dist$neighborhoods[1, , is_sp] )
+  
+  #tableau summary
+  tableaubleau<- tibble(
+    distance = as.numeric(names(isar_sp)),
+    richesse = as.numeric(isar_sp))
+  
+  #creation du plot
+  magnifique_isar<-- ggplot(tableautableau, aes(x = distance, y = richesse)) +
+    geom_point() +
+    geom_line()
+  
+  #sortie de la fonction
+  return(magnifique_isar)
+}
+
+#crash teeeest
+isar(mini_test, "Eschweilera sagotiana")
+
 
 
 
