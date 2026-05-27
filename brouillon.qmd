@@ -223,95 +223,63 @@ la fonction de ent_sp_simpson (shimatani) ne fait pas les rayons des cercles mai
 
 ### les ISAR
 
-###### *(à coder)*
+*(à coder)*
 
 il nous faudrait avoir une coubre d'accumulation uniquement pour une espèce
-
-```{r}
-accum_sp_hill(g,
-              order=0,
-              r=seq(0, .5, .05),
-              individual= TRUE,
-              #ici on fait une courbe par personne
-             ) ->
-  richesse_distance
-
-#contenu de l'objet accumulation spatiale
-richesse_distance$g %>% autoplot()
-
-richesse_distance$accumulation
-
-#ce code ne marche paas, prendre celui du prof, enfait si ca va
-#enfait non dans la colone "q" il manque le 1 en plus du 0
-
-#calcul des voisinages pour ensuite calculer les ISAR
-richesse_distance$neighborhoods
-
-#retrouver à quelle espece correspond chaques points
-#creation de vecteur espece 1
-est_sp_1<-( g$marks$PointType=="sp_1")
-
-#Voisinage des points de l'espece 1, richesse
-richesse_distance$neighborhoods[1, , est_sp_1] %>% 
-  rowMeans()-> 
-  isar_sp1
-
-tibble(
-  distance = names(isar_sp1),
-  richesse = isar_sp1
-) %>% 
-  ggplot(aes(x=distance, y =richesse))+
-  geom_point()+
-  
-
-#voici l'isar de l'espece 1
-yey
-
-
-#ca fonctionne paaaaaas, enfait jsp
-
-
-
-
-#calcul de l'hypothèse nulle de l'isar
-richesse_distance_h0$accumulation 
-
-#dans accumulation plusieur couches, valeur observée + valeruthéoriques+ bas/haut de l'intrevalle
-#donc il suffit d'afficher la courbe et son intervalle dans notre plot original 
-#rajouter un h0 = localisation aléatoire de tout les pts sauf l'espece de reference pour prendre en compte sa structure spatiale. 
-
-```
 
 objectif rendre plus fluide, peut-être ecrire un fonction qu'on appellerai "ISAR", avec argurment d'entrée = richesse distance.
 
 quelles sont les especes attractives, et calculer leur isar
 
-création de la fonction Isar
+##### exemple de fonction 
 
 ```{r}
-cotes<- function(
-    aire,
-    facteur_de_forme){
-  largeur<- sqrt(aire/facteur_de_forme)
-  longeur<- largeur*facteur_de_forme
-  return(list(longeur=longeur, largeur=largeur))
-  
-}
+#selection d'un petit sous tableau
+mini_paracou <- paracou2015_6[sample(nrow(paracou2015_6), 40), ]
 
-cotes(45,5)
+#creation d'un wmppp
+mini_paracou %>% 
+  #renommer les colones 
+  rename(
+    X=Xfield,
+    Y= Yfield,
+    PointType= BinomialName,
+    PointWeight = G
+    ) %>% 
+  wmppp(
+    window = owin(xrange= c(0, 250), yrange = c(0,250)), 
+    unitname = c("metre", "metres")
+  ) %>% 
+  #deplacement des pts pour eviter les chevauchements
+  rjitter(radius = 0.01)->
+  mini_paracou_wmppp 
 
-#
+#j'essais de regler le pb de pointweigth
+mini_test <- mini_paracou_wmppp
 
+marks(mini_test)$PointWeight <- 1
+
+
+
+```
+
+creation des isars
+
+```{r}
 #fonction ISAr de Eric
 accum_sp_hill(
-  g, 
+  mini_test, 
   # Richesse
   orders = c(0, 1),
   # Distances
-  r = seq(0, .5, .05),
+  r = seq(0, 150,10 ),
   individual = TRUE
 ) ->
   richesse_distance
+
+
+
+
 # Jeu de points
 richesse_distance$X %>% autoplot()
 # Valeurs en fonction de q et r
@@ -320,7 +288,7 @@ richesse_distance$accumulation
 richesse_distance$neighborhoods[, , 1:2]
 
 # Vecteur de sélection
-est_sp1 <- (richesse_distance$X$marks$PointType == "sp_1")
+est_sp1 <- (richesse_distance$X$marks$PointType == "Eschweilera sagotiana")
 #on creer un vecteur contenant que l'sp.1
 #il faut que quand on tape la fonction l'argument 1 soit cette sp. 
 
@@ -328,7 +296,8 @@ est_sp1 <- (richesse_distance$X$marks$PointType == "sp_1")
 richesse_distance$neighborhoods[1, , est_sp1] %>% 
   rowMeans() -> 
   isar_sp1
-
+######################################################
+#version classique
 tibble(
   distance = names(isar_sp1),
   richesse = isar_sp1
@@ -336,11 +305,51 @@ tibble(
   ggplot(aes(x = distance, y  = richesse)) +
   geom_point()
 
-richesse_distance_h0$accumulation
+
+############################################################
+#apparament ce débile comprenait pas que ct un variable numérique
+tibble(
+  distance = as.numeric(names(isar_sp1)),
+  richesse = as.numeric(isar_sp1)
+) %>% 
+  ggplot(aes(x = distance, y = richesse)) +
+  geom_point() +
+  geom_line()
 
 
+```
 
-###########
+maintenant comparaison avec un hypothèse nulle de dispersition de poisson homogène
+
+```{r}
+
+#fonction ISAr de Eric
+accum_sp_hill(
+  mini_test, 
+  # Richesse
+  orders = c(0, 1),
+  # Distances
+  r = seq(0, 150,10 ),
+  individual = TRUE,
+  h0= "binomial"
+) ->
+  richesse_distance_h0
+
+###bon on s'est arreter la parce que 16min de simulation, ... GROS LOL
+```
+
+##### tentative
+
+```{r}
+
+cotes<- function(
+    aire,
+    facteur_de_forme){
+  largeur<- sqrt(aire/facteur_de_forme)
+  longeur<- largeur*facteur_de_forme
+  return(c(largeur, longeur))
+
+
 
 ```
 
