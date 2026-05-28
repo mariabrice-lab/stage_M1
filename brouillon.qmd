@@ -8,9 +8,9 @@ editor: visual
 bibliography: references.bib
 ---
 
-# experimentation
+# stage brouillon
 
-## Biodiversité
+## biodiversité
 
 Nombres d'espèces dans la parcelle :
 
@@ -215,7 +215,7 @@ processu binomial = processus de poisson ou le nombre d'arbre est fixé .
 
 order = change la diversité
 
-###### pour marlène
+###### (pour marlène)
 
 pour avoir shimatanie, accum_sp\_?? et orders=2 *(mais lui il a pas fait comme ca, autre methode de correction entre autre).*
 
@@ -532,6 +532,21 @@ paracou2015_6_spp %>%
 ```{r}
 paracou2015_6_wmppp %>% 
   rjitter()
+```
+
+### Paracou_2015
+
+exploration de données de paracou 2015\
+
+```{r}
+unique(paracou_2015$Plot)
+#voir toutes les valeurs que peut pdr notre colone
+
+length(unique(paracou_2015$BinomialName))
+#nombre d'sp. 
+#636 en tout
+
+
 ```
 
 # Annexes
