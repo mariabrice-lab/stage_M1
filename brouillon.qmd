@@ -10,6 +10,16 @@ bibliography: references.bib
 
 # experimentation
 
+##### les packages
+
+```{r}
+library(ads)
+library(divent)
+library(tidyverse)
+library(dbmss)
+
+```
+
 ## Biodiversité
 
 Nombres d'espèces dans la parcelle :
@@ -231,7 +241,7 @@ objectif rendre plus fluide, peut-être ecrire un fonction qu'on appellerai "ISA
 
 quelles sont les especes attractives, et calculer leur isar
 
-##### exemple de fonction 
+##### exemple de fonction
 
 ```{r}
 #selection d'un petit sous tableau
@@ -278,6 +288,7 @@ accum_sp_hill(
   richesse_distance
 
 
+
 ################################################
 #description des données (pas trop utile)
 # Jeu de points
@@ -297,14 +308,6 @@ est_sp1 <- (richesse_distance$X$marks$PointType == "Eschweilera sagotiana")
 richesse_distance$neighborhoods[1, , est_sp1] %>% 
   rowMeans() -> 
   isar_sp1
-######################################################
-#version classique
-tibble(
-  distance = names(isar_sp1),
-  richesse = isar_sp1
-) %>% 
-  ggplot(aes(x = distance, y  = richesse)) +
-  geom_point()
 
 
 ############################################################
@@ -338,7 +341,32 @@ accum_sp_hill(
 ) ->
   richesse_distance_h0
 
-###bon on s'est arreter la parce que 16min de simulation, ... GROS LOL
+
+#selection d'sp.
+est_sp1_h0 <- (richesse_distance_h0$X$marks$PointType == "Eschweilera sagotiana")
+
+#
+
+
+richesse_distance_h0$neighborhoods[1, , est_sp1] %>% 
+  rowMeans() -> 
+  isar_sp1_h0
+
+
+tibble(
+  distance = as.numeric(names(isar_sp1_h0)),
+  richesse = as.numeric(isar_sp1_h0)
+) %>% 
+  ggplot(aes(x = distance, y = richesse)) +
+  geom_point() +
+  geom_line()
+###Je comprend pas pk en comparant avec h0, ca donne la meme chose
+
+rich_binom <- accum_sp_hill(mini_test, h0 = "binomial")
+rich_none  <- accum_sp_hill(mini_test, h0 = "none")
+
+summary(rich_binom$neighborhoods)
+summary(rich_none$neighborhoods)
 ```
 
 ##### V1
@@ -464,13 +492,22 @@ isar2(wmppp =paracou_6_wmppp,
 
 chargement des données
 
+modif de 2/3 trucs
+
+```{r}
+
+Paracou2015$CircCorr<-as.numeric(gsub(",",".",Paracou2015$CircCorr))
+Paracou2015$Xfield<-as.numeric(gsub(",",".",Paracou2015$Xfield))
+Paracou2015$Yfield<-as.numeric(gsub(",",".",Paracou2015$Yfield))
+```
+
 les colones qui nous interresse sont cirCorr et spe
 
 ```{r}
 paracou_2015<-read_csv2(file = "data/Paracou2015.csv") 
 
 #modification de tableau
-paracou_2015 %>% 
+Paracou2015 %>% 
   #filtrer la parcelle6
   filter(Plot==6) %>% 
   #selection de colones
@@ -494,9 +531,60 @@ paracou2015_6 %>%
   ) %>% 
   #deplacement des pts pour eviter les chevauchements
   rjitter(radius = 0.01)->
-  paracou2015_6_wmppp
+  paracou2015_6_wmppp 
+
+autoplot(paracou2015_6_wmppp)
 
 
+
+#on refais pour la parcelle 15 et 16
+Paracou2015 %>% 
+  filter(Plot==15) %>% 
+  select(idTree, Xfield, Yfield, Family, Genus, BinomialName, CircCorr ) %>% 
+  mutate(G=pi*(CircCorr / pi/2)^2/10000)->
+  paracou2015_15
+
+#creation d'un wmpp
+paracou2015_15 %>%
+  rename(
+    X=Xfield,
+    Y= Yfield,
+    PointType= BinomialName,
+    PointWeight = G
+  ) %>% 
+  wmppp(
+    window = owin(xrange= c(0, 250), yrange = c(0,250)), 
+    unitname = c("metre", "metres")
+  ) %>% 
+  rjitter(radius = 0.01)->
+  paracou2015_15_wmppp 
+
+
+
+Paracou2015 %>% 
+  filter(Plot==16) %>% 
+  select(idTree, Xfield, Yfield, Family, Genus, BinomialName, CircCorr ) %>% 
+  mutate(G=pi*(CircCorr / pi/2)^2/10000)->
+  paracou2015_16
+
+#creation d'un wmpp
+paracou2015_16 %>% 
+  rename(
+    X=Xfield,
+    Y= Yfield,
+    PointType= BinomialName,
+    PointWeight = G
+  ) %>% 
+  wmppp(
+    window = owin(xrange= c(0, 500), yrange = c(0,500)), 
+    unitname = c("metre", "metres")
+  ) %>% 
+  rjitter(radius = 0.01)->
+  paracou2015_16_wmppp 
+
+
+#le paracou 16 il est chelou
+autoplot(paracou2015_16_wmppp)
 ```
 
 manipulation des données
