@@ -393,7 +393,7 @@ isar<-function(
   #calcul des CA individuelles
   rich_dist<-accum_sp_hill(
     wmppp,
-    r = seq(0, 150,10 ),
+    r = seq(0, 150, 10),
     individual = TRUE)
   
   #selection de l'espèce voulue
@@ -421,12 +421,66 @@ isar<-function(
 #crash teeeest
 isar(mini_test, "Eschweilera sagotiana")
 #ca à marchééééé la fete
-isar(mini_test, "Bocoa prouacensis")
+isar(mini_test, "Eperua falcata")
+
+
+
+isar(paracou2015_6_wmppp,"Licania micrantha ")
+```
+
+###### V1.2
+
+```{r}
+#exemple de creation de fonction
+cotes<- function(
+    aire,
+    facteur_de_forme){
+  largeur<- sqrt(aire/facteur_de_forme)
+  longeur<- largeur*facteur_de_forme
+  return(c(largeur, longeur))}
+
+
+#création de la fonction Isar
+#cette fonction prend un nom d'espece et nous rends une courbe d'accumulation
+
+isar1_2<-function(
+    #arguments de la fonction
+  wmppp,
+  sp_name){
+  
+  #devellopement de la fonction
+  #calcul des CA individuelles
+  rich_dist<-accum_sp_hill(
+    wmppp,
+    r = seq(0, 10,1 ),
+    individual = TRUE)
+  
+  #selection de l'espèce voulue
+  is_sp <- (rich_dist$X$marks$PointType == sp_name)
+  
+  #creation de l'isar seulement pour l'esp1
+  isar_sp<- rowMeans(rich_dist$neighborhoods[1, , is_sp, drop = FALSE] )
+  
+  #tableau summary
+  tableau<- tibble(
+    distance =  seq(0, 10,1 ),
+    richesse = as.numeric(isar_sp))
+  
+  #creation du plot
+  magnifique_isar<- ggplot(tableau, aes(x = distance, y = richesse)) +
+    geom_point() +
+    geom_line() +
+    labs(title = sp_name)
+  
+  
+  #sortie de la fonction
+  return(magnifique_isar)
+}
 
 
 
 
-
+isar1_2(paracou2015_6_wmppp,"Licania alba")
 ```
 
 ##### V2
@@ -484,6 +538,76 @@ isar2(wmppp =paracou_6_wmppp,
 )
 
 #attendre un ordi plus puissant
+```
+
+##### V3
+
+en vrai vaut mieux calculer l'entropie une fois pour toute puis selectionner les sp
+
+```{r}
+
+#calcul de l'entropie une bonne fois pour toutes
+accum_sp_hill(
+  paracou2015_6_wmppp, 
+  # Richesse
+  orders = c(0, 1),
+  # Distances
+  r = seq(0, 30,2 ),
+  individual = TRUE
+) ->
+  rich_dist_v3
+#je fais surtout ca parce que c'est beaucoup plus rapide
+#avoir qu'elle distance je choisi, peut-être que 30m c'est trop peu
+#on atteind aucun plateau, diversité seulement à trois
+
+
+
+#creation de la fonction isar
+isar3<-function(
+    #arguments de la fonction
+  sp_name){
+  
+  #selection de l'espèce voulue
+  is_sp <- (rich_dist_v3$X$marks$PointType == sp_name)
+  
+  #creation de l'isar seulement pour l'esp1
+  isar_sp<-apply(
+    rich_dist_v3$neighborhoods[1, , is_sp, drop = FALSE],
+    2,
+    mean,
+    na.rm = TRUE
+    )
+ 
+  
+  #tableau summary
+  tableau<- tibble(
+    distance = as.numeric(names(isar_sp)),
+    richesse = as.numeric(isar_sp))
+  
+  #creation du plot
+  magnifique_isar<- ggplot(tableau, aes(x = distance, y = richesse)) +
+    geom_point() +
+    geom_line()
+  
+  #sortie de la fonction
+  return(magnifique_isar)
+}
+
+#test
+isar3("Eperua falcata")
+isar3("Lecythis persistens")
+isar3("Licania alba")
+isar3("Dicorynia guianensis")
+isar3("Eschweilera sagotiana")
+autoplot(paracou2015_6_wmppp)
+
+
+names(rich_dist_v3)
+
+str(rich_dist_v3, max.level = 1)
+
+rich_dist_v3$accumulation[1, , 1]
+rich_dist_v3$accumulation[2, , 1]
 ```
 
 # traitement des données
