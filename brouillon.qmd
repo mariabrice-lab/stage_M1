@@ -32,6 +32,8 @@ Paracou2015$Xfield<-as.numeric(gsub(",",".",Paracou2015$Xfield))
 Paracou2015$Yfield<-as.numeric(gsub(",",".",Paracou2015$Yfield))
 Paracou2015$PlotArea<-as.numeric(gsub(",",".",Paracou2015$PlotArea))
 
+
+papa<-read_csv2("D:/maria/Paracou2015/Paracou2015.csv")
 ```
 
 ## Biodiversité
@@ -247,7 +249,7 @@ la fonction de ent_sp_simpson (shimatani) ne fait pas les rayons des cercles mai
 
 ## les ISAR : fonction
 
-### creation des isars
+### calcul des isars
 
 ```{r}
 accum_sp_hill(
@@ -748,7 +750,40 @@ isar4(c("Sextonia rubra","Ruizterania albiflora","Dicorynia guianensis"),rich_di
 isar4(c("Sextonia rubra","Ruizterania albiflora","Dicorynia guianensis"),rich_dist_v3.2, paracou2015_6_wmppp)
 ```
 
-# traitement des données
+### h0 : binomiale
+
+Alors maintenant on va essayer avec des h0 binomiale
+
+-creer des jeux de pts avec redistribution des etiquettes aléatoires
+
+-calculer les isar de ces jeux de pts et les stocker
+
+bon enfait non
+
+la comparaison se fait avec l'accumulation globale de la parcelle
+
+mettre sur la meme figure l'accumulation et les bornes
+
+```{r}
+accum_sp_hill(
+  rthin(paracou2015_6_wmppp,P = 0.1), 
+  # Richesse
+  orders = 0,
+  # Distances
+  r = seq(0, 30,2 ),
+  individual = TRUE,
+  h0=  "random location",
+  n_simulations = 20
+) ->
+  rich_dist_15_h0
+
+autoplot(rich_dist_15_h0)
+
+isar4(c("Eperua falcata"),rich_dist_15_h0, paracou2015_15_wmppp)
+
+```
+
+### traitement des données
 
 ### mise en forme
 
@@ -764,7 +799,7 @@ Paracou2015 %>%
   #selection de colones
   select(idTree, Xfield, Yfield, Family, Genus, BinomialName, CircCorr ) %>% 
   #calcul de la surface terrière en metre carré
-  mutate(G=pi*(CircCorr / pi/2)^2/10000)->
+  mutate(G = pi*(CircCorr / pi/2)^2/10000)->
   paracou2015_6
 
 #creation d'un wmpp
@@ -812,30 +847,35 @@ paracou2015_15 %>%
 
 
 
-Paracou2015 %>% 
+papa %>% 
   filter(Plot==16) %>% 
-  select(idTree, Xfield, Yfield, Family, Genus, BinomialName, CircCorr ) %>% 
+  select(idTree, Xutm, Yutm, Family, Genus, BinomialName, CircCorr ) %>% 
   mutate(G=pi*(CircCorr / pi/2)^2/10000)->
   paracou2015_16
 
 #creation d'un wmpp
 paracou2015_16 %>% 
   rename(
-    X=Xfield,
-    Y= Yfield,
+    X=Xutm,
+    Y= Yutm,
     PointType= BinomialName,
     PointWeight = G
   ) %>% 
   wmppp(
-    window = owin(xrange= c(0, 500), yrange = c(0,500)), 
     unitname = c("metre", "metres")
   ) %>% 
   rjitter(radius = 0.01)->
   paracou2015_16_wmppp 
 
+paracou2015_16_wmppp$owin <- convexhull(paracou2015_16_wmppp) 
 
-#le paracou 16 il est chelou
+
+
 autoplot(paracou2015_16_wmppp)
+#enfait 16 pas chelou
+#donc il ont découpé la grosse parcelle en 25petite de 100*100m
+
+
 ```
 
 manipulation des données
@@ -877,7 +917,7 @@ paracou2015_6_wmppp %>%
 
 ## crash test
 
-#### sous tableau 
+#### petit paracou pour faire des tests
 
 ```{r}
 {r}
@@ -905,6 +945,30 @@ mini_paracou %>%
 mini_test <- mini_paracou_wmppp
 
 marks(mini_test)$PointWeight <- 1
+
+autoplot(mini_paracou_wmppp)
+
+#############################
+
+
+#création d'un mini paracou par decoupage de la fenetre 
+
+mi_paracou<-paracou_6_wmppp[owin(xrange= c(0, 50), yrange = c(0,50))]
+autoplot(mi_paracou)
+
+
+
+########première simulation 
+accum_sp_hill(
+  mi_paracou, 
+  # Richesse
+  orders = 0,
+  # Distances
+  r = seq(0, 20,2 ),
+  individual = TRUE,
+  h0 = "random location"
+) ->
+  rich_dist_test
 ```
 
 ```{r}
