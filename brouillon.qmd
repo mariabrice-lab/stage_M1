@@ -18,22 +18,15 @@ library(divent)
 library(tidyverse)
 library(dbmss)
 library(patchwork)
+library(spatstat)
 
 ```
 
 ##### les données
 
 ```{r}
-Paracou2015 <- read.csv("D:/maria/Paracou2015/Paracou2015.csv", sep=";")
+Paracou2015 <- read_csv2("D:/maria/Paracou2015/Paracou2015.csv")
 
-#transfo des chr en num
-Paracou2015$CircCorr<-as.numeric(gsub(",",".",Paracou2015$CircCorr))
-Paracou2015$Xfield<-as.numeric(gsub(",",".",Paracou2015$Xfield))
-Paracou2015$Yfield<-as.numeric(gsub(",",".",Paracou2015$Yfield))
-Paracou2015$PlotArea<-as.numeric(gsub(",",".",Paracou2015$PlotArea))
-
-
-papa<-read_csv2("D:/maria/Paracou2015/Paracou2015.csv")
 ```
 
 ## Biodiversité
