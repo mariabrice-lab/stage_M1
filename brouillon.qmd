@@ -245,55 +245,20 @@ pour avoir shimatanie, accum_sp\_?? et orders=2 *(mais lui il a pas fait comme c
 
 la fonction de ent_sp_simpson (shimatani) ne fait pas les rayons des cercles mais une somme de K de ripley.
 
-### les ISAR : fonction
+## les ISAR : fonction
 
-creation des isars
+### creation des isars
 
 ```{r}
-#fonction ISAr de Eric
 accum_sp_hill(
-  mini_test, 
+  paracou2015_15_wmppp, 
   # Richesse
-  orders = c(0, 1),
+  orders = 0,
   # Distances
-  r = seq(0, 150,10 ),
+  r = seq(0, 50,2 ),
   individual = TRUE
 ) ->
-  richesse_distance
-
-
-
-################################################
-#description des données (pas trop utile)
-# Jeu de points
-richesse_distance$X %>% autoplot()
-# Valeurs en fonction de q et r
-richesse_distance$accumulation
-# Voisinages (deux premiers points)
-richesse_distance$neighborhoods[, , 1:2]
-####################################################
-
-# Vecteur de sélection
-est_sp1 <- (richesse_distance$X$marks$PointType == "Eschweilera sagotiana")
-#on creer un vecteur contenant que l'sp.1
-#il faut que quand on tape la fonction l'argument 1 soit cette sp. 
-
-# Voisinages des points de l'espèce 1, richesse seulement
-richesse_distance$neighborhoods[1, , est_sp1] %>% 
-  rowMeans() -> 
-  isar_sp1
-
-
-############################################################
-#apparament ce débile comprenait pas que ct un variable numérique
-tibble(
-  distance = as.numeric(names(isar_sp1)),
-  richesse = as.numeric(isar_sp1)
-) %>% 
-  ggplot(aes(x = distance, y = richesse)) +
-  geom_point() +
-  geom_line()
-
+  rich_dist_15
 
 ```
 
@@ -764,6 +729,23 @@ isar4 <- function(sp_name, isars, mapsdata){
 
 
 isar4(c("Eperua falcata","Dicorynia guianensis", "Oxandra asbeckii","Hirtella glandistipula"),rich_dist_v3.2, paracou2015_6_wmppp)
+
+#espece d'interet pour les population
+#fruit de coumou  et jus/huile de Patawa 
+isar4(c("Oenocarpus bacaba","Oenocarpus bataua"),rich_dist_v3.2, paracou2015_6_wmppp)
+
+#feuille de wai
+isar4(c("Ruizterania albiflora"),rich_dist_v3.2, paracou2015_6_wmppp)
+isar4(c("Ruizterania albiflora"),rich_dist_15, paracou2015_15_wmppp)
+
+#grignon franc preleves pour son bois
+isar4(c("Sextonia rubra"),rich_dist_v3.2, paracou2015_6_wmppp)
+isar4(c("Sextonia rubra"),rich_dist_15, paracou2015_15_wmppp)
+
+
+#75%  du prelevement en bois
+isar4(c("Sextonia rubra","Ruizterania albiflora","Dicorynia guianensis"),rich_dist_15, paracou2015_15_wmppp)
+isar4(c("Sextonia rubra","Ruizterania albiflora","Dicorynia guianensis"),rich_dist_v3.2, paracou2015_6_wmppp)
 ```
 
 # traitement des données
