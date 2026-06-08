@@ -1,0 +1,20 @@
+---
+title: "script clean"
+author: "Maria Brice"
+format: 
+ html: default
+ pdf: default
+editor: visual
+bibliography: references.bib
+---
+
+packages
+
+```{r}
+library(ads)
+library(divent)
+library(tidyverse)
+library(dbmss)
+library(patchwork)
+library(spatstat)
+```
