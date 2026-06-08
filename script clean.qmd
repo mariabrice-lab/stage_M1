@@ -8,20 +8,20 @@ editor: visual
 bibliography: references.bib
 ---
 
-## Mise en place
-
-packages
-
 ```{r}
+#chargement des packages 
 library(ads)
 library(divent)
 library(tidyverse)
 library(dbmss)
 library(patchwork)
 library(spatstat)
+library(dplyr)
+library(tidyr)
+library(purrr)
 ```
 
-### données
+## données
 
 ```{r}
 #importation
@@ -47,9 +47,9 @@ paracouplot<- function(data, plot){
     mutate(G = pi*(CircCorr / pi/2)^2/10000)
 }
 
-paracouplot(Paracou2015,6)->p_2015_6
-paracouplot(Paracou2015,15)->p_2015_15
-paracouplot(Paracou2015,16)->p_2015_16
+paracouplot(Paracou2015,6)->p2015_6
+paracouplot(Paracou2015,15)->p2015_15
+paracouplot(Paracou2015,16)->p2015_16
 
 ```
 
@@ -75,8 +75,226 @@ paracouwmppp<- function(data){
 }
 
 #creation de wmppp
-paracouwmppp(p_2015_6)->p_2015_6_wmppp
-paracouwmppp(p_2015_15)->p_2015_15_wmppp
+paracouwmppp(p2015_6)->p2015_6_wmppp
+paracouwmppp(p2015_15)->p2015_15_wmppp
 
+
+```
+
+*Parcelle 16*
+
+elle est formé de 25 carré de 1 ha chacun. Les coordonnées sont relatives à chaque carré et non à la parcelle, il faut recalculer.
+
+```{r}
+Paracou2015 %>% 
+  # Filtrer la parcelle 6
+  filter(Plot == 16) %>% 
+  # Les carrés sont numérotés de gauche à droite et haut en bas
+  mutate(
+    # Renuméroter les carrés de 0 à 24 (retirer 1)
+    # Ajouter 0, 100,..., 400m à Xfield
+    # Revenir à 0 tous les 5 carrés
+    Xplot = 100 * ((SubPlot - 1) %% 5) + Xfield,
+    # Ajouter 400, 300,..., 0 à Yfield pour les 5 premiers,
+    # 5 suivants, ..., carrés.
+    Yplot = 100 * (4 - (SubPlot - 1) %/% 5) + Yfield
+  ) %>% 
+  # Sélection des colonnes utiles
+  # Garder les UTM pour vérification
+  select(idTree, Xplot, Yplot, Xutm, Yutm, BinomialName, CircCorr) %>% 
+  # Calcul de la surface terrière en mètres carrés
+  mutate(G = pi * (CircCorr / pi / 2)^2 / 10000) ->
+  p2015_16
+
+p2015_16 %>%
+  # Renommer les colonnes   
+  rename(     
+    X = Xplot,
+    Y = Yplot,
+    PointType = BinomialName,
+    PointWeight = G
+  ) %>%
+  wmppp(
+    window = owin(xrange = c(0, 500), yrange = c(0, 500)),
+    unitname = c("metre", "metres") 
+  ) %>% 
+  # Déplacement les points pour éviter la superposition
+  rjitter(radius = 0.01) ->
+  p2015_16_wmppp 
+
+
+```
+
+# Traitement
+
+### Biodiversité
+
+```{r}
+#calcul d'indices de div par plot et mise en tableau
+indices_div <- Paracou2015 %>%
+  split(.$Plot) %>%
+  map_dfr(function(df){
+    
+    abd <- table(df$BinomialName)
+    
+    tibble(
+      Plot = df$Plot[1],
+      
+      Shannon = ent_shannon(as.numeric(abd), estimator = "naive")[[3]],
+      Simpson = ent_simpson(as.numeric(abd),estimator = "naive")[[3]],
+      Hill_q1 = div_hill(as.numeric(abd), q = 1)[[3]],
+      
+      Richesse = length(abd),
+      Abondance = sum(abd)
+    )
+  })
+
+view(indices_div)
+
+
+
+
+```
+
+### ISAR
+
+calcul des isars collectifs
+
+*in order to selectionner des especes en particulier on calcul d'abords les isars de chaque sp, le calcul prend +/- 10min*
+
+```{r}
+#fonction
+isars<- function(data, orders,r){accum_sp_hill(
+  data, 
+  # Richesse
+  orders = orders,
+  # Distances
+  r = r,
+  individual = TRUE
+) }
+
+#calcul de chaque ploot
+isars(p2015_6_wmppp,0,seq(0, 50,2 ))->  rd_6
+isars(p2015_15_wmppp,0,seq(0, 50,2 ))->  rich_dist_15
+```
+
+```{r}
+#Création d'une fonction ou l'on peut mettre plusieurs sp. et qui nous retourne graph + AC
+
+isarsp <- function(sp_name, isars, mapsdata){
+  
+  ##################################################
+  #palette de couleur
+  palette_sp <- setNames(
+    RColorBrewer::brewer.pal(
+      max(3, length(sp_name)),
+      "Set2"
+    )[seq_along(sp_name)],
+    sp_name
+  )
+  
+  
+  ##############################
+  # ISAR
+  tableau_final <- lapply(sp_name, function(sp){
+    #selection des sp
+    is_sp <- isars$X$marks$PointType == sp
+    #recuperation des isars
+    isar_sp <- apply(
+      isars$neighborhoods[1, , is_sp, drop = FALSE],
+      2,
+      mean,
+      na.rm = TRUE
+    )
+    #creation d'un tableau
+    tibble(
+      distance = as.numeric(names(isar_sp)),
+      richesse = as.numeric(isar_sp),
+      espece = sp
+    )
+  })
+  #merge des tableau de chaque sp
+  tableau_final <- dplyr::bind_rows(tableau_final)
+  #creation du plot des isars
+  plot_isar <-ggplot(
+    tableau_final,
+    aes(
+      x = distance,
+      y = richesse,
+      color = espece
+    )
+  ) +
+    geom_point() +
+    geom_line() +
+    scale_color_manual(values = palette_sp)
+  
+  
+  ##################################
+  # MAPS
+  motif <- paste(sp_name, collapse = "|")
+  
+  selection <- stringr::str_detect(
+    mapsdata$marks$PointType,
+    motif
+  )
+  
+  plot_map <- autoplot(mapsdata[selection, ]) +
+    scale_color_manual(values = palette_sp) +
+    theme_minimal(base_size = 18) +
+    theme(plot.margin = margin(10, 10, 10, 10))
+  
+  
+  #########################
+  return(list(
+    map = plot_map,
+    isar = plot_isar
+  ))
+}
+
+
+```
+
+les calculs d'isar de differents sp
+
+```{r}
+sar4(c("Eperua falcata","Dicorynia guianensis", "Oxandra asbeckii","Hirtella glandistipula"),rich_dist_v3.2, paracou2015_6_wmppp)
+
+#espece d'interet pour les population
+#fruit de coumou  et jus/huile de Patawa 
+isar4(c("Oenocarpus bacaba","Oenocarpus bataua"),rich_dist_v3.2, paracou2015_6_wmppp)
+
+#feuille de wai
+isar4(c("Ruizterania albiflora"),rich_dist_v3.2, paracou2015_6_wmppp)
+isar4(c("Ruizterania albiflora"),rich_dist_15, paracou2015_15_wmppp)
+
+#grignon franc preleves pour son bois
+isar4(c("Sextonia rubra"),rich_dist_v3.2, paracou2015_6_wmppp)
+isar4(c("Sextonia rubra"),rich_dist_15, paracou2015_15_wmppp)
+
+
+#75%  du prelevement en bois
+isar4(c("Sextonia rubra","Ruizterania albiflora","Dicorynia guianensis"),rich_dist_15, paracou2015_15_wmppp)
+isar4(c("Sextonia rubra","Ruizterania albiflora","Dicorynia guianensis"),rich_dist_v3.2, paracou2015_6_wmppp)
+```
+
+### h0 : random location
+
+On va comparer notre distribution avec une distribution "random location", tout les étiquettes (= individus) de la parcelles sont redistribués au hazard et on fait plusieurs simulations pour obtenir un intervalle de conf.
+
+```{r}
+
+accum_sp_hill(
+  rthin(p2015_6_wmppp,P = 0.1), 
+  # Richesse
+  orders = 0,
+  # Distances
+  r = seq(0, 30,2 ),
+  individual = TRUE,
+  h0=  "random location",
+  n_simulations = 20
+) ->
+  rd_6_h0
+
+autoplot(rd_6_h0)
 
 ```
