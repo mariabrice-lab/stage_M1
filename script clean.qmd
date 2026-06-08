@@ -8,6 +8,8 @@ editor: visual
 bibliography: references.bib
 ---
 
+## Mise en place
+
 packages
 
 ```{r}
@@ -17,4 +19,64 @@ library(tidyverse)
 library(dbmss)
 library(patchwork)
 library(spatstat)
+```
+
+### données
+
+```{r}
+#importation
+Paracou2015 <- read_csv2("D:/maria/Paracou2015/Paracou2015.csv")
+
+```
+
+Jeu de données de Paracou (2015) : 75253 observation.
+
+contient les espèces, la position, le diamètre à hauteur de buste des arbres de 16 parcelles
+
+On y selectionne certaines colones et on creer la donnée de surface terrière
+
+#### Sous-tableaux
+
+```{r}
+#fonction de selection de parcelle
+paracouplot<- function(data, plot){
+  data %>% 
+    filter(Plot==plot) %>% 
+    select(idTree, Xfield, Yfield, Family, Genus, BinomialName, CircCorr ) %>% 
+    #calcul de la surface terrière en metre carré
+    mutate(G = pi*(CircCorr / pi/2)^2/10000)
+}
+
+paracouplot(Paracou2015,6)->p_2015_6
+paracouplot(Paracou2015,15)->p_2015_15
+paracouplot(Paracou2015,16)->p_2015_16
+
+```
+
+#### Wmppp
+
+```{r}
+#fonction
+paracouwmppp<- function(data){
+  data %>%
+    #renommer les colones 
+    rename(
+      X=Xfield,
+      Y= Yfield,
+      PointType= BinomialName,
+      PointWeight = G
+    ) %>% 
+    wmppp(
+      window = owin(xrange= c(0, 250), yrange = c(0,250)), 
+      unitname = c("metre", "metres")
+    ) %>% 
+    #deplacement des pts pour eviter les chevauchements
+    rjitter(radius = 0.01)
+}
+
+#creation de wmppp
+paracouwmppp(p_2015_6)->p_2015_6_wmppp
+paracouwmppp(p_2015_15)->p_2015_15_wmppp
+
+
 ```
