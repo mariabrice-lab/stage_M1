@@ -69,7 +69,10 @@ div_richness(paracou_6, estimator="naive")
 #Numerique
 (div_richness(paracou_6, estimator="naive", as_numeric =TRUE))
 
+
 #shanon
+paracou_6 %>% 
+  ent_shannon(estimator = "naive")
 paracou_6 %>% 
   ent_shannon(estimator = "naive")
 #nombre de hill
@@ -83,6 +86,10 @@ paracou_6 %>%
 #interpretation : proba qu'on tombe sur 2sp different en tirant au hazard
 #nbr de hill simpson
 div_hill(paracou_6, q=2, estimator="naive")
+
+view(paracou_6)
+
+
 
 
 
@@ -155,7 +162,7 @@ nb : 60m determiné par R par rapport à la taille de la fenetre(ici 250m).
 
 on divise par lambda pi r2 pour avoir une valeur 1= respecte loi poisson
 
-interpretation : on voit que la courbe a petit distance est en dessu de l'attendu. A petite distance, les arbres ont tendance à se repousser (pas surprenant, les arbres ne sont pas des points)
+interpretation : on voit que la courbe a petit distance est en dessou de l'attendu. A petite distance, les arbres ont tendance à se repousser (pas surprenant, les arbres ne sont pas des points)
 
 Si on fait l'experience sur les wapa, repoussage à petite distance puis "agrégats"-\> sauf que hypothèse nulle est mauvaise, on ne peut pas les trouver partout, ils aimes pas avoir les pieds dans l'eau, on aurait besoin d'autre tests plus élaborés qui on tune hypothèse differents
 
@@ -170,12 +177,29 @@ Si on fait l'experience sur les wapa, repoussage à petite distance puis "agrég
 *(à recupérer sur github de Eric)*
 
 ```{r}
-#inutile de filtrer l'espece
+# Inutile de filtrer l'espèce
 paracou_6_wmppp %>% 
+  # Calcul de K et de l'envelope de confiance de sa distribution 
+  # sous l'hypothèse nulle d'indépendance
   KEnvelope(
-    ReferenceType = ""
-    NeighborType
-  )
+    # Centre des cercles
+    ReferenceType = "Fabaceae_Eperua_grandiflora",
+    # Voisins
+    NeighborType =  "Fabaceae_Eperua_falcata",
+  ) -> 
+  # Mémorisation pour permettre de tester les options graphiques
+  # sans tout recalculer
+  k_wapa_inter
+# Figure
+k_wapa_inter %>% 
+  # Transformer K (division par pi r²), en fonction de r
+  autoplot(fmla = ./(pi*r^2) ~ r) +
+  # Légende illisible
+  theme(legend.position = "none") + 
+  # Axe des y trop long
+  labs(y = expression(K / (pi * r^2))) +
+  # Limiter l'axe des y pour voir les détails
+  scale_y_continuous(limits = c(0, 2.5))
 ```
 
 ## Diversité à distance
