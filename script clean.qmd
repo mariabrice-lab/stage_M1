@@ -173,9 +173,13 @@ isars<- function(data, orders,r){accum_sp_hill(
   individual = TRUE
 ) }
 
-#calcul de chaque ploot
+#calcul de chaque plot
 isars(p2015_6_wmppp,0,seq(0, 50,2 ))->  rd_6
 isars(p2015_15_wmppp,0,seq(0, 50,2 ))->  rich_dist_15
+isars(p2015_6_wmppp, 0, seq(0,30,2))->testi
+
+
+
 ```
 
 ```{r}
@@ -282,7 +286,7 @@ isar4(c("Sextonia rubra","Ruizterania albiflora","Dicorynia guianensis"),rich_di
 On va comparer notre distribution avec une distribution "random location", tout les étiquettes (= individus) de la parcelles sont redistribués au hazard et on fait plusieurs simulations pour obtenir un intervalle de conf.
 
 ```{r}
-
+#calcul de isars sous h0
 accum_sp_hill(
   rthin(p2015_6_wmppp,P = 0.1), 
   # Richesse
@@ -295,6 +299,7 @@ accum_sp_hill(
 ) ->
   rd_6_h0
 
+autoplot(testi)
 autoplot(rd_6_h0)
 
 ```
