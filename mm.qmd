@@ -12,6 +12,8 @@ Lecture des données:
 
 ```{r}
 library("secret")
+vault <- "vault"
+project_id <- "stage_M1"
 # Lecture de la donnée
 Sys.setenv(USER_KEY = usethis::proj_path(paste0(project_id, ".rsa")))
 # Lecture de la donnée "X"
