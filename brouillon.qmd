@@ -582,7 +582,7 @@ accum_sp_hill(
   rich_dist_v3.2
 
 
-isar3_2<-function(
+isar3_2 <- function(
     #arguments de la fonction
   sp_name,
   isars){
@@ -591,7 +591,7 @@ isar3_2<-function(
   is_sp <- (isars$X$marks$PointType == sp_name)
   
   #creation de l'isar seulement pour l'esp1
-  isar_sp<-apply(
+  isar_sp <- apply(
     isars$neighborhoods[1, , is_sp, drop = FALSE],
     2,
     mean,
@@ -600,14 +600,14 @@ isar3_2<-function(
   
   
   #tableau summary
-  tableau<- tibble(
+  tableau <- tibble(
     distance = as.numeric(names(isar_sp)),
     richesse = as.numeric(isar_sp))
   
   #creation du plot
-  magnifique_isar<- ggplot(tableau, aes(x = distance, y = richesse)) +
+  magnifique_isar <- ggplot(tableau, aes(x = distance, y = richesse)) +
     geom_point() +
-    geom_line()+
+    geom_line() +
     labs(title = sp_name)
   
   #sortie de la fonction
@@ -616,7 +616,7 @@ isar3_2<-function(
 
 
 isar3_2("Dicorynia guianensis", rich_dist_v3.2)
-eperua<-isar3_2("Eperua falcata",rich_dist_v3.2)
+eperua <- isar3_2("Eperua falcata",rich_dist_v3.2)
 
 ```
 
@@ -711,7 +711,7 @@ isar4 <- function(sp_name, isars, mapsdata){
   #merge des tableau de chaque sp
   tableau_final <- dplyr::bind_rows(tableau_final)
   #creation du plot des isars
-  plot_isar <-ggplot(
+  plot_isar <- ggplot(
     tableau_final,
     aes(
       x = distance,
@@ -775,7 +775,7 @@ et faire en sorte que les resultats se stockent
 
 ```{r}
 #fonction maps
-maps_sp <- function(data_wmppp, sp_name){
+maps_sp <- function(sp_name, data_wmppp){
   
   
   ##################################################
@@ -796,13 +796,80 @@ maps_sp <- function(data_wmppp, sp_name){
     motif
   )
   
-  plot_map <- autoplot(mapsdata[selection, ]) +
+  plot_map <- autoplot(data_wmppp[selection, ]) +
     scale_color_manual(values = palette_sp) +
     theme_minimal(base_size = 18) +
     theme(plot.margin = margin(10, 10, 10, 10))
+  return(plot_map)
 }
 
 maps_sp(p2015_6_wmppp,c("Sextonia rubra","Ruizterania albiflora","Dicorynia guianensis"))
+
+
+
+
+#Fonction isars sp
+
+isarsp <- function(sp_name, isars){
+  
+  ##################################################
+  #palette de couleur
+  palette_sp <- setNames(
+    RColorBrewer::brewer.pal(
+      max(3, length(sp_name)),
+      "Set2"
+    )[seq_along(sp_name)],
+    sp_name
+  )
+  ##############################
+  # ISAR
+  tableau_final <- lapply(sp_name, function(sp){
+    #selection des sp
+    is_sp <- isars$X$marks$PointType == sp
+    #recuperation des isars
+    isar_sp <- apply(
+      isars$neighborhoods[1, , is_sp, drop = FALSE],
+      2,
+      mean,
+      na.rm = TRUE
+    )
+    #creation d'un tableau
+    tibble(
+      distance = as.numeric(names(isar_sp)),
+      richesse = as.numeric(isar_sp),
+      espece = sp
+    )
+  })
+  #merge des tableau de chaque sp
+  tableau_final <- dplyr::bind_rows(tableau_final)
+  #creation du plot des isars
+  plot_isar <- ggplot(
+    tableau_final,
+    aes(
+      x = distance,
+      y = richesse,
+      color = espece
+    )
+  ) +
+    geom_point() +
+    geom_line() +
+    scale_color_manual(values = palette_sp)
+  
+  #creation d'un objet
+  nom_objet <- paste0(
+    paste(sp_name, collapse = "_"),
+    "_",
+    deparse(substitute(isars))
+  )
+  
+  assign(nom_objet, tableau_final, envir = .GlobalEnv)
+  return(plot_isar)
+}
+
+isarsp(c("Eperua falcata"),rd_6)
+isarsp(c("Eperua falcata","Dicorynia guianensis"),rd_6)
+view(`Eperua falcata_rd_6`)
+view(`Eperua falcata_Dicorynia guianensis_rd_6`)
 ```
 
 ### h0 : binomiale
@@ -827,7 +894,7 @@ accum_sp_hill(
   # Distances
   r = seq(0, 30,2 ),
   individual = TRUE,
-  h0=  "random location",
+  h0 =  "random location",
   n_simulations = 20
 ) ->
   rich_dist_15_h0
@@ -892,13 +959,13 @@ autoplot(paracou2015_6_wmppp)
 Paracou2015 %>% 
   filter(Plot == 15) %>% 
   select(idTree, Xfield, Yfield, Family, Genus, BinomialName, CircCorr ) %>% 
-  mutate(G=pi*(CircCorr / pi/2)^2/10000)  ->
+  mutate(G = pi*(CircCorr / pi/2)^2/10000)  ->
   paracou2015_15
 
 #creation d'un wmpp
 paracou2015_15 %>%
   rename(
-    X =Xfield,
+    X = Xfield,
     Y = Yfield,
     PointType = BinomialName,
     PointWeight = G
@@ -921,7 +988,7 @@ papa %>%
 #creation d'un wmpp
 paracou2015_16 %>% 
   rename(
-    X =Xutm,
+    X = Xutm,
     Y = Yutm,
     PointType = BinomialName,
     PointWeight = G
@@ -961,7 +1028,7 @@ library("ads")
 paracou2015_6_spp <- spp(
   x = paracou2015_6_wmppp$x,
   y = paracou2015_6_wmppp$y,
-  window = owin2swin  (paracou2015_6_wmppp$window),
+  window = owin2swin(paracou2015_6_wmppp$window),
   marks = paracou2015_6_wmppp$marks$PointType
   )
 
@@ -1097,14 +1164,14 @@ treemaps2(paracou2015_6_wmppp, c("Dicorynia guianensis","Eperua falcata"))
 paracou_6_wmppp$marks$PointType -> espece
 
 #toutes les wapa
-Bigwapa <-str_detect(espece,"Fabaceae_Eperua_")
+Bigwapa <- str_detect(espece,"Fabaceae_Eperua_")
 
 paracou_6_wmppp[Bigwapa] %>% 
   autoplot()
 
 
 #la 2E plante la plus repandue
-plant2 <-str_detect(espece,"Lecythidaceae_")
+plant2 <- str_detect(espece,"Lecythidaceae_")
 
 paracou_6_wmppp[plant2] %>% 
   autoplot() + scale_color_brewer(type = "qual")
@@ -1114,7 +1181,7 @@ paracou_6_wmppp[plant2] %>%
 
 ```{r}
 #langelique
-angel <-str_detect(espece,"Dicorynia_guianensis")
+angel <- str_detect(espece,"Dicorynia_guianensis")
 
 paracou_6_wmppp[angel] %>% 
   autoplot() + scale_color_brewer(type = "qual")
@@ -1128,7 +1195,7 @@ Eperua falcata
 ```{r}
 #langelique et eperua
 
-eperua <-str_detect(espece, "Dicorynia_guianensis|Eperua_falcata")
+eperua <- str_detect(espece, "Dicorynia_guianensis|Eperua_falcata")
 
 
 paracou_6_wmppp[eperua] %>% 
@@ -1137,14 +1204,14 @@ paracou_6_wmppp[eperua] %>%
 
 
 #eperua et grandiflora
-grandi <-str_detect(espece, "Eperua_grandiflora|Eperua_falcata")
+grandi <- str_detect(espece, "Eperua_grandiflora|Eperua_falcata")
 paracou_6_wmppp[grandi] %>% 
   autoplot() + scale_color_brewer(type = "qual")
 
 
 ```
 
-## tuto de R
+# TUTO de R
 
 #### manipulation d'un vecteur
 
@@ -1160,7 +1227,7 @@ a <- 11:20
 a[est_pair]
 
 #methode rapide
-a[(a %%2) == 0]
+a[(a %% 2) == 0]
 ```
 
 #### processus ponctuel
@@ -1181,7 +1248,7 @@ ppm <- rMatClust(0.2, 0.3, 10, win = owin(c(0,10),c(0,10)))
 plot(ppm)
 
 # Simulation d’un processus de Thomas 
-ppt <- rThomas  (0.1, 0.5, 10, win = owin(c(0,10),c(0,10))) 
+ppt <- rThomas(0.1, 0.5, 10, win = owin(c(0,10),c(0,10))) 
 plot(ppt)
 ```
 
