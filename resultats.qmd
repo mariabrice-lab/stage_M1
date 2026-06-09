@@ -1,3 +1,5 @@
+{{< include common.qmd >}}
+
 # Résultats
 
 ## Premier résultat
