@@ -964,16 +964,6 @@ isar4(c("Eperua falcata"),rd_6, p2015_6_wmppp)
 
 ```
 
-comment compareer
-
-mettre sur le meme graph
-
-des test pvalue ?
-
-```{r}
-
-```
-
 ### traitement des données
 
 ### mise en forme
@@ -1038,7 +1028,7 @@ paracou2015_15 %>%
 
 
 
-papa %>% 
+Paracou2015 %>% 
   filter(Plot == 16) %>% 
   select(idTree, Xutm, Yutm, Family, Genus, BinomialName, CircCorr ) %>% 
   mutate(G = pi*(CircCorr / pi/2)^2/10000) ->
