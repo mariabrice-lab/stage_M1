@@ -2,6 +2,16 @@
 
 # Mode d'emploi de ce modèle
 
+La @fig-toto est jolie.
+
+::: {#fig-toto}
+```{r}
+plot(cars)
+```
+
+legende : le plot le plus moche du monde
+:::
+
 L'objectif de ce modèle est de vous permettre de rédiger votre mémoire de stage en respectant les principes de la rédaction scientifique [@Lindsay2011] et de reproductibilité [@Marcon2021].
 
 ## Figures
