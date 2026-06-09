@@ -27,6 +27,7 @@
 
 **/*.quarto_ipynb
 
-# clef privée
+# clef privée et publique
 *.rsa
+*.rsa.pub
 data/Paracou2015.csv
