@@ -8,4 +8,16 @@ OU *méthodologie* pour des sujets en sciences humaines et sociales[^mm-1].
 
 ## Acquisition des données
 
+Lecture des données:
+
+```{r}
+library("secret")
+# Lecture de la donnée
+Sys.setenv(USER_KEY = usethis::proj_path(paste0(project_id, ".rsa")))
+# Lecture de la donnée "X"
+Paracou2015 <- get_secret("Paracou2015", vault = vault)
+# Affichage
+Paracou2015
+```
+
 ## Analyse des données

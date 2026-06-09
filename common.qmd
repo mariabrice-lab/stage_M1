@@ -44,7 +44,9 @@ knitr::knit_hooks$set(
 # Add necessary packages here
 packages <- c(
   "tidyverse", 
-  "gt"
+  "gt",
+  "secret",
+  "usethis"
 )
 # Install them
 install_packages(packages)
