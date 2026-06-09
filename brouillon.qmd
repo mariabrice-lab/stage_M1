@@ -25,7 +25,9 @@ library(spatstat)
 ##### les données
 
 ```{r}
+# Version pas cryptée, on va chercher des données classiquement
 Paracou2015 <- read_csv2("data/Paracou2015.csv")
+
 
 # cryptage
 library("secret")
@@ -62,6 +64,30 @@ Sys.setenv(USER_KEY = usethis::proj_path(paste0(project_id, ".rsa")))
 Paracou2015 <- get_secret("Paracou2015", vault = vault)
 ```
 
+création du tableau ou on à modifié les BinomialName
+
+```{r}
+read_csv2(file = "data/Paracou2015.csv") %>% 
+  # Noms binomiaux
+  mutate(BinomialName = paste(Genus, Species)) %>% 
+  # Sélection des colonnes utiles
+  select(
+    # Parcelle (pour créer les jeux de points)
+    Plot, 
+    # Carré (pour la p16)
+    SubPlot, 
+    # Identifiant et position de chaque arbre, UTM pour p16
+    idTree, Xfield, Yfield, Xutm, Yutm,
+    # Botanique
+    Family, Genus, Species, BinomialName, 
+    # Circonférence
+    CircCorr
+  ) %>%
+  # Calcul de la surface terrière en mètres carrés
+  mutate(G = pi * (CircCorr / pi / 2)^2 / 10000) ->
+  Paracou2015
+```
+
 ## Biodiversité
 
 Nombres d'espèces dans la parcelle :
@@ -90,7 +116,7 @@ les calculs
 
 ```{r}
 paracou_6_abd %>% 
-  metacommunity(name= "Paracou_6") ->
+  metacommunity(name  = "Paracou_6") ->
   paracou_6
 #fonction metacommunauté à rassemblé les 4 carré de paracou
 #estimer "naive" compte betement et n'essaye pas d'estimer
@@ -98,9 +124,9 @@ paracou_6_abd %>%
 autoplot(paracou_6)
 
 #standard
-div_richness(paracou_6, estimator="naive")
+div_richness(paracou_6, estimator = "naive")
 #Numerique
-(div_richness(paracou_6, estimator="naive", as_numeric =TRUE))
+(div_richness(paracou_6, estimator = "naive", as_numeric = TRUE))
 
 
 #shanon
@@ -109,16 +135,16 @@ paracou_6 %>%
 paracou_6 %>% 
   ent_shannon(estimator = "naive")
 #nombre de hill
-div_hill(paracou_6, q=1, estimator = "naive")
+div_hill(paracou_6, q = 1, estimator = "naive")
 # ->interpretation, c'est comme si on avait 101 sp qui aurait la meme d'abondance
 #irl on a 300sp.
 
 #simpson
 paracou_6 %>% 
-  ent_simpson(estimator="naive")
+  ent_simpson(estimator = "naive")
 #interpretation : proba qu'on tombe sur 2sp different en tirant au hazard
 #nbr de hill simpson
-div_hill(paracou_6, q=2, estimator="naive")
+div_hill(paracou_6, q = 2, estimator = "naive")
 
 view(paracou_6)
 
