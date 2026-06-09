@@ -28,7 +28,7 @@ remotes::install_github("EricMarcon/divent")
 
 ```{r}
 #importation
-Paracou2015 <- read_csv2("D:/maria/Paracou2015/Paracou2015.csv")
+Paracou2015 <- read_csv2("data/Paracou2015.csv")
 
 
 #chargement des isars calculés
@@ -199,8 +199,9 @@ isars(p2015_15_wmppp,0,seq(0, 30,2 )) ->  rd_15
 
 
 
-save(rd_6, file = "rd_6.RData")
-save(rd_15, file = "rd_15.RData")
+save(rd_6, file = "data/rd_6.Rdata")
+load("data/rd_6.Rdata")
+save(rd_15, file = "data/rd_15.Rdata")
 ```
 
 fonction qui calcule les isars en fonction de l'espèce

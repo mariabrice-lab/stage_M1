@@ -25,8 +25,41 @@ library(spatstat)
 ##### les données
 
 ```{r}
-Paracou2015 <- read_csv2("D:/maria/Paracou2015/Paracou2015.csv")
+Paracou2015 <- read_csv2("data/Paracou2015.csv")
 
+# cryptage
+library("secret")
+vault <- "vault"
+create_vault(vault)
+
+# Identifiant GitHub du propriétaire du projet
+github_user <- "mariabrice-lab"
+# Lecture et stockage de la clé, i est le numéro de la clé
+add_github_user(github_user, vault = vault, i = 3)
+
+library("openssl")
+project_id <- "stage_M1"
+# Lecture de la clé
+rsa_project <- read_pubkey(paste0(project_id, ".rsa.pub"))
+# Ajout au coffre-fort
+add_user(project_id, public_key = rsa_project, vault = vault)
+
+
+add_secret(
+  # Nom de la donnée
+  "Paracou2015", 
+  # Valeur
+  value = Paracou2015, 
+  # Utilisateurs autorisés: propriétaire et générique
+  users = c(paste0("github-", github_user), project_id), 
+  # Coffre-fort
+  vault = vault
+)
+
+# Lecture de la donnée
+Sys.setenv(USER_KEY = usethis::proj_path(paste0(project_id, ".rsa")))
+# Lecture de la donnée "X"
+Paracou2015 <- get_secret("Paracou2015", vault = vault)
 ```
 
 ## Biodiversité
@@ -238,10 +271,10 @@ l'accumulation est elle + lente que sous l'hypothèse de
 
 ```{r}
 accum_sp_hill(g,
-              order=0,
-              r=seq(0, .5, .05),
-              h0="binomial"
-              )->
+              order = 0,
+              r = seq(0, .5, .05),
+              h0  ="binomial"
+              ) ->
   richesse_distance_h0
 
 richesse_distance_h0 %>% 
@@ -295,7 +328,7 @@ accum_sp_hill(
   # Distances
   r = seq(0, 150,10 ),
   individual = TRUE,
-  h0= "binomial"
+  h0 = "binomial"
 ) ->
   richesse_distance_h0
 
@@ -331,11 +364,11 @@ summary(rich_none$neighborhoods)
 
 ```{r}
 #exemple de creation de fonction
-cotes<- function(
+cotes <- function(
     aire,
     facteur_de_forme){
-  largeur<- sqrt(aire/facteur_de_forme)
-  longeur<- largeur*facteur_de_forme
+  largeur  <- sqrt(aire/facteur_de_forme)
+  longeu <- largeur*facteur_de_forme
   return(c(largeur, longeur))}
 
   
@@ -349,7 +382,7 @@ isar<-function(
   
   #devellopement de la fonction
   #calcul des CA individuelles
-  rich_dist<-accum_sp_hill(
+  rich_dist < -accum_sp_hill(
     wmppp,
     r = seq(0, 150, 10),
     individual = TRUE)
@@ -358,15 +391,15 @@ isar<-function(
   is_sp <- (rich_dist$X$marks$PointType == sp_name)
   
   #creation de l'isar seulement pour l'esp1
-  isar_sp<- rowMeans(rich_dist$neighborhoods[1, , is_sp] )
+  isar_sp <- rowMeans(rich_dist$neighborhoods[1, , is_sp] )
   
   #tableau summary
-  tableau<- tibble(
+  tableau <- tibble(
     distance = as.numeric(names(isar_sp)),
     richesse = as.numeric(isar_sp))
   
   #creation du plot
-  magnifique_isar<- ggplot(tableau, aes(x = distance, y = richesse)) +
+  magnifique_isar <- ggplot(tableau, aes(x = distance, y = richesse)) +
     geom_point() +
     geom_line() +
     labs(title = sp_name)
@@ -390,25 +423,25 @@ isar(paracou2015_6_wmppp,"Licania micrantha ")
 
 ```{r}
 #exemple de creation de fonction
-cotes<- function(
+cotes <- function(
     aire,
     facteur_de_forme){
-  largeur<- sqrt(aire/facteur_de_forme)
-  longeur<- largeur*facteur_de_forme
+  largeur <- sqrt(aire/facteur_de_forme)
+  longeur <- largeur*facteur_de_forme
   return(c(largeur, longeur))}
 
 
 #création de la fonction Isar
 #cette fonction prend un nom d'espece et nous rends une courbe d'accumulation
 
-isar1_2<-function(
+isar1_2 <- function(
     #arguments de la fonction
   wmppp,
   sp_name){
   
   #devellopement de la fonction
   #calcul des CA individuelles
-  rich_dist<-accum_sp_hill(
+  rich_dist <-accum_sp_hill(
     wmppp,
     r = seq(0, 10,1 ),
     individual = TRUE)
@@ -417,15 +450,15 @@ isar1_2<-function(
   is_sp <- (rich_dist$X$marks$PointType == sp_name)
   
   #creation de l'isar seulement pour l'esp1
-  isar_sp<- rowMeans(rich_dist$neighborhoods[1, , is_sp, drop = FALSE] )
+  isar_sp <- rowMeans(rich_dist$neighborhoods[1, , is_sp, drop = FALSE] )
   
   #tableau summary
-  tableau<- tibble(
+  tableau <- tibble(
     distance =  seq(0, 10,1 ),
     richesse = as.numeric(isar_sp))
   
   #creation du plot
-  magnifique_isar<- ggplot(tableau, aes(x = distance, y = richesse)) +
+  magnifique_isar <- ggplot(tableau, aes(x = distance, y = richesse)) +
     geom_point() +
     geom_line() +
     labs(title = sp_name)
@@ -454,7 +487,7 @@ amélioration de la fonction
 - voir si ca fonction sur un dataframe de parcou directement
 
 ```{r}
-isar2<-function(
+isar2 <- function(
     #arguments de la fonction
     wmppp,
     sp_name,
@@ -463,7 +496,7 @@ isar2<-function(
   
   #devellopement de la fonction
   #calcul des CA individuelles
-  rich_dist<-accum_sp_hill(
+  rich_dist <- accum_sp_hill(
     wmppp,
     r = r,
     orders = q,
@@ -473,15 +506,15 @@ isar2<-function(
   is_sp <- (rich_dist$X$marks$PointType == sp_name)
   
   #creation de l'isar seulement pour l'esp1
-  isar_sp<- rowMeans(rich_dist$neighborhoods[1, , is_sp] )
+  isar_sp <- rowMeans(rich_dist$neighborhoods[1, , is_sp] )
   
   #tableau summary
-  tableau<- tibble(
+  tableau <- tibble(
     distance = as.numeric(names(isar_sp)),
     richesse = as.numeric(isar_sp))
   
   #creation du plot
-  magnifique_isar<- ggplot(tableau, aes(x = distance, y = richesse)) +
+  magnifique_isar <- ggplot(tableau, aes(x = distance, y = richesse)) +
     geom_point() +
     geom_line()
   
@@ -489,8 +522,8 @@ isar2<-function(
   return(magnifique_isar)
 }
 
-isar2(wmppp =paracou_6_wmppp,
-      sp_name ="Ambelania_acida",
+isar2(wmppp = paracou_6_wmppp,
+      sp_name = "Ambelania_acida",
       r = seq(0, 20, 1 ),
       q = 0
 )
@@ -521,7 +554,7 @@ accum_sp_hill(
 
 
 #creation de la fonction isar
-isar3<-function(
+isar3 <- function(
     #arguments de la fonction
   sp_name){
   
@@ -529,7 +562,7 @@ isar3<-function(
   is_sp <- (rich_dist_v3$X$marks$PointType == sp_name)
   
   #creation de l'isar seulement pour l'esp1
-  isar_sp<-apply(
+  isar_sp <- apply(
     rich_dist_v3$neighborhoods[1, , is_sp, drop = FALSE],
     2,
     mean,
@@ -538,12 +571,12 @@ isar3<-function(
  
   
   #tableau summary
-  tableau<- tibble(
+  tableau <- tibble(
     distance = as.numeric(names(isar_sp)),
     richesse = as.numeric(isar_sp))
   
   #creation du plot
-  magnifique_isar<- ggplot(tableau, aes(x = distance, y = richesse)) +
+  magnifique_isar <- ggplot(tableau, aes(x = distance, y = richesse)) +
     geom_point() +
     geom_line()
   
