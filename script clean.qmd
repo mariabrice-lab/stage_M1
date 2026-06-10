@@ -36,7 +36,26 @@ remotes::install_github("EricMarcon/divent")
 #importation
 Paracou2015 <- read_csv2("data/Paracou2015.csv")
 
-
+#importation pour l'ordi rapide
+read_csv2("~/maria/Paracou2015.csv") %>% 
+  # Noms binomiaux
+  mutate(BinomialName = paste(Genus, Species)) %>% 
+  # Sélection des colonnes utiles
+  select(
+    # Parcelle (pour créer les jeux de points)
+    Plot, 
+    # Carré (pour la p16)
+    SubPlot, 
+    # Identifiant et position de chaque arbre, UTM pour p16
+    idTree, Xfield, Yfield, Xutm, Yutm,
+    # Botanique
+    Family, Genus, Species, BinomialName, 
+    # Circonférence
+    CircCorr
+  ) %>%
+  # Calcul de la surface terrière en mètres carrés
+  mutate(G = pi * (CircCorr / pi / 2)^2 / 10000) ->
+  Paracou2015
 
 #importation cryptée
 library("secret")
@@ -474,16 +493,17 @@ isarsnone <- function(data, orders, r){
 #calcul de chaque plot
 if (file.exists("data/rd_6_none.Rdata")) {
   load("data/rd_6_none.Rdata")
-}else{
+} else {
   rd_6_none <- isarsnone(p2015_6_wmppp,0,seq(0, 30,2 ))
-  save(rd_6_none, file = "data/rd_6_none.Rdata")}
+  save(rd_6_none, file = "data/rd_6_none.Rdata")
+}
 
 autoplot(rd_6_none)
 
 #isar sous h0
 if (file.exists("data/rd_6_none_h0.Rdata")) {
   load("data/rd_6_none_h0.Rdata")
-}else{
+} else {
   rd_6_none_h0 <- accum_sp_hill(p2015_6_wmppp, 
                              # Richesse
                              orders = 0,
@@ -495,7 +515,8 @@ if (file.exists("data/rd_6_none_h0.Rdata")) {
                              richness_estimator = "iChao1",
                              correction = "none"
                              )
-  save(rd_6_none_h0, file = "data/rd_6_none_h0.Rdata")}
+  save(rd_6_none_h0, file = "data/rd_6_none_h0.Rdata")
+}
 
 autoplot(rd_6_none_h0)
 
@@ -509,5 +530,20 @@ isarsp("Eperua falcata", rd_6_none) + autoplot(rd_6_none_h0)
 
 
 
+if (file.exists("data/rd_6_h0.Rdata")) {
+  load("data/rd_6_h0.Rdata")
+} else {
+  rd_6_h0 <- accum_sp_hill(p2015_6_wmppp, 
+                          # Richesse
+                          orders = 0,
+                          # Distances
+                          r = seq(0, 30,2 ),
+                          individual = TRUE,
+                          h0 =  "random location",
+                          n_simulations = 100,
+                          richness_estimator = "iChao1"
+  )
+  save(rd_6_h0, file = "data/rd_6_h0.Rdata")
+}
 
 ```
