@@ -1,3 +1,5 @@
+{{< include common.qmd >}}
+
 # Matériel et méthodes
 
 OU *méthodologie* pour des sujets en sciences humaines et sociales[^mm-1].
