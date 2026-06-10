@@ -19,8 +19,13 @@ library(spatstat)
 library(dplyr)
 library(tidyr)
 library(purrr)
-library("secret")
+library(secret)
 
+```
+
+m.a.j des packages
+
+```{r}
 #mise à jour des packages
 remotes::install_github("EricMarcon/divent")  
 ```
@@ -34,6 +39,8 @@ Paracou2015 <- read_csv2("data/Paracou2015.csv")
 
 
 #importation cryptée
+library("secret")
+vault <- "vault"
 library("openssl")
 project_id <- "stage_M1"
 Sys.setenv(USER_KEY = usethis::proj_path(paste0(project_id, ".rsa")))
@@ -60,10 +67,6 @@ get_secret("Paracou2015", vault = vault) %>%
   Paracou2015
 
 
-
-#chargement des isars calculés
-load("data/rd_6.RData")
-load("data/rd_15.RDdata")
 ```
 
 Jeu de données de Paracou (2015) : 75253 observation.
@@ -216,7 +219,7 @@ view(indices_div)
 
 ### ISAR
 
-calcul des isars collectifs
+#### calcul des isars collectifs
 
 *in order to selectionner des especes en particulier on calcul d'abords les isars de chaque sp, le calcul prend +/- 10min*
 
@@ -244,7 +247,7 @@ if (file.exists("data/rd_6.Rdata")) {
 
 ```
 
-fonction qui calcule les isars en fonction de l'espèce
+#### Isar spécifiques
 
 ```{r}
 #fonction isarsp
@@ -262,9 +265,9 @@ isarsp <- function(sp_name, isars){
   ##############################
   # ISAR
   tableau_final <- lapply(sp_name, function(sp){
-    #selection des sp
+    #vecteur T/F pour l'espece voulue
     is_sp <- isars$X$marks$PointType == sp
-    #recuperation des isars
+    #recuperation des neighborhoods pour l'espece voulue
     isar_sp <- apply(
       isars$neighborhoods[1, , is_sp, drop = FALSE],
       2,
@@ -400,7 +403,7 @@ if (file.exists("data/rd_6_none.Rdata")) {
   rd_6_none <- isarsnone(p2015_6_wmppp,0,seq(0, 30,2 ))
   save(rd_6_none, file = "data/rd_6_none.Rdata")}
 
-
+autoplot(rd_6_none)
 
 #isar sous h0
 if (file.exists("data/rd_6_none_h0.Rdata")) {
@@ -419,9 +422,81 @@ if (file.exists("data/rd_6_none_h0.Rdata")) {
                              )
   save(rd_6_none_h0, file = "data/rd_6_none_h0.Rdata")}
 
+autoplot(rd_6_none_h0)
+
+#isars d'un espece
+isarsp("Dicorynia guianensis", rd_6_none) -> isar_eperua
+
+isarsp("Eperua falcata", rd_6_none) + autoplot(rd_6_none_h0)
+
+
+
+
+
+
 
 ```
 
+mettre sur le meme graph
+
 ```{r}
+sp_name <- "Eperua falcata"
+
+tableau_final <- lapply(sp_name, function(sp){
+  #vecteur T/F pour l'espece voulue
+  is_sp <- rd_6_none$X$marks$PointType == sp
+  #recuperation des neighborhoods pour l'espece voulue
+  isar_sp <- apply(
+    rd_6_none$neighborhoods[1, , is_sp, drop = FALSE],
+    2,
+    mean,
+    na.rm = TRUE
+  )
+  #creation d'un tableau
+  tibble(
+    distance = as.numeric(names(isar_sp)),
+    richesse = as.numeric(isar_sp),
+    espece = sp
+  )
+})
+#merge des tableau de chaque sp
+tableau_final <- dplyr::bind_rows(tableau_final)
+#creation du plot des isars
+ggplot(
+  tableau_final,
+  aes(
+    x = distance,
+    y = richesse,
+    color = espece
+  )
+) +
+  geom_point() +
+  geom_line() +
+  scale_color_manual(values = palette_sp)
+
+
+#creation d'un dbl plot
+autoplot(rd_6_none_h0) -> plot
+
+
+plot +
+  geom_point(
+    aes(
+      x = distance,
+      y = richesse,
+      color = espece
+    ),
+    data = tableau_final
+  ) +
+  geom_line(
+    aes(
+      x = distance,
+      y = richesse,
+      color = espece
+    ),
+    data = tableau_final,
+    linewidth = 0.8
+  )
+
 
 ```
