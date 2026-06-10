@@ -2,7 +2,7 @@
   {
     "objectID": "index.html",
     "href": "index.html",
-    "title": "Mémoire BioGET",
+    "title": "Mémoire BioGET - Apports des mesures d’accumulation de la diversité à la compréhension des processus d’assemblage des communautés",
     "section": "",
     "text": "Résumé\nCe modèle vous aide à produire un document conforme au Guide de rédaction “Rédiger un mémoire de stage : check-list avant soumission”.\nL’ordre des sections et les styles ne doivent pas être modifiés. Ce modèle DOIT être utilisé lors de la création de votre document de mémoire de stage. En cas de difficulté d’utilisation, contactez l’équipe pédagogique.",
     "crumbs": [
@@ -12,7 +12,7 @@
   {
     "objectID": "index.html#abstract",
     "href": "index.html#abstract",
-    "title": "Mémoire BioGET",
+    "title": "Mémoire BioGET - Apports des mesures d’accumulation de la diversité à la compréhension des processus d’assemblage des communautés",
     "section": "Abstract",
     "text": "Abstract\nInclude an English version of the abstract.",
     "crumbs": [
@@ -54,7 +54,7 @@
     "href": "mm.html#acquisition-des-données",
     "title": "2  Matériel et méthodes",
     "section": "2.2 Acquisition des données",
-    "text": "2.2 Acquisition des données\nLecture des données :\n\n\n# A tibble: 75,253 × 42\n    ...1 Forest   Plot PlotType PlotArea GeolPlot SubPlot TreeFieldNum idTree\n   &lt;dbl&gt; &lt;chr&gt;   &lt;dbl&gt; &lt;chr&gt;       &lt;dbl&gt; &lt;chr&gt;      &lt;dbl&gt;        &lt;dbl&gt;  &lt;dbl&gt;\n 1    26 Paracou     1 T0           6.25 Bonidoro       1            1  75475\n 2    61 Paracou     1 T0           6.25 Bonidoro       1            2  75476\n 3    96 Paracou     1 T0           6.25 Bonidoro       1            3  75477\n 4   136 Paracou     1 T0           6.25 Bonidoro       1            5  75479\n 5   171 Paracou     1 T0           6.25 Bonidoro       1            6  75480\n 6   206 Paracou     1 T0           6.25 Bonidoro       1            7  75481\n 7   241 Paracou     1 T0           6.25 Bonidoro       1            9  75482\n 8   276 Paracou     1 T0           6.25 Bonidoro       1           10  75483\n 9   311 Paracou     1 T0           6.25 Bonidoro       1           11  75484\n10   346 Paracou     1 T0           6.25 Bonidoro       1           12  75485\n# ℹ 75,243 more rows\n# ℹ 33 more variables: Xfield &lt;dbl&gt;, Yfield &lt;dbl&gt;, Xutm &lt;dbl&gt;, Yutm &lt;dbl&gt;,\n#   Lat &lt;dbl&gt;, Lon &lt;dbl&gt;, Family &lt;chr&gt;, Genus &lt;chr&gt;, Species &lt;chr&gt;,\n#   BinomialName &lt;chr&gt;, Author &lt;chr&gt;, Botanist &lt;chr&gt;, IdentYear &lt;dbl&gt;,\n#   FamilyFilled &lt;chr&gt;, GenusFilled &lt;chr&gt;, SpeciesFilled &lt;chr&gt;,\n#   AuthorFilled &lt;chr&gt;, BotaSource &lt;chr&gt;, BotaCertainty &lt;dbl&gt;, idVern &lt;dbl&gt;,\n#   VernName &lt;chr&gt;, CommercialSp &lt;dbl&gt;, CensusYear &lt;dbl&gt;, CensusDate &lt;date&gt;, …",
+    "text": "2.2 Acquisition des données\nLes données utilisées sont issues d’un dispositif installé sur le site de Paracou en Guyane française. Il comprends 16 parcelles mais seules les parcelles 6 (2.5ha, 250m*250m), 15 (2.5 ha) et 16 (5 ha) sont prises en compte dans notre stage. Dans ces parcelles, chaque arbre est repertorié (indentification de l’espèce, localisation, diverses mesures,…) approximativement tout les 2ans. Nous avons choisi les données d’inventaire de 2015, car c’est la seule années où nos 3 parcelles ont été entièrement inventoriées.\nLecture des données :\n\n\n\n# A tibble: 75,253 × 42\n    ...1 Forest   Plot PlotType PlotArea GeolPlot\n   &lt;dbl&gt; &lt;chr&gt;   &lt;dbl&gt; &lt;chr&gt;       &lt;dbl&gt; &lt;chr&gt;   \n 1    26 Paracou     1 T0           6.25 Bonidoro\n 2    61 Paracou     1 T0           6.25 Bonidoro\n 3    96 Paracou     1 T0           6.25 Bonidoro\n 4   136 Paracou     1 T0           6.25 Bonidoro\n 5   171 Paracou     1 T0           6.25 Bonidoro\n 6   206 Paracou     1 T0           6.25 Bonidoro\n 7   241 Paracou     1 T0           6.25 Bonidoro\n 8   276 Paracou     1 T0           6.25 Bonidoro\n 9   311 Paracou     1 T0           6.25 Bonidoro\n10   346 Paracou     1 T0           6.25 Bonidoro\n# ℹ 75,243 more rows\n# ℹ 36 more variables: SubPlot &lt;dbl&gt;,\n#   TreeFieldNum &lt;dbl&gt;, idTree &lt;dbl&gt;,\n#   Xfield &lt;dbl&gt;, Yfield &lt;dbl&gt;, Xutm &lt;dbl&gt;,\n#   Yutm &lt;dbl&gt;, Lat &lt;dbl&gt;, Lon &lt;dbl&gt;,\n#   Family &lt;chr&gt;, Genus &lt;chr&gt;, Species &lt;chr&gt;,\n#   BinomialName &lt;chr&gt;, Author &lt;chr&gt;, …",
     "crumbs": [
       "<span class='chapter-number'>2</span>  <span class='chapter-title'>Matériel et méthodes</span>"
     ]
@@ -64,7 +64,7 @@
     "href": "mm.html#analyse-des-données",
     "title": "2  Matériel et méthodes",
     "section": "2.3 Analyse des données",
-    "text": "2.3 Analyse des données",
+    "text": "2.3 Analyse des données\nPour l’analyse des données nous nous sommes basés sur les theories de (Wiegand?) sur ce qui devellope la notion de courbe d’accumulation de diversité spécifique, qu’il appelle “isar”. Elles se definissent par : “le nombre attendu d’espèces dans un cercle de rayon \\(r\\) autour d’un individu moyen de l’espèce ciblée \\(t\\). “\n\\[ISAR(r) = \\sum_{j=1}^{N}[{1-P_{tj}(0,r)]}\\]\nLe calcul des isars permets de mesurer l’evolution de l’accumulation de la diversité par rapport à une certaines espèces et non sur l’ensemble de la communauté. A terme cela permet d’indentifier des espèces “accumulatrices” ou “repulsives” de biodiversité.",
     "crumbs": [
       "<span class='chapter-number'>2</span>  <span class='chapter-title'>Matériel et méthodes</span>"
     ]
@@ -94,7 +94,7 @@
     "href": "annexe1.html",
     "title": "Annexe A — Mode d’emploi de ce modèle",
     "section": "",
-    "text": "A.1 Figures\nL’objectif de ce modèle est de vous permettre de rédiger votre mémoire de stage en respectant les principes de la rédaction scientifique (Lindsay2011?) et de reproductibilité (Marcon2021?).\nLes figures produites par du code R suivent la syntaxe suivante.\nPour appeler une figure, insérer une référence croisée : Figure A.1.\nPour une figure enregistrée dans un fichier (comme la Figure A.2), il est possible d’utiliser la syntaxe de Markdown si le titre ne contient qu’une seule ligne.",
+    "text": "A.1 Figures\nLa Figure A.1 est jolie.\nL’objectif de ce modèle est de vous permettre de rédiger votre mémoire de stage en respectant les principes de la rédaction scientifique (Lindsay2011?) et de reproductibilité (Marcon2021?).\nLes figures produites par du code R suivent la syntaxe suivante.\nPour appeler une figure, insérer une référence croisée : Figure A.2.\nPour une figure enregistrée dans un fichier (comme la Figure A.3), il est possible d’utiliser la syntaxe de Markdown si le titre ne contient qu’une seule ligne.",
     "crumbs": [
       "Annexes",
       "<span class='chapter-number'>A</span>  <span class='chapter-title'>Mode d'emploi de ce modèle</span>"
@@ -105,7 +105,7 @@
     "href": "annexe1.html#figures",
     "title": "Annexe A — Mode d’emploi de ce modèle",
     "section": "",
-    "text": "Figure A.1: Lien entre l’autonomie sur autoroute et en ville de 38 modèles de voiture.\n\n\n\n\n\n\n\n\n\n\n\nFigure A.2: Logo de BioGET",
+    "text": "Figure A.2: Lien entre l’autonomie sur autoroute et en ville de 38 modèles de voiture.\n\n\n\n\n\n\n\n\n\n\n\nFigure A.3: Logo de BioGET",
     "crumbs": [
       "Annexes",
       "<span class='chapter-number'>A</span>  <span class='chapter-title'>Mode d'emploi de ce modèle</span>"
