@@ -5,15 +5,15 @@ project:
 
 book:
   # Métadonnées et contenu du mémoire à compléter
-  title: Mémoire BioGET
+  title: Mémoire BioGET - Apports des mesures d’accumulation de la diversité à la compréhension des processus d’assemblage des communautés 
   author:
-    name: Prénom Nom
+    name: Maria Brice
     affiliation:
       - name: Université de Montpellier / AgroParisTech
         department: Master BioGET
         city: Montpellier
         state: France
-  date: last-modified
+  date: dix juin deux-mille-vingt-six
   chapters:
     - index.qmd          # Contient le résumé
     - remerciements.qmd  # Suivi de la table des matières
