@@ -834,6 +834,8 @@ finalement on fait 2 fonction séparés pour la maps et le graph
 
 et faire en sorte que les resultats se stockent
 
+###### maps
+
 ```{r}
 #fonction maps
 maps_sp <- function(sp_name, data_wmppp){
@@ -864,11 +866,61 @@ maps_sp <- function(sp_name, data_wmppp){
   return(plot_map)
 }
 
-maps_sp(p2015_6_wmppp,c("Sextonia rubra","Ruizterania albiflora","Dicorynia guianensis"))
+
+#############fonction maps qui laisse tout les arbres mais qui colore ceux qui nous interresses
+
+#fonction maps
+maps_sp2 <- function(sp_name, data_wmppp){
+  
+  # Palette de couleurs
+  palette_sp <- setNames(
+    RColorBrewer::brewer.pal(
+      max(3, length(sp_name)),
+      "Set2"
+    )[seq_along(sp_name)],
+    sp_name
+  )
+  
+  # Création d'une nouvelle variable grp de couleur
+#valeur par defaut autre
+  data_wmppp$marks$col_group <- "Autres"
+#vecteur sp prend le nom de chaque sp  
+  for (sp in sp_name) {
+    
+    idx <- stringr::str_detect(
+      data_wmppp$marks$PointType,
+      sp
+    )
+    
+    data_wmppp$marks$col_group[idx] <- sp
+  }
+  
+  # Carte
+  plot_map <- autoplot(
+    data_wmppp,
+    colour = "col_group"
+  ) +
+    scale_color_manual(
+      values = c(
+        "Autres" = "grey80",
+        palette_sp
+      )
+    ) +
+    theme_minimal(base_size = 18) +
+    theme(
+      plot.margin = margin(10, 10, 10, 10)
+    )
+  
+  return(plot_map)
+}
+maps_sp2(c("Eperua falcata"),p2015_6_wmppp)
 
 
+```
 
+###### isar 
 
+```{r}
 #Fonction isars sp
 
 isarsp <- function(sp_name, isars){
@@ -933,7 +985,7 @@ view(`Eperua falcata_rd_6`)
 view(`Eperua falcata_Dicorynia guianensis_rd_6`)
 ```
 
-##### V6
+##### V6 : ic
 
 fonction qui mets l'intevalle et sur le graph
 
@@ -1524,3 +1576,18 @@ exemples :
 $\frac{a}{b}$
 
 $$\sum_{i=0}^{n}{P_i}$$
+
+#### Fenêtre externe de graph
+
+*(à faire dans le doc /.R/ pas /.qmd/ sinon ca marche paaas)*
+
+```{r}
+#normalement
+windows()   # ou quartz() ou x11()
+
+plot_map <- plot
+
+print(plot_map)
+
+
+```
