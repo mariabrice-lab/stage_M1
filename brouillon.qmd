@@ -965,7 +965,7 @@ maps_sp2 <- function(sp_name, data_wmppp){
 
 ```
 
-###### isar 
+###### isar
 
 ```{r}
 #Fonction isars sp
