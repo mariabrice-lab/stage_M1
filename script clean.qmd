@@ -420,13 +420,14 @@ isarsp_ic <- function(sp_name, isars,isarsh0){
       ),
       data = tableau_final,
       linewidth = 0.8
-    )
+    ) +
+    scale_color_manual(values = palette_sp)
   
   return(plot_isar)
 }
 
-
-isarsp_ic(c("Dicorynia guianensis","Eperua falcata"), rd_6_none,rd_6_none_h0)
+#exemple
+isarsp_ic(c("Dicorynia guianensis","Eperua falcata"), rd_6,rd_6_h0)
 ```
 
 ### Maps
@@ -594,15 +595,51 @@ if (file.exists("data/rd_6_h0.Rdata")) {
 
 ```
 
-youyhou j'ai fait mon premier isar
+### écologie
 
 ```{r}
-autoplot(rd_6) + autoplot(rd_6_h0)
 autoplot(rd_6_h0)
-
 isarsp_ic(c("Dicorynia guianensis","Eperua falcata"), rd_6,rd_6_h0)
-isarsp_ic(c("Lecythis persistens"), rd_6,rd_6_h0)
-isarsp_ic(c("Eschweilera sagotiana"), rd_6,rd_6_h0)
+isarsp_ic(c("Lecythis persistens","Eschweilera sagotiana","Eperua falcata","Sandwithia guyanensis","Pogonophora schomburgkiana"), rd_6,rd_6_h0)
+
+isarsp_ic(c("Lecythis persistens","Sandwithia guyanensis","Oxandra asbeckii"), rd_6,rd_6_h0)
 
 
+
+maps_localisation(c("Eschweilera sagotiana","Sandwithia guyanensis"),p2015_6_wmppp)
+maps_localisation(c("Lecythis persistens"), p2015_6_wmppp) + isarsp_ic("Lecythis persitens",rd_6,rd_6_h0 )
+
+isarsp_ic(c("Lecythis persistens"), rd_6,rd_6_h0) + maps_localisation(c("Lecythis persistens"),p2015_6_wmppp)
+
+
+```
+
+[Interpretatioooon :]{.underline}
+
+- *Eperua falcata* (wapa) : espece qui semble etre bien espacée, \> 10m
+
+- *Lecythis persistens* : \< vers 10m et \< vers 25m
+
+- *Eschweilera sagotiana* : \> apres 20m
+
+- *Pogonophora schomburgkiana* : dans la courbe globalement (petite aggregation)
+
+- *Sandwithia guyanensis* : \>\> à partir de 15m
+
+- *Oxandra asbeckii* : petit aggregats et attractive
+
+*Dicorynia guyanensi*s (angéliques) : \> vers 10m plus legèrement au dessus, (mais je pense pas assez de pts pour faire de la donnée)
+
+Pour des especes au alentour de 20/30 indiv on observe plus souvent la combinaison de reppulsive (d'apres mes test actuels). *Tovomita caloneura* sort du lot et accumule
+
+Especes de 60/40 indiv : plutot accum (*Licania canescens, Pradosia cochlearia* assez remarquable)
+
+[remarques :]{.underline}
+
+interessant de changer d'indice parce prise en compte des individu solo trop importantes (100 sur 3586, c'est pas tant enfait) mais si on prend les repartitions globales ? -\>
+
+```{r}
+ggplot(surface_ter_6, aes(x = nombre)) +
+  geom_histogram(bins = 30, fill = "turquoise4", color = "white") +
+  theme_minimal()
 ```
