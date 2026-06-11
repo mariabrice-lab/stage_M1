@@ -195,12 +195,16 @@ p2015_6 %>%
   summarise(nombre = n(), surface_terrière = mean(G)) %>% 
   arrange(desc(nombre)) -> surface_ter_6
 
+surface_ter_6$proportion <- surface_ter_6$nombre*100/sum(surface_ter_6$nombre)
+
 view(surface_ter_6)
 
 p2015_15 %>% 
   group_by(BinomialName) %>% 
   summarise(nombre = n(), surface_terrière = mean(G)) %>% 
   arrange(desc(nombre)) -> surface_ter_15
+
+surface_ter_15$proportion <- surface_ter_15$nombre*100/sum(surface_ter_15$nombre)
 
 p2015_16 %>% 
   group_by(BinomialName) %>% 
@@ -638,8 +642,20 @@ Especes de 60/40 indiv : plutot accum (*Licania canescens, Pradosia cochlearia* 
 
 interessant de changer d'indice parce prise en compte des individu solo trop importantes (100 sur 3586, c'est pas tant enfait) mais si on prend les repartitions globales ? -\>
 
+- 2/3 especes ont moins de 100 indiv
+
+- 50% ont moins de 50 indiv
+
+- 
+
 ```{r}
 ggplot(surface_ter_6, aes(x = nombre)) +
   geom_histogram(bins = 30, fill = "turquoise4", color = "white") +
   theme_minimal()
+
+
+roh <- sum(surface_ter_6$nombre[surface_ter_6$nombre < 50])*100/sum(surface_ter_6$nombre)
+
+sum(surface_ter_6$nombre[surface_ter_6$nombre >= 50])
+sum(surface_ter_6$nombre)
 ```
