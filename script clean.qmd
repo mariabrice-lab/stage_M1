@@ -352,19 +352,38 @@ On va comparer notre distribution avec une distribution "random location", tout 
 
 ```{r}
 #calcul de isars sous h0
-accum_sp_hill(p2015_6_wmppp, 
-  # Richesse
-  orders = 0,
-  # Distances
-  r = seq(0, 50,2 ),
-  individual = TRUE,
-  h0 =  "random location",
-  n_simulations = 100,
-  richness_estimator = "iChao1"
-) ->
-  rd_6_h0
+if (file.exists("data/rd_6_h0.Rdata")) {
+  load("data/rd_6_h0.Rdata")
+} else {
+  rd_6_h0 <- accum_sp_hill(p2015_6_wmppp, 
+                           # Richesse
+                           orders = 0,
+                           # Distances
+                           r = seq(0, 30,2 ),
+                           individual = TRUE,
+                           h0 =  "random location",
+                           n_simulations = 100,
+                           richness_estimator = "iChao1"
+  )
+  save(rd_6_h0, file = "data/rd_6_h0.Rdata")
+}
 
 
+if (file.exists("data/rd_15_h0.Rdata")) {
+  load("data/rd_15_h0.Rdata")
+} else {
+  rd_15_h0 <- accum_sp_hill(p2015_15_wmppp, 
+                           # Richesse
+                           orders = 0,
+                           # Distances
+                           r = seq(0, 30,2 ),
+                           individual = TRUE,
+                           h0 =  "random location",
+                           n_simulations = 100,
+                           richness_estimator = "iChao1"
+  )
+  save(rd_15_h0, file = "data/rd_15_h0.Rdata")
+}
 
 ```
 
