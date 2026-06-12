@@ -277,21 +277,7 @@ if (file.exists("data/rd_15.Rdata")) {
   rd_15 <- isars(p2015_15_wmppp,0,seq(0, 30,2 ))
   save(rd_15, file = "data/rd_15.Rdata")}
 
-f (file.exists("data/rd_6_h0.Rdata")) {
-  load("data/rd_6_h0.Rdata")
-} else {
-  rd_6_h0 <- accum_sp_hill(p2015_6_wmppp, 
-                           # Richesse
-                           orders = 0,
-                           # Distances
-                           r = seq(0, 30,2 ),
-                           individual = TRUE,
-                           h0 =  "random location",
-                           n_simulations = 100,
-                           richness_estimator = "iChao1"
-  )
-  save(rd_6_h0, file = "data/rd_6_h0.Rdata")
-}
+
 
 ```
 
@@ -375,6 +361,7 @@ On va comparer notre distribution avec une distribution "random location", tout 
 
 ```{r}
 #calcul de isars sous h0
+#6
 if (file.exists("data/rd_6_h0.Rdata")) {
   load("data/rd_6_h0.Rdata")
 } else {
@@ -392,7 +379,7 @@ if (file.exists("data/rd_6_h0.Rdata")) {
 }
 
 
-
+#15
 if (file.exists("data/rd_15_h0.Rdata")) {
   load("data/rd_15_h0.Rdata")
 } else {
@@ -401,7 +388,6 @@ if (file.exists("data/rd_15_h0.Rdata")) {
                            orders = 0,
                            # Distances
                            r = seq(0, 30,2 ),
-                           individual = TRUE,
                            h0 =  "random location",
                            n_simulations = 100,
                            richness_estimator = "iChao1"
@@ -409,6 +395,7 @@ if (file.exists("data/rd_15_h0.Rdata")) {
   save(rd_15_h0, file = "data/rd_15_h0.Rdata")
 }
 
+#individual = TRUE? I don't think it's usefull for the h0 but ask Eric  
 ```
 
 fonction qui mets les itervalles de confiance sur les graph
@@ -584,7 +571,10 @@ maps_localisation(c("Lecythis persistens"), p2015_6_wmppp) + isarsp_ic("Lecythis
 
 isarsp_ic(c("Lecythis persistens"), rd_6,rd_6_h0) + maps_localisation(c("Lecythis persistens"),p2015_6_wmppp)
 
-
+#sp 40-39 indiv
+maps_localisation(c("Carapa surinamensis","Eschweilera coriacea","Gustavia hexapetala","Licania laxiflora","Moronobea coccinea"),
+                  p2015_6_wmppp) + isarsp_ic(c("Carapa surinamensis","Eschweilera coriacea","Gustavia hexapetala","Licania laxiflora","Moronobea coccinea"), rd_6,rd_6_h0)
+#Eschweilera repulsive remarquable
 ```
 
 [Interpretatioooon :]{.underline}
@@ -631,6 +621,74 @@ sum(surface_ter_6$nombre)
 
 # bazaard
 
+tableau de classement de sp
+
+pour la classe je vais creer un indice
+
+du max repulsion -2 (pour \<2.25 à 30m) au max accumulation 3 (pour accum à 30m au dessus de 3.5 et 2 \>3.25), avec 0 espece neutre
+
+```{r}
+acre_6 <- surface_ter_6[1:71, 1:2]
+acre_6$classe <- NA
+
+riri <- function(espece, classe) {
+  
+  idx <- acre_6$BinomialName %in% espece
+  
+  acre_6$classe[idx] <<- classe[match(acre_6$BinomialName[idx], espece)]
+  
+}
+
+
+save(acre_6,file = "data/acre_6.csv")
+load("data/acre_6.csv")
+
+```
+
+modif du tableau
+
 ```{r}
 
+
+riri("Eschweilera coriacea", -2)
+riri(c("Dicorynia guianensis","Eperua falcata"),c(1,0))
+riri(c("Carapa surinamensis","Gustavia hexapetala","Licania laxiflora","Moronobea coccinea"),c(0,0,0,0))
+  
+#sp 40-39 indiv  
+isarsp_ic(c("Carapa surinamensis","Eschweilera coriacea","Gustavia hexapetala","Licania laxiflora","Moronobea coccinea"), rd_6,rd_6_h0)
+riri(c("Carapa surinamensis","Gustavia hexapetala","Licania laxiflora","Moronobea coccinea"),c(0,0,0,0))
+
+#espece 98->67 indiv
+isarsp_ic(c("Tapura capitulifera","Oenocarpus bataua","Pradosia cochlearia"), rd_6,rd_6_h0)
+riri(c("Tapura capitulifera","Oenocarpus bataua","Pradosia cochlearia"),c(2,2,-1))
+
+isarsp_ic(c("Eschweilera decolorans","Vouacapoua americana","Symphonia sp.1","Eperua grandiflora"), rd_6,rd_6_h0)
+riri(c("Eschweilera decolorans","Vouacapoua americana","Symphonia sp.1","Eperua grandiflora"),c(3,1,1,2))
+
+isarsp_ic(c("Pradosia cochlearia","Bocoa prouacensis","Licania canescens","Dicorynia guianensis"), rd_6,rd_6_h0)
+riri(c("Pradosia cochlearia","Bocoa prouacensis","Licania canescens","Dicorynia guianensis"),c(2,1,3,1))
+
+isarsp_ic(c("Lecythis persistens","Eschweilera sagotiana","Sandwithia guyanensis","Pogonophora schomburgkiana"), rd_6,rd_6_h0)
+riri(c("Lecythis persistens","Eschweilera sagotiana","Sandwithia guyanensis","Pogonophora schomburgkiana"),c(-1,1,1,0))
+
+isarsp_ic(c("Oxandra asbeckii","Licania alba","Couratari multiflora","Pogonophora schomburgkiana"), rd_6,rd_6_h0)
+riri(c("Oxandra asbeckii","Licania alba","Couratari multiflora","Pogonophora schomburgkiana"),c(2,-1,1,0))
+
+isarsp_ic(c("Recordoxylon speciosum","Hymenopus heteromorphus","Chaetocarpus schomburgkianus","Pogonophora schomburgkiana"), rd_6,rd_6_h0)
+riri(c("Recordoxylon speciosum","Hymenopus heteromorphus","Chaetocarpus schomburgkianus","Pogonophora schomburgkiana"),c(-2,1,0,0))
+
+isarsp_ic(c("Homalolepis cedron","Licania membranacea","Iryanthera sagotiana","Hevea guianensis"), rd_6,rd_6_h0)
+riri(c("Homalolepis cedron","Licania membranacea","Iryanthera sagotiana","Hevea guianensis"),c(0,0,0,-2))
+
+isarsp_ic(c("Sterculia pruriens","Protium opacum_subsp.rabelianum","Conceveiba guianensis","Tovomita brevistaminea"), rd_6,rd_6_h0)
+riri(c("Sterculia pruriens","Protium opacum_subsp.rabelianum","Conceveiba guianensis","Tovomita brevistaminea"),c(0,0,-1,-2))
+
+isarsp_ic(c("Miconia acuminata","Iryanthera hostmannii","Couepia caryophylloides","Goupia glabra"), rd_6,rd_6_h0)
+riri(c("Miconia acuminata","Iryanthera hostmannii","Couepia caryophylloides","Goupia glabra"),c(0,-1,0,-1))
+
+isarsp_ic(c("Pachira dolichocalyx","Theobroma guianense","Jacaranda copaia","Mouriri crassifolia"), rd_6,rd_6_h0)
+riri(c("Pachira dolichocalyx","Theobroma guianense","Jacaranda copaia","Mouriri crassifolia"),c(3,0,NA,0))
+
+isarsp_ic(c("Tovomita caloneura","Chrysophyllum prieurii","Brosimum guianense","Catostemma fragrans"), rd_6,rd_6_h0)
+riri(c("Tovomita caloneura","Chrysophyllum prieurii","Brosimum guianense","Catostemma fragrans"),c(1,-1,NA,1))
 ```

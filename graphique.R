@@ -27,3 +27,7 @@ maps_localisation(c("Eschweilera decolorans","Vouacapoua americana","Symphonia s
 maps_localisation(c("Tapura capitulifera","Oenocarpus bataua","Pradosia cochlearia"),
                   p2015_6_wmppp) + isarsp_ic(c("Tapura capitulifera","Oenocarpus bataua","Pradosia cochlearia"), rd_6,rd_6_h0)
 #Oenocapus en repulsive le reste au dessus
+
+#sp 40-39 indiv
+maps_localisation(c("Carapa surinamensis","Eschweilera coriacea","Gustavia hexapetala","Licania laxiflora","Moronobea coccinea"),
+                  p2015_6_wmppp) + isarsp_ic(c("Carapa surinamensis","Eschweilera coriacea","Gustavia hexapetala","Licania laxiflora","Moronobea coccinea"), rd_6,rd_6_h0)
