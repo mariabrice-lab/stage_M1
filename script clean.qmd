@@ -184,7 +184,7 @@ p2015_16 %>%
 
 ```
 
-# Traitement
+# Codage
 
 ### Description
 
@@ -263,12 +263,35 @@ isars <- function(data, orders, r){
 }
 
 #calcul de chaque plot
+#6
 if (file.exists("data/rd_6.Rdata")) {
   load("data/rd_6.Rdata")
 }else{
   rd_6 <- isars(p2015_6_wmppp,0,seq(0, 30,2 ))
   save(rd_6, file = "data/rd_6.Rdata")}
 
+#15
+if (file.exists("data/rd_15.Rdata")) {
+  load("data/rd_15.Rdata")
+}else{
+  rd_15 <- isars(p2015_15_wmppp,0,seq(0, 30,2 ))
+  save(rd_15, file = "data/rd_15.Rdata")}
+
+f (file.exists("data/rd_6_h0.Rdata")) {
+  load("data/rd_6_h0.Rdata")
+} else {
+  rd_6_h0 <- accum_sp_hill(p2015_6_wmppp, 
+                           # Richesse
+                           orders = 0,
+                           # Distances
+                           r = seq(0, 30,2 ),
+                           individual = TRUE,
+                           h0 =  "random location",
+                           n_simulations = 100,
+                           richness_estimator = "iChao1"
+  )
+  save(rd_6_h0, file = "data/rd_6_h0.Rdata")
+}
 
 ```
 
@@ -367,6 +390,7 @@ if (file.exists("data/rd_6_h0.Rdata")) {
   )
   save(rd_6_h0, file = "data/rd_6_h0.Rdata")
 }
+
 
 
 if (file.exists("data/rd_15_h0.Rdata")) {
@@ -542,83 +566,9 @@ maps_sp <- function(sp_name, data_wmppp){
 maps_sp(c("Sextonia rubra","Ruizterania albiflora","Dicorynia guianensis"),p2015_6_wmppp)
 ```
 
-# tests
+# Analyse
 
-### isars sans correction de bord
-
-```{r}
-isarsnone <- function(data, orders, r){
-  accum_sp_hill(
-    data, 
-    # Richesse
-    orders = orders,
-    # Distances
-    r = r,
-    richness_estimator = "iChao1",
-    individual = TRUE, 
-    correction = "none"
-  )
-}
-
-#calcul de chaque plot
-if (file.exists("data/rd_6_none.Rdata")) {
-  load("data/rd_6_none.Rdata")
-} else {
-  rd_6_none <- isarsnone(p2015_6_wmppp,0,seq(0, 30,2 ))
-  save(rd_6_none, file = "data/rd_6_none.Rdata")
-}
-
-autoplot(rd_6_none)
-
-#isar sous h0
-if (file.exists("data/rd_6_none_h0.Rdata")) {
-  load("data/rd_6_none_h0.Rdata")
-} else {
-  rd_6_none_h0 <- accum_sp_hill(p2015_6_wmppp, 
-                             # Richesse
-                             orders = 0,
-                             # Distances
-                             r = seq(0, 30,2 ),
-                             individual = TRUE,
-                             h0 =  "random location",
-                             n_simulations = 20,
-                             richness_estimator = "iChao1",
-                             correction = "none"
-                             )
-  save(rd_6_none_h0, file = "data/rd_6_none_h0.Rdata")
-}
-
-autoplot(rd_6_none_h0)
-
-#isars d'un espece
-isarsp("Dicorynia guianensis", rd_6_none) -> isar_eperua
-
-isarsp("Eperua falcata", rd_6_none) + autoplot(rd_6_none_h0)
-
-
-
-
-
-
-if (file.exists("data/rd_6_h0.Rdata")) {
-  load("data/rd_6_h0.Rdata")
-} else {
-  rd_6_h0 <- accum_sp_hill(p2015_6_wmppp, 
-                          # Richesse
-                          orders = 0,
-                          # Distances
-                          r = seq(0, 30,2 ),
-                          individual = TRUE,
-                          h0 =  "random location",
-                          n_simulations = 100,
-                          richness_estimator = "iChao1"
-  )
-  save(rd_6_h0, file = "data/rd_6_h0.Rdata")
-}
-
-```
-
-### écologie
+### tests randoms
 
 ```{r}
 autoplot(rd_6_h0)
@@ -677,4 +627,10 @@ roh <- sum(surface_ter_6$nombre[surface_ter_6$nombre < 50])*100/sum(surface_ter_
 
 sum(surface_ter_6$nombre[surface_ter_6$nombre >= 50])
 sum(surface_ter_6$nombre)
+```
+
+# bazaard
+
+```{r}
+
 ```
