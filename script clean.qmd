@@ -389,6 +389,7 @@ if (file.exists("data/rd_15_h0.Rdata")) {
                            # Distances
                            r = seq(0, 30,2 ),
                            h0 =  "random location",
+                           individual = TRUE,
                            n_simulations = 100,
                            richness_estimator = "iChao1"
   )
@@ -691,4 +692,20 @@ riri(c("Pachira dolichocalyx","Theobroma guianense","Jacaranda copaia","Mouriri 
 
 isarsp_ic(c("Tovomita caloneura","Chrysophyllum prieurii","Brosimum guianense","Catostemma fragrans"), rd_6,rd_6_h0)
 riri(c("Tovomita caloneura","Chrysophyllum prieurii","Brosimum guianense","Catostemma fragrans"),c(1,-1,NA,1))
+
+
+isarsp_ic(c("Brosimum guianense","Sterculia speciosa","Eschweilera congestiflora","Brosimum rubescens"), rd_6,rd_6_h0)
+riri(c("Brosimum guianense","Sterculia speciosa","Eschweilera congestiflora","Brosimum rubescens"),c(NA,0,0,0))
+
+isarsp_ic(c("Hebepetalum humiriifolium","Mabea piriri","Thyrsodium guianense","Cordia sagotii"), rd_6,rd_6_h0)
+riri(c("Hebepetalum humiriifolium","Mabea piriri","Thyrsodium guianense","Cordia sagotii"),c(1,0,2,0))
+
+isarsp_ic(c("Lecythis poiteaui","Leptobalanus sprucei","Abarema jupunba","Licania ovalifolia"), rd_6,rd_6_h0)
+riri(c("Lecythis poiteaui","Leptobalanus sprucei","Abarema jupunba","Licania ovalifolia"),c(1,0,-1,-1))
+
+isarsp_ic(c("Chrysophyllum sanguinolentum","Drypetes variabilis","Henriettea flavescens","Inga Indet."), rd_6,rd_6_h0)
+riri(c("Chrysophyllum sanguinolentum","Drypetes variabilis","Henriettea flavescens","Inga Indet."),c(-2,2,1,NA))
+
+isarsp_ic(c("Monteverdia oblongata","Sextonia rubra","Swartzia polyphylla","Symphonia globulifera","Talisia hexaphylla"), rd_6,rd_6_h0)
+riri(c("Monteverdia oblongata","Sextonia rubra","Swartzia polyphylla","Symphonia globulifera","Talisia hexaphylla"),c(1,-1,-1,-2,1))
 ```
