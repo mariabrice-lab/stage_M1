@@ -277,6 +277,12 @@ if (file.exists("data/rd_15.Rdata")) {
   rd_15 <- isars(p2015_15_wmppp,0,seq(0, 30,2 ))
   save(rd_15, file = "data/rd_15.Rdata")}
 
+#16
+if (file.exists("data/rd_16.Rdata")) {
+  load("data/rd_16.Rdata")
+}else{
+  rd_16 <- isars(p2015_16_wmppp,0,seq(0, 30,2 ))
+  save(rd_16, file = "data/rd_16.Rdata")}
 
 
 ```
@@ -396,6 +402,7 @@ if (file.exists("data/rd_15_h0.Rdata")) {
   save(rd_15_h0, file = "data/rd_15_h0.Rdata")
 }
 
+
 #individual = TRUE? I don't think it's usefull for the h0 but ask Eric  
 ```
 
@@ -463,6 +470,7 @@ isarsp_ic <- function(sp_name, isars,isarsh0){
 
 #exemple
 isarsp_ic(c("Dicorynia guianensis","Eperua falcata"), rd_6,rd_6_h0)
+
 ```
 
 ### Maps
@@ -629,6 +637,7 @@ pour la classe je vais creer un indice
 du max repulsion -2 (pour \<2.25 à 30m) au max accumulation 3 (pour accum à 30m au dessus de 3.5 et 2 \>3.25), avec 0 espece neutre
 
 ```{r}
+#parcelle 6
 acre_6 <- surface_ter_6[1:71, 1:2]
 acre_6$classe <- NA
 
@@ -644,6 +653,43 @@ riri <- function(espece, classe) {
 save(acre_6,file = "data/acre_6.csv")
 load("data/acre_6.csv")
 
+
+#parcelle 15
+acre_15 <- surface_ter_15[1:87, 1:2]
+acre_15$classe <- NA
+
+rohroh <- function(espece, classe) {
+  
+  idx <- acre_15$BinomialName %in% espece
+  
+  acre_15$classe[idx] <<- classe[match(acre_15$BinomialName[idx], espece)]
+  
+}
+
+save(acre_15,file = "data/acre_15.csv")
+load("data/acre_15.csv")
+
+#parcelle 16
+acre_16 <- surface_ter_16[1:197, 1:2]
+acre_16$classe <- NA
+
+ruru <- function(espece, classe) {
+  
+  idx <- acre_16$BinomialName %in% espece
+  
+  acre_16$classe[idx] <<- classe[match(acre_16$BinomialName[idx], espece)]
+  
+}
+
+save(acre_16,file = "data/acre_16.csv")
+load("data/acre_16.csv")
+
+tab_final <- full_join(acre_15, acre_6, by = "BinomialName")
+names(tab_final) <- c("BinomialName", "effectif15", "classe15", "effectif6","classe6")
+
+acre_final <- full_join(tab_final, acre_16, by = "BinomialName")
+
+#y'a quand meme 300 indet indet chez p16
 ```
 
 modif du tableau
@@ -653,59 +699,42 @@ modif du tableau
 
 riri("Eschweilera coriacea", -2)
 riri(c("Dicorynia guianensis","Eperua falcata"),c(1,0))
-riri(c("Carapa surinamensis","Gustavia hexapetala","Licania laxiflora","Moronobea coccinea"),c(0,0,0,0))
+rohroh(c("Carapa surinamensis","Gustavia hexapetala","Licania laxiflora","Moronobea coccinea"),c(0,0,0,0))
   
 #sp 40-39 indiv  
-isarsp_ic(c("Carapa surinamensis","Eschweilera coriacea","Gustavia hexapetala","Licania laxiflora","Moronobea coccinea"), rd_6,rd_6_h0)
-riri(c("Carapa surinamensis","Gustavia hexapetala","Licania laxiflora","Moronobea coccinea"),c(0,0,0,0))
+isarsp_ic(c("Guarea pubescens","Inga loubryana","Lueheopsis rugosa","Miconia tschudyoides"), rd_15,rd_15_h0)
+rohroh(c("Guarea pubescens","Inga loubryana","Lueheopsis rugosa","Miconia tschudyoides"),c(2,1,0,-1))
 
-#espece 98->67 indiv
-isarsp_ic(c("Tapura capitulifera","Oenocarpus bataua","Pradosia cochlearia"), rd_6,rd_6_h0)
-riri(c("Tapura capitulifera","Oenocarpus bataua","Pradosia cochlearia"),c(2,2,-1))
+isarsp_ic(c("Lecythis persistens"), rd_15,rd_15_h0)
+isarsp_ic(c("Lecythis persistens"), rd_6,rd_6_h0)
 
-isarsp_ic(c("Eschweilera decolorans","Vouacapoua americana","Symphonia sp.1","Eperua grandiflora"), rd_6,rd_6_h0)
-riri(c("Eschweilera decolorans","Vouacapoua americana","Symphonia sp.1","Eperua grandiflora"),c(3,1,1,2))
+#+3.25 >> 2
+#-2.25 >>-2
+```
 
-isarsp_ic(c("Pradosia cochlearia","Bocoa prouacensis","Licania canescens","Dicorynia guianensis"), rd_6,rd_6_h0)
-riri(c("Pradosia cochlearia","Bocoa prouacensis","Licania canescens","Dicorynia guianensis"),c(2,1,3,1))
+sp interessante
 
-isarsp_ic(c("Lecythis persistens","Eschweilera sagotiana","Sandwithia guyanensis","Pogonophora schomburgkiana"), rd_6,rd_6_h0)
-riri(c("Lecythis persistens","Eschweilera sagotiana","Sandwithia guyanensis","Pogonophora schomburgkiana"),c(-1,1,1,0))
+<https://www.guyane.developpement-durable.gouv.fr/IMG/pdf/Wacapou_Eval_sensibilit__ONF_2010.pdf>
 
-isarsp_ic(c("Oxandra asbeckii","Licania alba","Couratari multiflora","Pogonophora schomburgkiana"), rd_6,rd_6_h0)
-riri(c("Oxandra asbeckii","Licania alba","Couratari multiflora","Pogonophora schomburgkiana"),c(2,-1,1,0))
+wacapou peut -etre menacé lire l'etude
 
-isarsp_ic(c("Recordoxylon speciosum","Hymenopus heteromorphus","Chaetocarpus schomburgkianus","Pogonophora schomburgkiana"), rd_6,rd_6_h0)
-riri(c("Recordoxylon speciosum","Hymenopus heteromorphus","Chaetocarpus schomburgkianus","Pogonophora schomburgkiana"),c(-2,1,0,0))
+<https://www.lachaussetterouge.fr/2014/11/hura-crepitans-sablier-bois-diable.html>
 
-isarsp_ic(c("Homalolepis cedron","Licania membranacea","Iryanthera sagotiana","Hevea guianensis"), rd_6,rd_6_h0)
-riri(c("Homalolepis cedron","Licania membranacea","Iryanthera sagotiana","Hevea guianensis"),c(0,0,0,-2))
+*hevea guianensis* arbre à caoutchou (mais moins bonne quali que bresil)
 
-isarsp_ic(c("Sterculia pruriens","Protium opacum_subsp.rabelianum","Conceveiba guianensis","Tovomita brevistaminea"), rd_6,rd_6_h0)
-riri(c("Sterculia pruriens","Protium opacum_subsp.rabelianum","Conceveiba guianensis","Tovomita brevistaminea"),c(0,0,-1,-2))
+*Symphonia globulifera*
 
-isarsp_ic(c("Miconia acuminata","Iryanthera hostmannii","Couepia caryophylloides","Goupia glabra"), rd_6,rd_6_h0)
-riri(c("Miconia acuminata","Iryanthera hostmannii","Couepia caryophylloides","Goupia glabra"),c(0,-1,0,-1))
+*Manilkara bidentata* bois de construction et gomme gutta-balata latex pour balle de golft (par ex)
 
-isarsp_ic(c("Pachira dolichocalyx","Theobroma guianense","Jacaranda copaia","Mouriri crassifolia"), rd_6,rd_6_h0)
-riri(c("Pachira dolichocalyx","Theobroma guianense","Jacaranda copaia","Mouriri crassifolia"),c(3,0,NA,0))
+```{r}
+#couroutari guianensis medecine et bois
+maps_localisation("Eperua falcata", p2015_16_wmppp)
+maps_localisation("Symphonia globulifera", p2015_16_wmppp)
+maps_localisation("Manilkara bidentata", p2015_16_wmppp)
 
-isarsp_ic(c("Tovomita caloneura","Chrysophyllum prieurii","Brosimum guianense","Catostemma fragrans"), rd_6,rd_6_h0)
-riri(c("Tovomita caloneura","Chrysophyllum prieurii","Brosimum guianense","Catostemma fragrans"),c(1,-1,NA,1))
+autoplot(rd_16)
+isarsp(c("Eperua falcata", "Oxandra asbeckii"), rd_16)
 
-
-isarsp_ic(c("Brosimum guianense","Sterculia speciosa","Eschweilera congestiflora","Brosimum rubescens"), rd_6,rd_6_h0)
-riri(c("Brosimum guianense","Sterculia speciosa","Eschweilera congestiflora","Brosimum rubescens"),c(NA,0,0,0))
-
-isarsp_ic(c("Hebepetalum humiriifolium","Mabea piriri","Thyrsodium guianense","Cordia sagotii"), rd_6,rd_6_h0)
-riri(c("Hebepetalum humiriifolium","Mabea piriri","Thyrsodium guianense","Cordia sagotii"),c(1,0,2,0))
-
-isarsp_ic(c("Lecythis poiteaui","Leptobalanus sprucei","Abarema jupunba","Licania ovalifolia"), rd_6,rd_6_h0)
-riri(c("Lecythis poiteaui","Leptobalanus sprucei","Abarema jupunba","Licania ovalifolia"),c(1,0,-1,-1))
-
-isarsp_ic(c("Chrysophyllum sanguinolentum","Drypetes variabilis","Henriettea flavescens","Inga Indet."), rd_6,rd_6_h0)
-riri(c("Chrysophyllum sanguinolentum","Drypetes variabilis","Henriettea flavescens","Inga Indet."),c(-2,2,1,NA))
-
-isarsp_ic(c("Monteverdia oblongata","Sextonia rubra","Swartzia polyphylla","Symphonia globulifera","Talisia hexaphylla"), rd_6,rd_6_h0)
-riri(c("Monteverdia oblongata","Sextonia rubra","Swartzia polyphylla","Symphonia globulifera","Talisia hexaphylla"),c(1,-1,-1,-2,1))
+#Swartzia polyphylla medecine et bois
+#Caryocar glabrum food/wood exported also soap
 ```
