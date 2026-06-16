@@ -1,0 +1,740 @@
+---
+title: "script clean"
+author: "Maria Brice"
+format: 
+ html: default
+ pdf: default
+editor: visual
+bibliography: references.bib
+---
+
+```{r}
+#chargement des packages 
+library(ads)
+library(divent)
+library(tidyverse)
+library(dbmss)
+library(patchwork)
+library(spatstat)
+library(dplyr)
+library(tidyr)
+library(purrr)
+library(secret)
+
+```
+
+m.a.j des packages
+
+```{r}
+#mise à jour des packages
+remotes::install_github("EricMarcon/divent")  
+```
+
+## données
+
+```{r}
+#importation gaves
+Paracou2015 <- read_csv2("data/Paracou2015.csv")
+
+#importation pour l'ordi rapide
+read_csv2("~/maria/Paracou2015.csv") %>% 
+  # Noms binomiaux
+  mutate(BinomialName = paste(Genus, Species)) %>% 
+  # Sélection des colonnes utiles
+  select(
+    # Parcelle (pour créer les jeux de points)
+    Plot, 
+    # Carré (pour la p16)
+    SubPlot, 
+    # Identifiant et position de chaque arbre, UTM pour p16
+    idTree, Xfield, Yfield, Xutm, Yutm,
+    # Botanique
+    Family, Genus, Species, BinomialName, 
+    # Circonférence
+    CircCorr
+  ) %>%
+  # Calcul de la surface terrière en mètres carrés
+  mutate(G = pi * (CircCorr / pi / 2)^2 / 10000) ->
+  Paracou2015
+
+#importation cryptée
+library("secret")
+vault <- "vault"
+library("openssl")
+project_id <- "stage_M1"
+Sys.setenv(USER_KEY = usethis::proj_path(paste0(project_id, ".rsa")))
+# Lecture de la donnée "X"
+library("secret")
+get_secret("Paracou2015", vault = vault) %>% 
+  # Noms binomiaux
+  mutate(BinomialName = paste(Genus, Species)) %>% 
+  # Sélection des colonnes utiles
+  select(
+    # Parcelle (pour créer les jeux de points)
+    Plot, 
+    # Carré (pour la p16)
+    SubPlot, 
+    # Identifiant et position de chaque arbre, UTM pour p16
+    idTree, Xfield, Yfield, Xutm, Yutm,
+    # Botanique
+    Family, Genus, Species, BinomialName, 
+    # Circonférence
+    CircCorr
+  ) %>%
+  # Calcul de la surface terrière en mètres carrés
+  mutate(G = pi * (CircCorr / pi / 2)^2 / 10000) ->
+  Paracou2015
+
+
+```
+
+Jeu de données de Paracou (2015) : 75253 observation.
+
+contient les espèces, la position, le diamètre à hauteur de buste des arbres de 16 parcelles
+
+On y selectionne certaines colones et on creer la donnée de surface terrière
+
+#### Sous-tableaux
+
+```{r}
+#fonction de selection de parcelle
+paracouplot <- function(data, plot){
+  data %>% 
+    filter(Plot == plot) %>% 
+    select(idTree, Xfield, Yfield, Family, Genus, BinomialName, CircCorr ) %>% 
+    #calcul de la surface terrière en metre carré
+    mutate(G = pi*(CircCorr / pi/2)^2/10000)
+}
+
+paracouplot(Paracou2015,6) -> p2015_6
+paracouplot(Paracou2015,15) -> p2015_15
+
+
+```
+
+#### Wmppp
+
+```{r}
+#fonction
+paracouwmppp <- function(data){
+  data %>%
+    #renommer les colones 
+    rename(
+      X = Xfield,
+      Y = Yfield,
+      PointType = BinomialName,
+      PointWeight = G
+    ) %>% 
+    wmppp(
+      window = owin(xrange = c(0, 250), yrange = c(0,250)), 
+      unitname = c("metre", "metres")
+    ) %>% 
+    #deplacement des pts pour eviter les chevauchements
+    rjitter(radius = 0.01)
+}
+
+#creation de wmppp
+paracouwmppp(p2015_6) -> p2015_6_wmppp
+paracouwmppp(p2015_15) -> p2015_15_wmppp
+
+
+```
+
+#### *Parcelle 16*
+
+elle est formé de 25 carré de 1 ha chacun. Les coordonnées sont relatives à chaque carré et non à la parcelle, il faut recalculer.
+
+```{r}
+Paracou2015 %>% 
+  # Filtrer la parcelle 16
+  filter(Plot == 16) %>% 
+  # Les carrés sont numérotés de gauche à droite et haut en bas
+  mutate(
+    # Renuméroter les carrés de 0 à 24 (retirer 1)
+    # Ajouter 0, 100,..., 400m à Xfield
+    # Revenir à 0 tous les 5 carrés
+    Xplot = 100 * ((SubPlot - 1) %% 5) + Xfield,
+    # Ajouter 400, 300,..., 0 à Yfield pour les 5 premiers,
+    # 5 suivants, ..., carrés.
+    Yplot = 100 * (4 - (SubPlot - 1) %/% 5) + Yfield
+  ) %>% 
+  # Sélection des colonnes utiles
+  # Garder les UTM pour vérification
+  select(idTree, Xplot, Yplot, Xutm, Yutm, BinomialName, CircCorr) %>% 
+  # Calcul de la surface terrière en mètres carrés
+  mutate(G = pi * (CircCorr / pi / 2)^2 / 10000) ->
+  p2015_16
+
+p2015_16 %>%
+  # Renommer les colonnes   
+  rename(     
+    X = Xplot,
+    Y = Yplot,
+    PointType = BinomialName,
+    PointWeight = G
+  ) %>%
+  wmppp(
+    window = owin(xrange = c(0, 500), yrange = c(0, 500)),
+    unitname = c("metre", "metres") 
+  ) %>% 
+  # Déplacement les points pour éviter la superposition
+  rjitter(radius = 0.01) ->
+  p2015_16_wmppp 
+
+
+```
+
+# Codage
+
+### Description
+
+```{r}
+#classement des sp par rapport à leur surf terrière
+p2015_6 %>% 
+  group_by(BinomialName) %>% 
+  summarise(nombre = n(), surface_terrière = mean(G)) %>% 
+  arrange(desc(nombre)) -> surface_ter_6
+
+surface_ter_6$proportion <- surface_ter_6$nombre*100/sum(surface_ter_6$nombre)
+
+view(surface_ter_6)
+
+p2015_15 %>% 
+  group_by(BinomialName) %>% 
+  summarise(nombre = n(), surface_terrière = mean(G)) %>% 
+  arrange(desc(nombre)) -> surface_ter_15
+
+surface_ter_15$proportion <- surface_ter_15$nombre*100/sum(surface_ter_15$nombre)
+
+p2015_16 %>% 
+  group_by(BinomialName) %>% 
+  summarise(nombre = n(), surface_terrière = mean(G)) %>% 
+  arrange(desc(nombre)) -> surface_ter_16
+
+```
+
+### Biodiversité
+
+```{r}
+#calcul d'indices de div par plot et mise en tableau
+indices_div <- Paracou2015 %>%
+  split(.$Plot) %>%
+  map_dfr(function(df){
+    
+    abd <- table(df$BinomialName)
+    
+    tibble(
+      Plot = df$Plot[1],
+      
+      Shannon = ent_shannon(as.numeric(abd), estimator = "naive")[[3]],
+      Simpson = ent_simpson(as.numeric(abd),estimator = "naive")[[3]],
+      Hill_q1 = div_hill(as.numeric(abd), q = 1)[[3]],
+      
+      Richesse = length(abd),
+      Abondance = sum(abd)
+    )
+  })
+
+view(indices_div)
+
+
+
+
+```
+
+### ISAR
+
+#### calcul des isars collectifs
+
+*in order to selectionner des especes en particulier on calcul d'abords les isars de chaque sp, le calcul prend +/- 10min*
+
+```{r}
+#fonction
+isars <- function(data, orders, r){
+  accum_sp_hill(
+    data, 
+    # Richesse
+    orders = orders,
+    # Distances
+    r = r,
+    richness_estimator = "iChao1",
+    individual = TRUE
+  )
+}
+
+#calcul de chaque plot
+#6
+if (file.exists("data/rd_6.Rdata")) {
+  load("data/rd_6.Rdata")
+}else{
+  rd_6 <- isars(p2015_6_wmppp,0,seq(0, 30,2 ))
+  save(rd_6, file = "data/rd_6.Rdata")}
+
+#15
+if (file.exists("data/rd_15.Rdata")) {
+  load("data/rd_15.Rdata")
+}else{
+  rd_15 <- isars(p2015_15_wmppp,0,seq(0, 30,2 ))
+  save(rd_15, file = "data/rd_15.Rdata")}
+
+#16
+if (file.exists("data/rd_16.Rdata")) {
+  load("data/rd_16.Rdata")
+}else{
+  rd_16 <- isars(p2015_16_wmppp,0,seq(0, 30,2 ))
+  save(rd_16, file = "data/rd_16.Rdata")}
+
+
+```
+
+#### Isar spécifiques
+
+```{r}
+#fonction isarsp
+isarsp <- function(sp_name, isars){
+  
+  ##################################################
+  #palette de couleur
+  palette_sp <- setNames(
+    RColorBrewer::brewer.pal(
+      max(3, length(sp_name)),
+      "Dark2"
+    )[seq_along(sp_name)],
+    sp_name
+  )
+  ##############################
+  # ISAR
+  tableau_final <- lapply(sp_name, function(sp){
+    #vecteur T/F pour l'espece voulue
+    is_sp <- isars$X$marks$PointType == sp
+    #recuperation des neighborhoods pour l'espece voulue
+    isar_sp <- apply(
+      isars$neighborhoods[1, , is_sp, drop = FALSE],
+      2,
+      mean,
+      na.rm = TRUE
+    )
+    #creation d'un tableau
+    tibble(
+      distance = as.numeric(names(isar_sp)),
+      richesse = as.numeric(isar_sp),
+      espece = sp
+    )
+  })
+  #merge des tableau de chaque sp
+  tableau_final <- dplyr::bind_rows(tableau_final)
+  #creation du plot des isars
+  plot_isar <- ggplot(
+    tableau_final,
+    aes(
+      x = distance,
+      y = richesse,
+      color = espece
+    )
+  ) +
+    geom_point() +
+    geom_line() +
+    scale_color_manual(values = palette_sp)
+  
+  #creation d'un objet
+  nom_objet <- paste0(
+    paste(sp_name, collapse = "_"),
+    "_",
+    deparse(substitute(isars))
+  )
+  
+  assign(nom_objet, tableau_final, envir = .GlobalEnv)
+  return(plot_isar)
+}
+
+#exemple
+isarsp(c("Sextonia rubra","Ruizterania albiflora","Dicorynia guianensis"), rd_6)
+```
+
+Espece d'interet pour les populations :
+
+- Fruit de coumou et jus/huile de Patawa : *Oenocarpus bacaba*, *Oenocarpus bataua*
+
+- Feuilles de wai *Ruizterania albiflora*
+
+- Grignon franc preleves pour son bois *Sextonia rubra*
+
+- 75% du prelevement en bois *Sextonia rubra*, *Ruizterania albiflora*, *Dicorynia guianensis*
+
+#### h0 : random location
+
+On va comparer notre distribution avec une distribution "random location", tout les étiquettes (= individus) de la parcelles sont redistribués au hazard et on fait plusieurs simulations pour obtenir un intervalle de conf.
+
+```{r}
+#calcul de isars sous h0
+#6
+if (file.exists("data/rd_6_h0.Rdata")) {
+  load("data/rd_6_h0.Rdata")
+} else {
+  rd_6_h0 <- accum_sp_hill(p2015_6_wmppp, 
+                           # Richesse
+                           orders = 0,
+                           # Distances
+                           r = seq(0, 30,2 ),
+                           individual = TRUE,
+                           h0 =  "random location",
+                           n_simulations = 100,
+                           richness_estimator = "iChao1"
+  )
+  save(rd_6_h0, file = "data/rd_6_h0.Rdata")
+}
+
+
+#15
+if (file.exists("data/rd_15_h0.Rdata")) {
+  load("data/rd_15_h0.Rdata")
+} else {
+  rd_15_h0 <- accum_sp_hill(p2015_15_wmppp, 
+                           # Richesse
+                           orders = 0,
+                           # Distances
+                           r = seq(0, 30,2 ),
+                           h0 =  "random location",
+                           individual = TRUE,
+                           n_simulations = 100,
+                           richness_estimator = "iChao1"
+  )
+  save(rd_15_h0, file = "data/rd_15_h0.Rdata")
+}
+
+
+#individual = TRUE? I don't think it's usefull for the h0 but ask Eric  
+```
+
+fonction qui mets les itervalles de confiance sur les graph
+
+```{r}
+isarsp_ic <- function(sp_name, isars,isarsh0){
+  
+  ##################################################
+  #palette de couleur
+  palette_sp <- setNames(
+    RColorBrewer::brewer.pal(
+      max(3, length(sp_name)),
+      "Dark2"
+    )[seq_along(sp_name)],
+    sp_name
+  )
+  ##############################
+  # ISAR
+  tableau_final <- lapply(sp_name, function(sp){
+    #vecteur T/F pour l'espece voulue
+    is_sp <- isars$X$marks$PointType == sp
+    #recuperation des neighborhoods pour l'espece voulue
+    isar_sp <- apply(
+      isars$neighborhoods[1, , is_sp, drop = FALSE],
+      2,
+      mean,
+      na.rm = TRUE
+    )
+    #creation d'un tableau
+    tibble(
+      distance = as.numeric(names(isar_sp)),
+      richesse = as.numeric(isar_sp),
+      espece = sp
+    )
+  })
+  #merge des tableau de chaque sp
+  tableau_final <- dplyr::bind_rows(tableau_final)
+  
+  #creation du plot des intervalles de conf
+  plot_ic <- autoplot(isarsh0)
+  
+  plot_isar <- plot_ic +
+    geom_point(
+      aes(
+        x = distance,
+        y = richesse,
+        color = espece
+      ),
+      data = tableau_final
+    ) +
+    geom_line(
+      aes(
+        x = distance,
+        y = richesse,
+        color = espece
+      ),
+      data = tableau_final,
+      linewidth = 0.8
+    ) +
+    scale_color_manual(values = palette_sp)
+  
+  return(plot_isar)
+}
+
+#exemple
+isarsp_ic(c("Dicorynia guianensis","Eperua falcata"), rd_6,rd_6_h0)
+
+```
+
+### Maps
+
+```{r}
+#fonction maps rend uniquement les arbres concernés
+maps_localisation <- function(sp_name, data_wmppp){
+  
+  ##################################################
+  #palette de couleur
+  palette_sp <- setNames(
+    RColorBrewer::brewer.pal(
+      max(3, length(sp_name)),
+      "Dark2"
+    )[seq_along(sp_name)],
+    sp_name)
+  
+  #####################################################
+  # MAPS
+  motif <- paste(sp_name, collapse = "|")
+  
+  selection <- stringr::str_detect(
+    data_wmppp$marks$PointType,
+    motif
+  )
+  
+  plot_map <- autoplot(data_wmppp[selection, ]) +
+    scale_color_manual(values = palette_sp) +
+    theme_minimal(base_size = 13) +
+    theme(plot.margin = margin(10, 10, 10, 10))
+  return(plot_map)
+}
+
+
+#exemple
+maps_localisation(c("Sextonia rubra","Ruizterania albiflora","Dicorynia guianensis"),p2015_6_wmppp)
+```
+
+autre fonction qui highlight les arbres mais en gardant tout les individus de la parcelle
+
+*(ne conserve pas les weight)*
+
+```{r}
+#fonction
+maps_sp <- function(sp_name, data_wmppp){
+  
+  library(spatstat.geom)
+  library(stringr)
+  library(ggplot2)
+  library(RColorBrewer)
+  
+  
+  marks <- data_wmppp$marks
+  marks$PointType <- as.character(marks$PointType)
+  
+  motif <- paste(sp_name, collapse = "|")
+  
+  sel <- str_detect(marks$PointType, motif)
+  
+  palette_sp <- setNames(
+    brewer.pal(max(3, length(sp_name)), "Dark2")[seq_along(sp_name)],
+    sp_name
+  )
+  
+  plot_map <- ggplot() +
+    
+    # couche 1 : tout les arbres en gris
+    geom_point(
+      data = as.data.frame(data_wmppp),
+      aes(x, y),
+      color = "honeydew2",
+      size = 1
+    ) +
+    
+    # couche 2 : les sp d'interet
+    geom_point(
+      data = as.data.frame(data_wmppp)[sel, ],
+      aes(x, y, colour = marks$PointType[sel]),
+      size = 1
+    ) +
+    
+    scale_color_manual(values = palette_sp) +
+    theme_minimal(base_size = 13)
+  
+  
+  return(plot_map)
+}
+
+maps_sp(c("Sextonia rubra","Ruizterania albiflora","Dicorynia guianensis"),p2015_6_wmppp)
+```
+
+# Analyse
+
+### tests randoms
+
+```{r}
+autoplot(rd_6_h0)
+isarsp_ic(c("Dicorynia guianensis","Eperua falcata"), rd_6,rd_6_h0)
+isarsp_ic(c("Lecythis persistens","Eschweilera sagotiana","Eperua falcata","Sandwithia guyanensis","Pogonophora schomburgkiana"), rd_6,rd_6_h0)
+
+isarsp_ic(c("Lecythis persistens","Sandwithia guyanensis","Oxandra asbeckii"), rd_6,rd_6_h0)
+
+
+
+maps_localisation(c("Eschweilera sagotiana","Sandwithia guyanensis"),p2015_6_wmppp)
+maps_localisation(c("Lecythis persistens"), p2015_6_wmppp) + isarsp_ic("Lecythis persitens",rd_6,rd_6_h0 )
+
+isarsp_ic(c("Lecythis persistens"), rd_6,rd_6_h0) + maps_localisation(c("Lecythis persistens"),p2015_6_wmppp)
+
+#sp 40-39 indiv
+maps_localisation(c("Carapa surinamensis","Eschweilera coriacea","Gustavia hexapetala","Licania laxiflora","Moronobea coccinea"),
+                  p2015_6_wmppp) + isarsp_ic(c("Carapa surinamensis","Eschweilera coriacea","Gustavia hexapetala","Licania laxiflora","Moronobea coccinea"), rd_6,rd_6_h0)
+#Eschweilera repulsive remarquable
+```
+
+[Interpretatioooon :]{.underline}
+
+- *Eperua falcata* (wapa) : espece qui semble etre bien espacée, \> 10m
+
+- *Lecythis persistens* : \< vers 10m et \< vers 25m
+
+- *Eschweilera sagotiana* : \> apres 20m
+
+- *Pogonophora schomburgkiana* : dans la courbe globalement (petite aggregation)
+
+- *Sandwithia guyanensis* : \>\> à partir de 15m
+
+- *Oxandra asbeckii* : petit aggregats et attractive
+
+*Dicorynia guyanensi*s (angéliques) : \> vers 10m plus legèrement au dessus, (mais je pense pas assez de pts pour faire de la donnée)
+
+Pour des especes au alentour de 20/30 indiv on observe plus souvent la combinaison de reppulsive (d'apres mes test actuels). *Tovomita caloneura* sort du lot et accumule
+
+Especes de 60/40 indiv : plutot accum (*Licania canescens, Pradosia cochlearia* assez remarquable)
+
+[remarques :]{.underline}
+
+interessant de changer d'indice parce prise en compte des individu solo trop importantes (100 sur 3586, c'est pas tant enfait) mais si on prend les repartitions globales ? -\>
+
+- 2/3 especes ont moins de 100 indiv
+
+- 50% ont moins de 50 indiv
+
+- 
+
+```{r}
+ggplot(surface_ter_6, aes(x = nombre)) +
+  geom_histogram(bins = 30, fill = "turquoise4", color = "white") +
+  theme_minimal()
+
+
+roh <- sum(surface_ter_6$nombre[surface_ter_6$nombre < 50])*100/sum(surface_ter_6$nombre)
+
+sum(surface_ter_6$nombre[surface_ter_6$nombre >= 50])
+sum(surface_ter_6$nombre)
+```
+
+# bazaard
+
+tableau de classement de sp
+
+pour la classe je vais creer un indice
+
+du max repulsion -2 (pour \<2.25 à 30m) au max accumulation 3 (pour accum à 30m au dessus de 3.5 et 2 \>3.25), avec 0 espece neutre
+
+```{r}
+#parcelle 6
+acre_6 <- surface_ter_6[1:71, 1:2]
+acre_6$classe <- NA
+
+riri <- function(espece, classe) {
+  
+  idx <- acre_6$BinomialName %in% espece
+  
+  acre_6$classe[idx] <<- classe[match(acre_6$BinomialName[idx], espece)]
+  
+}
+
+
+save(acre_6,file = "data/acre_6.csv")
+load("data/acre_6.csv")
+
+
+#parcelle 15
+acre_15 <- surface_ter_15[1:87, 1:2]
+acre_15$classe <- NA
+
+rohroh <- function(espece, classe) {
+  
+  idx <- acre_15$BinomialName %in% espece
+  
+  acre_15$classe[idx] <<- classe[match(acre_15$BinomialName[idx], espece)]
+  
+}
+
+save(acre_15,file = "data/acre_15.csv")
+load("data/acre_15.csv")
+
+#parcelle 16
+acre_16 <- surface_ter_16[1:197, 1:2]
+acre_16$classe <- NA
+
+ruru <- function(espece, classe) {
+  
+  idx <- acre_16$BinomialName %in% espece
+  
+  acre_16$classe[idx] <<- classe[match(acre_16$BinomialName[idx], espece)]
+  
+}
+
+save(acre_16,file = "data/acre_16.csv")
+load("data/acre_16.csv")
+
+tab_final <- full_join(acre_15, acre_6, by = "BinomialName")
+names(tab_final) <- c("BinomialName", "effectif15", "classe15", "effectif6","classe6")
+
+acre_final <- full_join(tab_final, acre_16, by = "BinomialName")
+
+#y'a quand meme 300 indet indet chez p16
+```
+
+modif du tableau
+
+```{r}
+
+
+riri("Eschweilera coriacea", -2)
+riri(c("Dicorynia guianensis","Eperua falcata"),c(1,0))
+rohroh(c("Carapa surinamensis","Gustavia hexapetala","Licania laxiflora","Moronobea coccinea"),c(0,0,0,0))
+  
+#sp 40-39 indiv  
+isarsp_ic(c("Guarea pubescens","Inga loubryana","Lueheopsis rugosa","Miconia tschudyoides"), rd_15,rd_15_h0)
+rohroh(c("Guarea pubescens","Inga loubryana","Lueheopsis rugosa","Miconia tschudyoides"),c(2,1,0,-1))
+
+isarsp_ic(c("Lecythis persistens"), rd_15,rd_15_h0)
+isarsp_ic(c("Lecythis persistens"), rd_6,rd_6_h0)
+
+#+3.25 >> 2
+#-2.25 >>-2
+```
+
+sp interessante
+
+<https://www.guyane.developpement-durable.gouv.fr/IMG/pdf/Wacapou_Eval_sensibilit__ONF_2010.pdf>
+
+wacapou peut -etre menacé lire l'etude
+
+<https://www.lachaussetterouge.fr/2014/11/hura-crepitans-sablier-bois-diable.html>
+
+*hevea guianensis* arbre à caoutchou (mais moins bonne quali que bresil)
+
+*Symphonia globulifera*
+
+*Manilkara bidentata* bois de construction et gomme gutta-balata latex pour balle de golft (par ex)
+
+```{r}
+#couroutari guianensis medecine et bois
+maps_localisation("Eperua falcata", p2015_16_wmppp)
+maps_localisation("Symphonia globulifera", p2015_16_wmppp)
+maps_localisation("Manilkara bidentata", p2015_16_wmppp)
+
+autoplot(rd_16)
+isarsp(c("Eperua falcata", "Oxandra asbeckii"), rd_16)
+
+#Swartzia polyphylla medecine et bois
+#Caryocar glabrum food/wood exported also soap
+```

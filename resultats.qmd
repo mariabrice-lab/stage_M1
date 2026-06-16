@@ -1,0 +1,7 @@
+{{< include common.qmd >}}
+
+# Résultats
+
+## Premier résultat
+
+{{< lipsum 20 >}}

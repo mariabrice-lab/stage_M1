@@ -1,10 +1,33 @@
+# R files
 .Rproj.user
 .Rhistory
-.RData
-.Ruserdata
-.positai
+.Rdata
 
-#fichers de travail
-*.html
-*.pdf
-*_files/
+# RStudio files
+.positai
+/site_libs/
+
+# Quarto working files
+/.quarto/
+/nul
+/*.aux
+/*.bst
+/*.cls
+/*.html
+/*.log
+/*.pdf
+/*.tex
+
+# Cache
+/*_files/
+/*_cache/
+
+# Output. Comment out if GitHub Actions build the document.
+/docs/
+
+**/*.quarto_ipynb
+
+# clef privée et publique
+*.rsa
+*.rsa.pub
+data/Paracou2015.csv

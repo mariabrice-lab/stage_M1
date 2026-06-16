@@ -1,0 +1,35 @@
+{{< include common.qmd >}}
+
+# Matériel et méthodes
+
+OU *méthodologie* pour des sujets en sciences humaines et sociales[^mm-1].
+
+[^mm-1]: Choisir le titre approprié
+
+## Site d’étude
+
+## Acquisition des données
+
+Les données utilisées sont issues d'un dispositif installé sur le site de Paracou en Guyane française. Il comprends 16 parcelles mais seules les parcelles 6 (2.5ha, 250m\*250m), 15 (2.5 ha) et 16 (5 ha) sont prises en compte dans notre stage. Dans ces parcelles, chaque arbre est repertorié (indentification de l'espèce, localisation, diverses mesures,...) approximativement tout les 2ans. Nous avons choisi les données d'inventaire de 2015, car c'est la seule années où nos 3 parcelles ont été entièrement inventoriées.
+
+Lecture des données:
+
+```{r}
+library("secret")
+vault <- "vault"
+project_id <- "stage_M1"
+# Lecture de la donnée
+Sys.setenv(USER_KEY = usethis::proj_path(paste0(project_id, ".rsa")))
+# Lecture de la donnée "X"
+Paracou2015 <- get_secret("Paracou2015", vault = vault)
+# Affichage
+Paracou2015
+```
+
+## Analyse des données
+
+Pour l'analyse des données nous nous sommes basés sur les theories de @Wiegand sur ce qui devellope la notion de courbe d'accumulation de diversité spécifique, qu'il appelle "isar". Elles se definissent par : "*le nombre attendu d'espèces dans un cercle de rayon* $r$ *autour d'un individu moyen de l'espèce ciblée* $t$*. "*
+
+$$ISAR(r) = \sum_{j=1}^{N}[{1-P_{tj}(0,r)]}$$
+
+Le calcul des isars permets de mesurer l'evolution de l'accumulation de la diversité par rapport à une certaines espèces et non sur l'ensemble de la communauté. A terme cela permet d'indentifier des espèces "accumulatrices" ou "repulsives" de biodiversité.
