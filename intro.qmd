@@ -8,6 +8,12 @@ C'est dans le cadre de mon M1 en biologie végétale tropicale (BioGet) à l'uni
 
 ## Etat de l'art
 
+### Forêts de Guyane
+
+Les foret tropicales représente 45% des forêts du globe. La Guyane en est couverte à 96% ( @fao2025) et compte quelque 1700 essence d'arbres. Recouverte à 95% de forêt primaires nullement fragmentées (@fao2025) , cet écosystème renferme une biodiversité aussi riche que mystérieuse en faisant un objet d'étude parfait pour la diversité spatiale.
+
+### Techniques d'évaluation de la biodiversité
+
 Problématique : Apports des mesures d’accumulation de la diversité à la compréhension des processus d’assemblage des communautés.
 
 ## Objectifs du stage 
