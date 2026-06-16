@@ -46,7 +46,16 @@ packages <- c(
   "tidyverse", 
   "gt",
   "secret",
-  "usethis"
+  "usethis",
+  "divent",
+  "dbmss",
+  "ads",
+  "spatstat",
+  "patchwork",
+  "dplyr",
+  "tidyr",
+  "purrr",
+  "secret"
 )
 # Install them
 install_packages(packages)
