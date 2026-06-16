@@ -1,9 +1,11 @@
 {{< include common.qmd >}}
 
-# Introduction
+# 1.1 Introduction
 
-Problématique
+## 1.2 ouoi oui 
 
-Objectifs
+Problématique : Apports des mesures d’accumulation de la diversité à la compréhension des processus d’assemblage des communautés.
+
+Objectifs du stage
 
 Plan général de la démarche
