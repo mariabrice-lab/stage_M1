@@ -1,11 +1,15 @@
 {{< include common.qmd >}}
 
-# 1.1 Introduction
+# Introduction
 
-## 1.2 ouoi oui 
+C'est dans le cadre de mon M1 en biologie végétale tropicale (BioGet) à l'université Montpellier que j'ai entreprit le stage de recherche qui va vous être présenté dans ce mémoire. Mon stage s'est déroulé sur le campus monpellierain d'AgroParisTech ( co-pilote de mon parcours de M1). Ce campus regroupe plusieurs formations sur les ecosystèmes forestiers et de la gestion de l'eau, ainsi que quatres pôles de recherches comme l'UMR "Territoires, environnement, télédétection et information spatiale". Lors de mon stage j'ai justement utilisé des informations spatiales afin d'analyser la biodiversité forestière tropicale.
+
+@wiegand2007 Pose les bases du calcul des "ISAR", des courbes d'accumulation qui sont spécifique à une seule espèce. Le sujet de mon stage porte sur ces mesures d’accumulation de la diversité et leur apport dans la compréhension des processus d’assemblage des communautés.
+
+## Etat de l'art
 
 Problématique : Apports des mesures d’accumulation de la diversité à la compréhension des processus d’assemblage des communautés.
 
-Objectifs du stage
+## Objectifs du stage 
 
-Plan général de la démarche
+## Plan général de la démarche 
