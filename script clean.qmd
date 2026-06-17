@@ -431,6 +431,23 @@ if (file.exists("data/rd_16_h0.Rdata")) {
 }
 
 
+#On calcul avec simpsoon
+if (file.exists("data/rd_16_h0_simpson.Rdata")) {
+  load("data/rd_16_h0_simpson.Rdata")
+} else {
+  rd_16_h0_simpson <- accum_sp_hill(p2015_16_wmppp, 
+                            # Richesse
+                            orders = 2,
+                            # Distances
+                            r = seq(0, 30,2 ),
+                            h0 =  "random location",
+                            individual = TRUE,
+                            n_simulations = 100,
+                            richness_estimator = "iChao1"
+  )
+  save(rd_16_h0_simpson, file = "data/rd_16_h0_simpson.Rdata")
+}
+
 ```
 
 fonction qui mets les itervalles de confiance sur les graph
