@@ -2,7 +2,7 @@
 
 # Introduction
 
-C'est dans le cadre de mon M1 en biologie végétale tropicale (BioGet) à l'université Montpellier que j'ai entreprit le stage de recherche qui va vous être présenté dans ce mémoire. Mon stage s'est déroulé sur le campus monpellierain d'AgroParisTech ( co-pilote de mon parcours de M1). Ce campus regroupe plusieurs formations sur les ecosystèmes forestiers et de la gestion de l'eau, ainsi que quatres pôles de recherches comme l'UMR "Territoires, environnement, télédétection et information spatiale". Lors de mon stage j'ai justement utilisé des informations spatiales afin d'analyser la biodiversité forestière tropicale.
+C'est dans le cadre de mon M1 en biologie végétale tropicale (BioGet) à l'université Montpellier que j'ai entreprit le stage de recherche qui va vous être présenté dans ce mémoire. Celui-ci s'est déroulé sur le campus monpellierain d'AgroParisTech ( co-pilote de mon parcours de M1). Ce campus regroupe plusieurs formations sur les écosystèmes forestiers et de la gestion de l'eau, ainsi que quatres pôles de recherches comme l'UMR "Territoires, environnement, télédétection et information spatiale". Lors de mon stage j'ai justement utilisé des informations spatiales afin d'analyser la biodiversité forestière tropicale.
 
 @wiegand2007 Pose les bases du calcul des "ISAR", des courbes d'accumulation qui sont spécifique à une seule espèce. Le sujet de mon stage porte sur ces mesures d’accumulation de la diversité et leur apport dans la compréhension des processus d’assemblage des communautés.
 
@@ -10,12 +10,42 @@ C'est dans le cadre de mon M1 en biologie végétale tropicale (BioGet) à l'uni
 
 ### Forêts de Guyane
 
-Les foret tropicales représente 45% des forêts du globe. La Guyane en est couverte à 96% ( @fao2025) et compte quelque 1700 essence d'arbres. Recouverte à 95% de forêt primaires nullement fragmentées (@fao2025) , cet écosystème renferme une biodiversité aussi riche que mystérieuse en faisant un objet d'étude parfait pour la diversité spatiale.
+Les foret tropicales représente 45% des forêts du globe. La Guyane en est couverte à 96% ( @fao2025) et compte quelque 1700 essence d'arbres. 95% de ses forêts sont considérées comme primaires et nullement fragmentées (@fao2025) , faisant de cet écosystème, aussi riche que mystérieux un objet d'étude parfait pour la diversité spatiale.
+
+Beaucoup d'hétérogénéitée spatiale, impossible de prévoir la div avant d'être sur le terrain (@geyer2020) .
+
+Nombreuses sp et reste à découvrir, @
+
+caractérisé par sp ultra présent et des sp rare peu d'indiv @
+
+de 100 à 200 sp/ha avec cas spécifique des mangroves (10sp) @
+
+climat stable, pas de pertubation biotique type cyclone @
+
+peu ou pas d'sp envahissante, 2 recensées mais dans les savanes @
+
+$D_{130}>10cm $ considéré comme un arbre. (désigne le diamètre à 130cm de hauteur)
 
 ### Techniques d'évaluation de la biodiversité
+
+div genetique peu analysée seulement sur certaine sp d'interet commerciales
+
+quelles mesure de diversité en guyane
+
+pourquoi important d'évaluer la div
 
 Problématique : Apports des mesures d’accumulation de la diversité à la compréhension des processus d’assemblage des communautés.
 
 ## Objectifs du stage 
 
 ## Plan général de la démarche 
+
+recheche biblio
+
+utilisation des methode de mesure de div sur les parcelle de paracou
+
+dev de ces meme methodes
+
+analyse (classement des arbres en sp accum/neutre/ repulsives)
+
+utilisation possible
