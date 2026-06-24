@@ -597,14 +597,14 @@ maps_sp <- function(sp_name, data_wmppp){
       data = as.data.frame(data_wmppp),
       aes(x, y),
       color = "honeydew2",
-      size = 1
+      size = 1.5
     ) +
     
     # couche 2 : les sp d'interet
     geom_point(
       data = as.data.frame(data_wmppp)[sel, ],
       aes(x, y, colour = marks$PointType[sel]),
-      size = 1
+      size = 2.5
     ) +
     
     scale_color_manual(
@@ -709,7 +709,9 @@ names(acre_final) <- c("BinomialName", "effectif15", "classe15", "effectif6","cl
 
 #ligne de modif des tableaux
 #2 pour over 3
-isarsp_ic(c(acre_16$BinomialName[129:133]), rd_16_simpson,rd_16_h0_simpson)
+isarsp_ic(c(acre_16$BinomialName[50:55]), rd_16_simpson,rd_16_h0_simpson)
+isarsp_ic(c("Endlicheria melinonii","Andira coriacea"), rd_16_simpson,rd_16_h0_simpson)
+isarsp_ic(c("Dicorynia guianensis"), rd_16,rd_16_h0) + isarsp_ic(c("Dicorynia guianensis"), rd_16_simpson,rd_16_h0_simpson)
 acre_16$classe2[29:33] <- c(2,2,2,2,2)
 autoplot(rd_16_simpson) + autoplot(rd_16)
 ```
@@ -732,8 +734,21 @@ wacapou peut -etre menacé lire l'etude
 d <- spatstat.geom::pairdist(p2015_16_wmppp)
 
 #nombre d'arbre moyen pour un rayon de 10m
-mean(colSums(d <= 10) - 1)
+mean(colSums(d <= 30) - 1)
 
+
+#nbr d'espec moyenne
+esprout <- marks(p2015_16_wmppp)
+esp <- esprout$PointType
+
+dru <- pairdist(p2015_16_wmppp)
+
+nb_especas <- apply(dru <= 30, 1, function(v) {
+  length(unique(esp[v]))
+})
+
+mean(nb_especas)
+summary(nb_especas)
 #graph rang abondance
 ab <- sort(surface_ter_16$nombre, decreasing = TRUE)
 plot(ab, log = "y", type = "b")
@@ -741,11 +756,123 @@ plot(ab, log = "y", type = "b")
 #zoom de wmppp
 library(spatstat.geom)
 
-w_zoom <- owin(xrange = c(400,500),
-               yrange = c(0, 100))
+w_zoom <- owin(xrange = c(200,300),
+               yrange = c(200, 300))
 
 zoom <- p2015_16_wmppp[w_zoom]
 autoplot(zoom)
 
-maps_localisation(c(acre_16$BinomialName[1:10]),zoom)
+
 ```
+
+```{r}
+library(spatstat.geom)
+
+# =========================
+# 1) DONNÉES
+# =========================
+
+X <- p2015_16_wmppp
+
+# extraction des marques (espèces)
+sp <- marks(X)$PointType
+
+
+# matrice des distances inter-individus
+d <- pairdist(X)
+
+# =========================
+# 2) FONCTION RICHESSE LOCALE
+# =========================
+
+richness_radius <- function(r) {
+  apply(d <= r, 1, function(v) {
+    length(unique(sp[v]))
+  })
+}
+
+# =========================
+# 3) COURBE D’ACCUMULATION SPATIALE
+# =========================
+
+r_vals <- seq(0, 30, 2)
+
+richness_mean <- sapply(r_vals, function(r) {
+  mean(richness_radius(r))
+})
+
+# =========================
+# 4) TABLE DE RÉSULTATS
+# =========================
+
+result <- data.frame(
+  radius = r_vals,
+  richness = richness_mean
+)
+
+print(result)
+
+# =========================
+# 5) VÉRIFICATION À 30 m
+# =========================
+
+cat("Richesse moyenne à 30 m :", richness_mean[r_vals == 30], "\n")
+
+# =========================
+# 6) PLOT
+# =========================
+
+plot(r_vals, richness_mean,
+     type = "l",
+     lwd = 2,
+     xlab = "Rayon (m)",
+     ylab = "Richesse moyenne (nombre d'espèces)",
+     main = "Accumulation spatiale (disque géométrique)")
+
+
+
+
+# =========================
+# fonction Simpson locale
+# =========================
+
+simpson_radius <- function(r) {
+  apply(d <= r, 1, function(v) {
+    
+    species <- sp[v]
+    tab <- table(species)
+    p <- tab / sum(tab)
+    
+    # Simpson (Hill q=2 = 1 / sum(p^2))
+    1 / sum(p^2)
+  })
+}
+
+# =========================
+# courbe
+# =========================
+
+r_vals <- seq(0, 30, 2)
+
+simpson_mean <- sapply(r_vals, function(r) {
+  mean(simpson_radius(r))
+})
+
+result_simpson <- data.frame(
+  radius = r_vals,
+  simpson = simpson_mean
+)
+
+print(result_simpson)
+
+#olallallala
+plot(r_vals, simpson_mean,
+     type = "l",
+     lwd = 2,
+     xlab = "Rayon (m)",
+     ylab = "Richesse moyenne (nombre d'espèces)",
+     main = "Accumulation spatiale (simpson)")
+
+```
+
+Je crois qu'on a un pb avec accum sp hill, ou alors le graph rendu est chelou?
