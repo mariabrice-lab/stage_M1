@@ -234,6 +234,7 @@ indices_div <- Paracou2015 %>%
       Shannon = ent_shannon(as.numeric(abd), estimator = "naive")[[3]],
       Simpson = ent_simpson(as.numeric(abd),estimator = "naive")[[3]],
       Hill_q1 = div_hill(as.numeric(abd), q = 1)[[3]],
+      Hill_q2 = div_hill(as.numeric(abd), q = 2 )[[3]],
       
       Richesse = length(abd),
       Abondance = sum(abd)
@@ -288,12 +289,19 @@ if (file.exists("data/rd_15.Rdata")) {
   save(rd_15, file = "data/rd_15.Rdata")}
 
 #16
+#order = 0
 if (file.exists("data/rd_16.Rdata")) {
   load("data/rd_16.Rdata")
 }else{
   rd_16 <- isars(p2015_16_wmppp,0,seq(0, 30,2 ))
   save(rd_16, file = "data/rd_16.Rdata")}
 
+#ordre = 2
+if (file.exists("data/rd_16_simpson.Rdata")) {
+  load("data/rd_16_simpson.Rdata")
+}else{
+  rd_16_simpson <- isars(p2015_16_wmppp,2,seq(0, 30,2 ))
+  save(rd_16_simpson, file = "data/rd_16_simpson.Rdata")}
 
 ```
 
@@ -448,6 +456,7 @@ if (file.exists("data/rd_16_h0_simpson.Rdata")) {
   save(rd_16_h0_simpson, file = "data/rd_16_h0_simpson.Rdata")
 }
 
+autoplot(rd_16_h0_simpson)
 ```
 
 fonction qui mets les itervalles de confiance sur les graph
@@ -552,7 +561,7 @@ maps_localisation <- function(sp_name, data_wmppp){
 
 
 #exemple
-maps_localisation(c("Sextonia rubra","Ruizterania albiflora","Dicorynia guianensis"),p2015_6_wmppp)
+maps_localisation(c("Sextonia rubra","Ruizterania albiflora","Dicorynia guianensis"),p2015_16_wmppp)
 ```
 
 autre fonction qui highlight les arbres mais en gardant tout les individus de la parcelle
@@ -687,6 +696,7 @@ acre_15$classe <- NA
 #parcelle 16
 acre_16 <- surface_ter_16[1:197, 1:2]
 acre_16$classe <- NA
+acre_16$classe2 <- NA
 #y'a quand meme 300 indet.indet.indet chez p16
 
 
@@ -698,8 +708,10 @@ names(acre_final) <- c("BinomialName", "effectif15", "classe15", "effectif6","cl
 
 
 #ligne de modif des tableaux
-isarsp_ic(c(acre_16$BinomialName[1:4]), rd_16,rd_16_h0)
-acre_16$classe[1:4] <- c(0,0,0,0)
+#2 pour over 3
+isarsp_ic(c(acre_16$BinomialName[129:133]), rd_16_simpson,rd_16_h0_simpson)
+acre_16$classe2[29:33] <- c(2,2,2,2,2)
+autoplot(rd_16_simpson) + autoplot(rd_16)
 ```
 
 sp interessante
@@ -715,3 +727,25 @@ wacapou peut -etre menacé lire l'etude
 *Symphonia globulifera* (30 en tout)
 
 *Manilkara bidentata* (21 en p16) :bois de construction et gomme gutta-balata latex pour balle de golft (par ex)
+
+```{r}
+d <- spatstat.geom::pairdist(p2015_16_wmppp)
+
+#nombre d'arbre moyen pour un rayon de 10m
+mean(colSums(d <= 10) - 1)
+
+#graph rang abondance
+ab <- sort(surface_ter_16$nombre, decreasing = TRUE)
+plot(ab, log = "y", type = "b")
+
+#zoom de wmppp
+library(spatstat.geom)
+
+w_zoom <- owin(xrange = c(400,500),
+               yrange = c(0, 100))
+
+zoom <- p2015_16_wmppp[w_zoom]
+autoplot(zoom)
+
+maps_localisation(c(acre_16$BinomialName[1:10]),zoom)
+```
