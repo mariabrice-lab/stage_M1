@@ -10,7 +10,7 @@ OU *méthodologie* pour des sujets en sciences humaines et sociales[^mm-1].
 
 ## Acquisition des données
 
-Les données utilisées sont issues d'un dispositif installé sur le site de Paracou en Guyane française. Il comprends 16 parcelles mais seules les parcelles 6 (2.5ha, 250m\*250m), 15 (2.5 ha) et 16 (5 ha) sont prises en compte dans notre stage. Dans ces parcelles, chaque arbre est repertorié (indentification de l'espèce, localisation, diverses mesures,...) approximativement tout les 2ans. Nous avons choisi les données d'inventaire de 2015, car c'est la seule années où nos 3 parcelles ont été entièrement inventoriées.
+Les données utilisées sont issues d'un dispositif installé sur le site de Paracou en Guyane française. Il comprends 16 parcelles mais seules les parcelles 6 (2.5ha, 250m\*250m), 15 (2.5 ha) et 16 (5 ha) sont prises en compte dans notre stage. Dans ces parcelles, chaque arbre est repertorié (indentification de l'espèce, localisation et diverses mesures,...) approximativement tout les 2ans. Nous avons choisi les données d'inventaire de 2015, car c'est la seule années où nos 3 parcelles ont été entièrement inventoriées.
 
 Lecture des données:
 
