@@ -23,7 +23,27 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
-</style>
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+  margin-bottom: 0em;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
 
 
 <script src="site_libs/quarto-nav/quarto-nav.js"></script>
@@ -185,8 +205,20 @@ ul.task-list li input[type="checkbox"] {
 </nav>
 <div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
-        
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table des matières</h2>
+   
+  <ul>
+  <li><a href="#état-de-lart" id="toc-état-de-lart" class="nav-link active" data-scroll-target="#état-de-lart"><span class="header-section-number">1.1</span> État de l’art</a>
+  <ul class="collapse">
+  <li><a href="#forêts-de-guyane" id="toc-forêts-de-guyane" class="nav-link" data-scroll-target="#forêts-de-guyane"><span class="header-section-number">1.1.1</span> Forêts de Guyane</a></li>
+  <li><a href="#techniques-dévaluation-de-la-biodiversité" id="toc-techniques-dévaluation-de-la-biodiversité" class="nav-link" data-scroll-target="#techniques-dévaluation-de-la-biodiversité"><span class="header-section-number">1.1.2</span> Techniques d’évaluation de la biodiversité</a></li>
+  </ul></li>
+  <li><a href="#objectifs-du-stage" id="toc-objectifs-du-stage" class="nav-link" data-scroll-target="#objectifs-du-stage"><span class="header-section-number">1.2</span> Objectifs du stage</a></li>
+  <li><a href="#plan-général-de-la-démarche" id="toc-plan-général-de-la-démarche" class="nav-link" data-scroll-target="#plan-général-de-la-démarche"><span class="header-section-number">1.3</span> Plan général de la démarche</a></li>
+  </ul>
+<div class="toc-actions"><ul><li><a href="https://github.com/mariabrice-lab/stage_M1/edit/main/intro.qmd" class="toc-action"><i class="bi bi-github"></i>Modifier cette page</a></li></ul></div></nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
@@ -210,11 +242,81 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<p>Problématique</p>
-<p>Objectifs</p>
-<p>Plan général de la démarche</p>
+<p>C’est dans le cadre de mon M1 en biologie végétale tropicale (BioGet) à l’université Montpellier que j’ai entreprit le stage de recherche qui va vous être présenté dans ce mémoire. Celui-ci s’est déroulé sur le campus montpelliérain d’AgroParisTech ( co-pilote de mon parcours de M1). Ce campus regroupe plusieurs formations sur les écosystèmes forestiers et de la gestion de l’eau, ainsi que quatre pôles de recherches comme l’UMR “Territoires, environnement, télédétection et information spatiale”. Lors de mon stage j’ai justement utilisé des informations spatiales afin d’analyser la biodiversité forestière tropicale.</p>
+<p>Les vagues de chaleur éprouvantes qui ont touché la France fin juin 2026 nous ont confronté à la triste réalité du réchauffement planétaire et ses conséquences directes. Les forêts tropicales, poumons vert de la planète, de part leur extrême biodiversité, constituent autant une barrière à ce réchauffement que les premières cibles de celui-ci. Il devient plus qu’urgent de les préserver, or préservation va de paire avec connaissance. L’étude et la compréhension des ces milieux complexes et mystérieux est un vent d’espoir ou au moins l’une des pales du ventilateur qui nous sauvera de cette fournaise.</p>
+<p>Afin de mieux appréhender la diversité tropicale, <span class="citation" data-cites="wiegand2007">Wiegand et al. (<a href="references.html#ref-wiegand2007" role="doc-biblioref">2007</a>)</span> Pose les bases du calcul des “ISAR”, des courbes d’accumulation spatiales, spécifiques à une seule espèce. Le sujet de mon stage porte sur ces mesures d’accumulation de la diversité et leur apport dans la compréhension des processus d’assemblage des communautés.</p>
+<section id="état-de-lart" class="level2" data-number="1.1">
+<h2 data-number="1.1" class="anchored" data-anchor-id="état-de-lart"><span class="header-section-number">1.1</span> État de l’art</h2>
+<section id="forêts-de-guyane" class="level3" data-number="1.1.1">
+<h3 data-number="1.1.1" class="anchored" data-anchor-id="forêts-de-guyane"><span class="header-section-number">1.1.1</span> Forêts de Guyane</h3>
+<p>Les forêts tropicales représente 45&nbsp;% des forêts du globe. La Guyane françaises, elle, en est couverte à 96&nbsp;% (<span class="citation" data-cites="fao2025"><em>FRA Platform | Global Forest Resources Data | Food and Agriculture Organization of the United Nations</em> (<a href="references.html#ref-fao2025" role="doc-biblioref">s.&nbsp;d.</a>)</span>) et compte quelque 1700 essence d’arbres. Ces forêts appartiennent au “bouclier Guyanais”,aussi appelé “plateau des guyanes” c’est l’un des plus ancien massif montagneux de la planète. Il se compose de trois cratons précambrien formant de nombreux reliefs érodés et est caractérisé par des sols acides et pauvres en micronutriments (<span class="citation" data-cites="molino2022">Molino et al. (<a href="references.html#ref-molino2022" role="doc-biblioref">2022</a>)</span>). Situé au nord-est du continent sud-américain, il traverse 6 pays : le Venezuela, le Guyana, le Brésil, le Suriname, la Colombie et la Guyane française (objets de notre études). La géologie du bouclier varie en fonction du pays, ainsi au Venezuela on trouve des hauts plateaux avec des reliefs culminant à 3000m alors que l’altitude en Guyane française est comprise entre 0 et 300m. De plus au cours de son histoire géologique, des pénétration d’eau dans les terres (du à l’élévation du niveaux des mers lors des périodes de réchauffement climatiques) ont participes à l’isolation du plateau des guyanes du bassin amazonien expliquant en partie son taux d’endémisme élevé (on en retrouve une soixantaine clairement identifiée rien qu’en Guyane française ( <span class="citation" data-cites="geyer2020">Geyer et al. (<a href="references.html#ref-geyer2020" role="doc-biblioref">s.&nbsp;d.</a>)</span> )</p>
+<p>La Guyane se caractérise par un climat équatorial humide qui voit d’effiler 4saisons, petite et grande saison sèche et petite et grande saison humide, avec des températures qui varient faiblement autour d’une moyenne de 27 dégrées et des précipitations moyennes annuelles qui varient de 2000 à 4000 mm.an<sup>-1</sup>. Bien que les perturbations météorologiques soit rares, ce territoire n’est nullement épargné par le chaufferette climatique, avec une augmentation moyenne de 1,4 dégrée entre 1955 et 2009 (<span class="citation" data-cites="météofrance"><em>data.gouv.fr</em> (<a href="references.html#ref-météofrance" role="doc-biblioref">s.&nbsp;d.</a>)</span>). Avec ses 14 bassins versant, représente par des grand fleuves comme yapock ou le Maroni, qui sont autant de voies de pénétration dans la forêt, le système hydrologique joue un grand rôle dans la topographie guyanaise ( <span class="citation" data-cites="observatoire_des_forêt_française"><em>Observatoire des forêts françaises</em> (<a href="references.html#ref-observatoire_des_forêt_française" role="doc-biblioref">s.&nbsp;d.</a>)</span> ).</p>
+<p>La préservation des forêts de Guyane française est remarquables, 95&nbsp;% de ses forêts sont considérées comme primaires et nullement fragmentées ( <span class="citation" data-cites="fao2025"><em>FRA Platform | Global Forest Resources Data | Food and Agriculture Organization of the United Nations</em> (<a href="references.html#ref-fao2025" role="doc-biblioref">s.&nbsp;d.</a>)</span> ). La faible population et sa répartition très localisée sur les régions côtières en est la cause principale. La Guyane étant un département français, elle se repose beaucoup sur des importations ce qui limite les besoins d’exploitation de ses propres ressources. De plus, des politiques de préservation misent en place dans les dernières années aide à maintenir l’état des forêts et en protéger la diversité (<span class="citation" data-cites="molino2022">Molino et al. (<a href="references.html#ref-molino2022" role="doc-biblioref">2022</a>)</span>).</p>
+<p>La forêt guyanais est décrite comme une mosaïque d’écosystèmes, si bien que chaque hectare se caractérise par une cohorte d’espèces qui peut être radicalement différent de l’hectare voisin ( <span class="citation" data-cites="geyer2020">Geyer et al. (<a href="references.html#ref-geyer2020" role="doc-biblioref">s.&nbsp;d.</a>)</span> ) . On y retrouve de nombreux habitat allant des mangroves (avec seulement une dizaine d’espèces d’arbres) aux forêts des plateaux élevés, en passant par les forêt des basses vallées fluviales, forêts des collines irrégulières, forêts littorales sur cordons sableux, …La répartition en abondance et au sein des famille est très hétéroclite, les huit familles prédominantes (50&nbsp;% des espèce) sont : les Leguminosae, Lauraceae, Myrtaceae, Sapotaceae, Chrysobalanaceae, Annonaceae, Melastomataceae et Rubiaceae ( <span class="citation" data-cites="molino2022">Molino et al. (<a href="references.html#ref-molino2022" role="doc-biblioref">2022</a>)</span> ). D’un autre coté on retrouve une quarantaine de famille qui ne compte que 5 espèces ou moins.</p>
+</section>
+<section id="techniques-dévaluation-de-la-biodiversité" class="level3" data-number="1.1.2">
+<h3 data-number="1.1.2" class="anchored" data-anchor-id="techniques-dévaluation-de-la-biodiversité"><span class="header-section-number">1.1.2</span> Techniques d’évaluation de la biodiversité</h3>
+<p>Définie comme “Variabilité des organismes vivants de toute origine y compris, entre autres, les écosystèmes terrestres, marins et autres écosystèmes aquatiques et les complexes écologiques dont ils font <span style="white-space:nowrap">partie ;</span> cela comprend la diversité au sein des espèces et entre espèces ainsi que celle des écosystèmes” lors de la conférence sur la diversité biologique des nations unies de 1992 ( <span class="citation" data-cites="NationUnies_convention_1992">Nations (<a href="references.html#ref-NationUnies_convention_1992" role="doc-biblioref">s.&nbsp;d.</a>)</span> ), la biodiversité est le socle de l’écologie actuelle.</p>
+<p>L’évalutation de la biodiversité est une démarche qui requière une connaissances importante des mécanismes et dynamiques en place dans les écosystèmes. Cette évaluation est cependant plus qu’indispensable à la préservation de ceux-ci, car on ne peut protéger ce qu’on ne comprend pas. Les forêts tropicales et notamment celle de Guyane, par leur complexité et leur dynamique ont attiré des siècle durant, les scientifiques qui ont cherché à percevoir les mystères de la faune et la flore qui les composent. Ils ont inventoriées, mesurés, calculer des indices, optimisé les techniques de mesures dans l’espoir de mieux appréhender ces forêts. L’évaluation de la biodiversité est d’autant plus urgente qu’elle s’érode à une vitesse grand V. Les pressions anthropiques locales (certes relativement faibles en Guyane) mais aussi leurs répercussions à l’échelle planétaire causent de l’extinction de nombreuses espèces et de la dégradation rapide, parfois irréversibles des habitats naturels. ( <span class="citation" data-cites="ipbes_rapport_2019">(<a href="references.html#ref-ipbes_rapport_2019" role="doc-biblioref"><strong>ipbes_rapport_2019?</strong></a>)</span> )</p>
+<p>On considère généralement 3 niveaux de biodiversité : diversité génétique ( = intra-spécifique), spécifique (=interspécifique) et écosystémique ( <span class="citation" data-cites="NationUnies_convention_1992">Nations (<a href="references.html#ref-NationUnies_convention_1992" role="doc-biblioref">s.&nbsp;d.</a>)</span> ). Bien que les deux autres autres niveaux soit extrêmement intéressants, on s’est focalisé ici sur la diversité spécifique. Elle étudie la nature (diversité fonctionnelle), l’abondance et le nombre d’espèces présentes sur terre ( <span class="citation" data-cites="magurran2003">Magurran (<a href="references.html#ref-magurran2003" role="doc-biblioref">2003</a>)</span> ). Dans le contexte des forêts guyanaises la diversité génétique mériterait à être plus étudiée de part les informations qu’elles fournis sur les dynamique d’évolution des population et leur possibles adaptation aux perturbation climatique à venir, malheureusement mon stage ne dure que 2mois…</p>
+<p>Pour analyser la biodiversité spécifique, on utilise les données obtenues lors d’échantillonnages sur le terrain, ils permettent de rendre compte de la biodiversité globale sans avoir à la mesurer entièrement. En milieu forestier on mets en place des parcelles des quelques hectares, délimitées par des quadras dans lequel on inventorie chaque plantes/arbres. Des “simples” techniques d’inventaires sur le terrains, on peut utiliser aujourd’hui des images satellites ou des modèles statistique pour évaluer la biodiversité.</p>
+<p>Dans le cadre de notre stage on mobilisé 2 mesures de diversité qui sont la base du calcul d’indices complexes, spécifique à certaines question biologiques :</p>
+<ul>
+<li><p>L’abondance soit le nombre d’individus par espèce</p></li>
+<li><p>La richesse spécifiques soit le nombres d’espèces différentes</p></li>
+</ul>
+<p>Le milieu tropical est particulier car il est très dense, ce qui rend la délimitation des parcelles et la circulation sur le terrain difficile. De plus l’identification est rendue difficile par l’extrême diversité des taxons, le manque de caractères et description des espèces et les nombreuses espèces qu’il reste à identifier.</p>
+<p>Il existe de nombreux indicateurs adapté à l’évaluation de la biodiversité. Ces indicateurs permettent de quantifier avec méthodologie la biodiversité permettant sa mesure objective et la simplification de données extrêmement complexes ( <span class="citation" data-cites="UICN2014"><em>LES INDICATEURS DE BIODIVERSITÉ <span></span> UICN-FR-COLLECTIVITES-BIODIVERSITE.FR</em> (<a href="references.html#ref-UICN2014" role="doc-biblioref">s.&nbsp;d.</a>)</span> ) . Il est important de choisir un ou plusieurs indices adapté à ses problématiques biologiques. Parmi ces indicateurs on trouve des indices comme Simpson ou Shannon, calculés à partir des données d’abondance et de richesse spécifiques, je vous renvoi aux matériels et méthodes pour ceux utilisé lors du stage.</p>
+<p>Les courbes d’accumulation attestent elles aussi de la diversité d’une localité ( <span class="citation" data-cites="gotelli2001">Gotelli &amp; Colwell (<a href="references.html#ref-gotelli2001" role="doc-biblioref">2001</a>)</span> ) Elles sont utilisées pour faire une approximation du nombre d’espèces d’un échantillon sans avoir à en conaitres chaque individus. Pour cela, on accroît petit à petit le nombre d’individus mesurés créant ainsi une courbe d’accumulation qui atteint bien souvent un plateau. Dans notre stage, ces courbes d’accumulation on été quelque peu transformées selon une démarche développée par <span class="citation" data-cites="wiegand2007">Wiegand et al. (<a href="references.html#ref-wiegand2007" role="doc-biblioref">2007</a>)</span> pour rendre compte de l’effet d’une espèces sur la diversité environnante (voir mat &amp; med pour développement).</p>
+</section>
+</section>
+<section id="objectifs-du-stage" class="level2" data-number="1.2">
+<h2 data-number="1.2" class="anchored" data-anchor-id="objectifs-du-stage"><span class="header-section-number">1.2</span> Objectifs du stage</h2>
+<p>Le stage à pour objectif de comprendre les apports des mesures d’accumulation de la diversité à la compréhension des processus d’assemblage des communautés dans la forêt guyanaise. Par comprendre on entend d’abord un travail bibliographique afin de s’approprier les notions développé par @Wiegand puis une application de ses notions sur des jeux de données complexes des forêt tropicales. On cherchera à approfondir ces méthodes de calcul de courbes d’accumulation avec l’intégration d’indices de diversité complexes, tel que Simpson ou des notion de distance phylogénétique et fonctionnelle. Grace à ces courbes d’accumulation spécifique, on cherche à attester du potentiel “accumulateur” ou “repoussoir” de diversité des principales espèces guyanaises. Autrement dit, si une espèce a tendance à rassembler de nombreuses espèces différence dans son voisinage et donc “favoriser la diversité” ou si celle-ci a plutôt tendance à produire une diversité locale faible. Enfin on cherchera des applications possibles dans le domaine de la préservation, de l’économie ou même du social.</p>
+</section>
+<section id="plan-général-de-la-démarche" class="level2" data-number="1.3">
+<h2 data-number="1.3" class="anchored" data-anchor-id="plan-général-de-la-démarche"><span class="header-section-number">1.3</span> Plan général de la démarche</h2>
+<p>La première partie du stage consista en un travail bibliographique. Les notions de diversité inhérentes aux forêts tropicales humides furent passées en revue, avec un zoom sur le cas des forêts de Guyane française. On se renseigna aussi brièvement sur les différentes manières de mesurer la biodiversité (indicateurs, inventaires, indices, taxonomie, …) . Et enfin le sujet spécifique des courbes d’accumulation par espèce et locales, abrégé “ISAR”, fut abordé en prenant appuis sur les articles développant ces mêmes mesures : <span class="citation" data-cites="wiegand2007">Wiegand et al. (<a href="references.html#ref-wiegand2007" role="doc-biblioref">2007</a>)</span> et <span class="citation" data-cites="wiegand2017">Wiegand et al. (<a href="references.html#ref-wiegand2017" role="doc-biblioref">2017</a>)</span> .</p>
+<p>La deuxième partie, une fois toutes les notions comprises, fut une prise en main de celle-ci à travers les données du site de Paracou (mat &amp; med). Au moyen du logiciel Rstudio, les Isars d’un grand nombres d’espèces d’arbres furent calculées, nous permettant de classer les espèces entre accumulatrices de biodiversité et repoussoir. La création de fonctions simplifia grandement les calculs qui sont relativement longs et complexes.</p>
+<p>Les résultat obtenus furent ensuite analysé avec un focus sur certaines espèces d’intérêt allant de paire avec une recherche sur les possibles applications futures et/ou le développement et la pertinence de la méthode des Isars.</p>
 
 
+<div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" data-line-spacing="2" role="list" style="display: none">
+<div id="ref-météofrance" class="csl-entry" role="listitem">
+<em>data.gouv.fr</em>. (s.&nbsp;d.). Consulté <a href="https://www.data.gouv.fr/datasets/inventaire-des-archives-du-climat-conservees-dans-les-centres-de-la-direction-interregionale-antilles-guyane">https://www.data.gouv.fr/datasets/inventaire-des-archives-du-climat-conservees-dans-les-centres-de-la-direction-interregionale-antilles-guyane</a>
+</div>
+<div id="ref-fao2025" class="csl-entry" role="listitem">
+<em>FRA Platform | Global Forest Resources Data | Food and Agriculture Organization of the United Nations</em>. (s.&nbsp;d.). Consulté <a href="https://fra-data.fao.org/assessments/fra/2025/GUF/home/overview">https://fra-data.fao.org/assessments/fra/2025/GUF/home/overview</a>
+</div>
+<div id="ref-geyer2020" class="csl-entry" role="listitem">
+Geyer, J.-F. de, Launay, J., Heuertz, M., Tysklind, N., Molino, J.-F., Delprete, P. G., Engel, J., &amp; Frame, D. (s.&nbsp;d.). <em>Deuxième rapport sur l’état des ressources génétiques forestières mondiales - 2020- Rapport national de la France - Tome 3 Guyane</em>.
+</div>
+<div id="ref-gotelli2001" class="csl-entry" role="listitem">
+Gotelli, N. J., &amp; Colwell, R. K. (2001). Quantifying biodiversity: procedures and pitfalls in the measurement and comparison of species richness. <em>Ecology Letters</em>, <em>4</em>(4), 379‑391. <a href="https://doi.org/10.1046/j.1461-0248.2001.00230.x">https://doi.org/10.1046/j.1461-0248.2001.00230.x</a>
+</div>
+<div id="ref-UICN2014" class="csl-entry" role="listitem">
+<em>LES INDICATEURS DE BIODIVERSITÉ <span></span> UICN-FR-COLLECTIVITES-BIODIVERSITE.FR</em>. (s.&nbsp;d.). Consulté <a href="http://uicn-fr-collectivites-biodiversite.fr/les-indicateurs-de-biodiversite/">http://uicn-fr-collectivites-biodiversite.fr/les-indicateurs-de-biodiversite/</a>
+</div>
+<div id="ref-magurran2003" class="csl-entry" role="listitem">
+Magurran, A. E. (2003). <em>Measuring Biological Diversity</em>. John Wiley &amp; Sons.
+</div>
+<div id="ref-molino2022" class="csl-entry" role="listitem">
+Molino, J.-F., Sabatier, D., Grenand, P., Engel, J., Frame, D., Delprete, P. G., Fleury, M., Odonne, G., Davy, D., Lucas, E. J., &amp; Martin, C. A. (2022). An annotated checklist of the tree species of French Guiana, including vernacular nomenclature. <em>Adansonia</em>, <em>44</em>(26). <a href="https://doi.org/10.5252/adansonia2022v44a26">https://doi.org/10.5252/adansonia2022v44a26</a>
+</div>
+<div id="ref-NationUnies_convention_1992" class="csl-entry" role="listitem">
+Nations, U. (s.&nbsp;d.). <em>La Convention sur la diversité biologique | Nations Unies</em>. Consulté <a href="https://www.un.org/fr/observances/biological-diversity-day/convention">https://www.un.org/fr/observances/biological-diversity-day/convention</a>
+</div>
+<div id="ref-observatoire_des_forêt_française" class="csl-entry" role="listitem">
+<em>Observatoire des forêts françaises</em>. (s.&nbsp;d.). Consulté <a href="https://observatoire.foret.gouv.fr/">https://observatoire.foret.gouv.fr/</a>
+</div>
+<div id="ref-wiegand2007" class="csl-entry" role="listitem">
+Wiegand, T., Gunatilleke, C. V. S., Gunatilleke, I. A. U. N., &amp; Huth, A. (2007). How individual species structure diversity in tropical forests. <em>Proceedings of the National Academy of Sciences of the United States of America</em>, <em>104</em>(48), 1902933. <a href="https://doi.org/10.1073/pnas.0705621104">https://doi.org/10.1073/pnas.0705621104</a>
+</div>
+<div id="ref-wiegand2017" class="csl-entry" role="listitem">
+Wiegand, T., Uriarte, M., Kraft, N. J. B., Shen, G., Wang, X., &amp; He, F. (2017). Spatially explicit metrics of species diversity, functional diversity, and phylogenetic diversity: Insights into plant community assembly processes. <em>Annual Review of Ecology, Evolution, and Systematics</em>, <em>48</em>(1), 329351. <a href="https://doi.org/10.1146/annurev-ecolsys-110316-022936">https://doi.org/10.1146/annurev-ecolsys-110316-022936</a>
+</div>
+</div>
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
@@ -634,4 +736,4 @@ ul.task-list li input[type="checkbox"] {
 
 
 
-<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions"><ul><li><a href="https://github.com/mariabrice-lab/stage_M1/edit/main/intro.qmd" class="toc-action"><i class="bi bi-github"></i>Modifier cette page</a></li></ul></div></div></div></footer></body></html>
+<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/mariabrice-lab/stage_M1/edit/main/intro.qmd" class="toc-action"><i class="bi bi-github"></i>Modifier cette page</a></li></ul></div></div></div></footer></body></html>
