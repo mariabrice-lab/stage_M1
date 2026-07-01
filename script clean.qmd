@@ -296,22 +296,10 @@ ggplot(abondance16, aes(Rank, Abundance)) +
 
 Pourcentage des espèces
 
-Paracou2015 %\>%
-
-filter(Plot %in% c(6, 15, 16)) %\>% \# optionnel si tu travailles sur plusieurs plots
-
-count(Family, name = "Abondance") %\>%
-
-mutate(Pourcentage = 100 \* Abondance / sum(Abondance)) %\>%
-
-arrange(desc(Abondance)) %\>%
-
-slice(1:5)
-
 ```{r}
 library(dplyr)
 
-abondance <- p2015_16 %>%      # remplace "data" par ton objet
+abondance6 <- p2015_6 %>%      # remplace "data" par ton objet
   count(BinomialName, name = "Abundance") %>%
   arrange(desc(Abundance))
 
@@ -327,7 +315,9 @@ resultats <- data.frame(
 
 resultats
 
-
+abondance15$Pourcentage<- 100*abondance15$Abundance/sum(abondance15$Abundance)
+abondance16$Pourcentage<- 100*abondance16$Abundance/sum(abondance16$Abundance)
+abondance6$Pourcentage<- 100*abondance6$Abundance/sum(abondance6$Abundance)
 #famille et genres les plus présents
 #famille
 Paracou2015 %>%
@@ -377,15 +367,17 @@ indices_div <- Paracou2015 %>%
       Abondance = sum(abd)
     )
   })
-
+indices_div
 
 #selection des parcelles d'interet
 indices_div <- indices_div[c(6,15,16), ]
+indices_div
+
+save(indices_div, file = "data/indices_div.csv")
 
 
 
-
-
+indices_div
 ```
 
 ### ISAR
@@ -669,7 +661,8 @@ isarsp_ic <- function(sp_name, isars,isarsh0){
 }
 
 #exemple (fig6)
-isarsp_ic(c("Dicorynia guianensis","Eperua falcata","Oxandra asbeckii","Eschweilera coriacea"), rd_6,rd_6_h0)
+isarsp_ic(c("Dicorynia guianensis","Eperua falcata","Chimarrhis turbinata","Lecythis persistens"), rd_16,rd_16_h0)
+
 
 ```
 
@@ -816,12 +809,62 @@ pour la classe je vais creer un indice
 du max repulsion -2 (pour \<2.25 à 30m) au max accumulation 3 (pour accum à 30m au dessus de 3.5 et 2 \>3.25), avec 0 espece neutre *(depend des isars de chaque parcelle, les taux varient)*
 
 ```{r}
+#sauvegard des modif de tableaux
+save(acre_6, file = "data/acre_6.csv")
+save(acre_15, file = "data/acre_15.csv")
+save(acre_16, file = "data/acre_16.csv")
+
+
+```
+
+chargement des tableaux
+
+```{r}
 #chargement des tableaux crées
 load("data/acre_6.csv")
 load("data/acre_15.csv")
 load("data/acre_16.csv")
 load("data/acre_final.csv")
+
 ```
+
+études des tableaux
+
+```{r}
+summary(acre_16$classe)
+acre_16 %>%
+  summarise(
+    positif = 100 * mean(classe > 0, na.rm = TRUE),
+    negatif = 100 * mean(classe < 0, na.rm = TRUE),
+    nul = 100 * mean(classe == 0, na.rm = TRUE)
+  )
+
+
+
+acre_16 %>% 
+  count(classe) %>% 
+  mutate(pourcentage = 100*n/sum(n))
+
+acre_6 %>% 
+  count(classe) %>% 
+  mutate(pourcentage=100*n/sum(n))
+
+acre_6 %>%
+  summarise(
+    positif = 100 * mean(classe > 0, na.rm = TRUE),
+    negatif = 100 * mean(classe < 0, na.rm = TRUE),
+    nul = 100 * mean(classe == 0, na.rm = TRUE)
+  )
+
+acre_15 %>%
+  summarise(
+    positif = 100 * mean(classe > 0, na.rm = TRUE),
+    negatif = 100 * mean(classe < 0, na.rm = TRUE),
+    nul = 100 * mean(classe == 0, na.rm = TRUE)
+  )
+```
+
+bazard de modif des tableaux
 
 ```{r}
 #!!! NE PAS EFFECTUER 
@@ -851,13 +894,17 @@ acre_final <- full_join(tab_final, acre_16, by = "BinomialName")
 #on nomme les colones
 names(acre_final) <- c("BinomialName", "abondance15", "classe15", "abondance6","classe6","abondance16","classe16")
 
+names(acre_16) <- c("BinomialName", "abondance", "classe")
+names(acre_6) <- c("BinomialName", "abondance", "classe")
+names(acre_15) <- c("BinomialName", "abondance", "classe")
 
 #ligne de modif des tableaux
 #2 pour over 3
 isarsp_ic(c(acre_16$BinomialName[50:55]), rd_16_simpson,rd_16_h0_simpson)
 isarsp_ic(c("Endlicheria melinonii","Andira coriacea"), rd_16_simpson,rd_16_h0_simpson)
-isarsp_ic(c("Dicorynia guianensis"), rd_16,rd_16_h0) + isarsp_ic(c("Dicorynia guianensis"), rd_16_simpson,rd_16_h0_simpson)
-acre_16$classe2[29:33] <- c(2,2,2,2,2)
+isarsp_ic(c("Dicorynia guianensis","Oxandra asbeckii"), rd_16,rd_16_h0) 
+isarsp_ic(c("Dicorynia guianensis","Oxandra asbeckii"), rd_16_simpson,rd_16_h0_simpson)
+acre_16$classe[98] <- c(2)
 autoplot(rd_16_simpson) + autoplot(rd_16)
 ```
 
@@ -1035,5 +1082,41 @@ autoplot (rd_15_h0)
 
 
 plot(rd_6, q = 0)
+
+```
+
+# Rapport
+
+```{r}
+#fig6
+isarsp_ic(c("Dicorynia guianensis","Eperua falcata","Recordoxylon speciosum","Lecythis persistens"), rd_16,rd_16_h0)
+
+#fig7
+isarsp_ic(c("Dicorynia guianensis","Eperua falcata","Recordoxylon speciosum","Lecythis persistens"), rd_16_simpson,rd_16_h0_simpson)
+
+#tableau1
+load("data/indices_div.csv")
+indices_div
+
+#tableau2
+load("data/acre_16.csv")
+acre_16
+
+#angélique
+#fig8
+isarsp_ic("Dicorynia guianensis", rd_6,rd_6_h0)
+#fig9
+isarsp_ic("Dicorynia guianensis", rd_15,rd_15_h0)
+#fig10
+isarsp_ic("Dicorynia guianensis", rd_16,rd_16_h0)
+
+#fig11
+maps_localisation("Dicorynia guianensis",p2015_6_wmppp)
+#fig12
+maps_localisation("Dicorynia guianensis",p2015_15_wmppp)
+#fig13
+maps_localisation("Dicorynia guianensis",p2015_16_wmppp)
+
+
 
 ```
