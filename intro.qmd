@@ -14,17 +14,17 @@ Les foret tropicales représente 45% des forêts du globe. La Guyane en est couv
 
 Beaucoup d'hétérogénéitée spatiale, impossible de prévoir la div avant d'être sur le terrain (@geyer2020) .
 
-Nombreuses sp et reste à découvrir, @
+Nombreuses sp et reste à découvrir, \@
 
-caractérisé par sp ultra présent et des sp rare peu d'indiv @
+caractérisé par sp ultra présent et des sp rare peu d'indiv \@
 
-de 100 à 200 sp/ha avec cas spécifique des mangroves (10sp) @
+de 100 à 200 sp/ha avec cas spécifique des mangroves (10sp) \@
 
-climat stable, pas de pertubation biotique type cyclone @
+climat stable, pas de pertubation biotique type cyclone \@
 
-peu ou pas d'sp envahissante, 2 recensées mais dans les savanes @
+peu ou pas d'sp envahissante, 2 recensées mais dans les savanes \@
 
-$D_{130}>10cm $ considéré comme un arbre. (désigne le diamètre à 130cm de hauteur)
+\$D\_{130}\>10cm \$ considéré comme un arbre. (désigne le diamètre à 130cm de hauteur)
 
 ### Techniques d'évaluation de la biodiversité
 
@@ -36,9 +36,9 @@ pourquoi important d'évaluer la div
 
 Problématique : Apports des mesures d’accumulation de la diversité à la compréhension des processus d’assemblage des communautés.
 
-## Objectifs du stage 
+## Objectifs du stage
 
-## Plan général de la démarche 
+## Plan général de la démarche
 
 recheche biblio
 
