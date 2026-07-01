@@ -20,6 +20,7 @@ library(dplyr)
 library(tidyr)
 library(purrr)
 library(secret)
+library(vegan)
 
 ```
 
@@ -85,6 +86,26 @@ get_secret("Paracou2015", vault = vault) %>%
   mutate(G = pi * (CircCorr / pi / 2)^2 / 10000) ->
   Paracou2015
 
+#importation Lordi 
+read_csv2("~/BioGET/stage/jeu de données/Paracou2015_UTF8/Paracou2015.csv") %>% 
+  # Noms binomiaux
+  mutate(BinomialName = paste(Genus, Species)) %>% 
+  # Sélection des colonnes utiles
+  select(
+    # Parcelle (pour créer les jeux de points)
+    Plot, 
+    # Carré (pour la p16)
+    SubPlot, 
+    # Identifiant et position de chaque arbre, UTM pour p16
+    idTree, Xfield, Yfield, Xutm, Yutm,
+    # Botanique
+    Family, Genus, Species, BinomialName, 
+    # Circonférence
+    CircCorr
+  ) %>%
+  # Calcul de la surface terrière en mètres carrés
+  mutate(G = pi * (CircCorr / pi / 2)^2 / 10000) ->
+  Paracou2015
 
 ```
 
@@ -109,6 +130,7 @@ paracouplot <- function(data, plot){
 paracouplot(Paracou2015,6) -> p2015_6
 paracouplot(Paracou2015,15) -> p2015_15
 
+p2015_15
 
 ```
 
@@ -219,6 +241,121 @@ p2015_16 %>%
 ```
 
 ### Biodiversité
+
+calcul des abondances et de la distribution gobale des sp
+
+```{r}
+#15
+abondance15 <- p2015_15 %>%
+  count(BinomialName, name = "Abundance") %>%
+  arrange(desc(Abundance)) %>%
+  mutate(Rank = row_number())
+
+ggplot(abondance15, aes(Rank, Abundance)) +
+  geom_point(size = 3) +
+  geom_line() +
+  scale_y_log10() +
+  theme_bw(base_size = 14) +
+  labs(
+    x = "Rang",
+    y = "Abondance (échelle logarithmique)"
+  )
+
+#6
+abondance6 <- p2015_6 %>%
+  count(BinomialName, name = "Abundance") %>%
+  arrange(desc(Abundance)) %>%
+  mutate(Rank = row_number())
+
+ggplot(abondance6, aes(Rank, Abundance)) +
+  geom_point(size = 3) +
+  geom_line() +
+  scale_y_log10() +
+  theme_bw(base_size = 14) +
+  labs(
+    x = "Rang",
+    y = "Abondance (échelle logarithmique)"
+  )
+
+#16
+abondance16 <- p2015_16 %>%
+  count(BinomialName, name = "Abundance") %>%
+  arrange(desc(Abundance)) %>%
+  mutate(Rank = row_number())
+
+ggplot(abondance16, aes(Rank, Abundance)) +
+  geom_point(size = 3) +
+  geom_line() +
+  scale_y_log10() +
+  theme_bw(base_size = 14) +
+  labs(
+    x = "Rang",
+    y = "Abondance (échelle logarithmique)"
+  )
+```
+
+Pourcentage des espèces
+
+Paracou2015 %\>%
+
+filter(Plot %in% c(6, 15, 16)) %\>% \# optionnel si tu travailles sur plusieurs plots
+
+count(Family, name = "Abondance") %\>%
+
+mutate(Pourcentage = 100 \* Abondance / sum(Abondance)) %\>%
+
+arrange(desc(Abondance)) %\>%
+
+slice(1:5)
+
+```{r}
+library(dplyr)
+
+abondance <- p2015_16 %>%      # remplace "data" par ton objet
+  count(BinomialName, name = "Abundance") %>%
+  arrange(desc(Abundance))
+
+# Rangs que tu souhaites afficher
+rangs <- c(5, 10, 20, 30, 40, 50, 75, 100, 200, 300)
+
+resultats <- data.frame(
+  espèces = rangs,
+  Pourcentage = sapply(rangs, function(x) {
+    100 * sum(abondance$Abundance[1:x]) / sum(abondance$Abundance)
+  })
+)
+
+resultats
+
+
+#famille et genres les plus présents
+#famille
+Paracou2015 %>%
+  filter(Plot %in% c(6, 15, 16)) %>%
+  count(Family, name = "Abondance") %>%
+  mutate(Pourcentage = 100 * Abondance / sum(Abondance)) %>%
+  arrange(desc(Abondance)) %>%
+  slice(1:5)
+
+#genre
+Paracou2015 %>%
+  filter(Plot %in% c(6, 15, 16)) %>%
+  count(Genus, name = "Abondance") %>%
+  mutate(Pourcentage = 100 * Abondance / sum(Abondance)) %>%
+  arrange(desc(Abondance)) %>%
+  slice(1:5)
+
+Paracou2015 %>%
+  filter(Plot %in% c(6, 15, 16)) %>%
+  count(Plot, Genus, name = "Abondance") %>%
+  group_by(Plot) %>%
+  arrange(Plot, desc(Abondance)) %>%
+  mutate(Pourcentage = 100 * Abondance / sum(Abondance)) %>%
+  slice_head(n = 5) %>%
+  ungroup()
+```
+
+calcul des indices de diversité
 
 ```{r}
 #calcul d'indices de div par plot et mise en tableau
@@ -459,6 +596,14 @@ if (file.exists("data/rd_16_h0_simpson.Rdata")) {
 autoplot(rd_16_h0_simpson)
 ```
 
+on affiche les graph
+
+```{r}
+autoplot(rd_15_h0)
+autoplot(rd_6_h0)+ autoplot(rd_16_h0)
+autoplot(rd_16_h0_simpson)
+```
+
 fonction qui mets les itervalles de confiance sur les graph
 
 ```{r}
@@ -523,8 +668,8 @@ isarsp_ic <- function(sp_name, isars,isarsh0){
   return(plot_isar)
 }
 
-#exemple
-isarsp_ic(c("Dicorynia guianensis","Eperua falcata"), rd_6,rd_6_h0)
+#exemple (fig6)
+isarsp_ic(c("Dicorynia guianensis","Eperua falcata","Oxandra asbeckii","Eschweilera coriacea"), rd_6,rd_6_h0)
 
 ```
 
@@ -704,7 +849,7 @@ acre_16$classe2 <- NA
 tab_final <- full_join(acre_15, acre_6, by = "BinomialName")
 acre_final <- full_join(tab_final, acre_16, by = "BinomialName")
 #on nomme les colones
-names(acre_final) <- c("BinomialName", "effectif15", "classe15", "effectif6","classe6","effectif16","classe16")
+names(acre_final) <- c("BinomialName", "abondance15", "classe15", "abondance6","classe6","abondance16","classe16")
 
 
 #ligne de modif des tableaux
@@ -876,3 +1021,19 @@ plot(r_vals, simpson_mean,
 ```
 
 Je crois qu'on a un pb avec accum sp hill, ou alors le graph rendu est chelou?
+
+```{r}
+X <- rspcommunity(1, size = 50, species_number = 10)
+# Calculate the accumulation of richness
+accum_n <- accum_sp_hill(X)
+autoplot(accum_n)
+plot(accum_n, q = 0)
+# along distance
+accum_r <- accum_sp_hill(X, orders = 0, r = seq(0, .5, .05))
+autoplot(accum_r)
+autoplot (rd_15_h0)
+
+
+plot(rd_6, q = 0)
+
+```
