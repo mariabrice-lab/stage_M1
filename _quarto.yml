@@ -97,6 +97,10 @@ format:
     papersize: A4
     # Taille de la police. Ne pas dépasser 80 caractères par ligne.
     fontsize: 11pt
+    #figure placement
+    fig-pos: "H"
+    fig-align: center
+    
     # Police Palatino (TeX Gyre Pagella)
     # https://www.gust.org.pl/projects/e-foundry/tex-gyre
     mainfont: texgyrepagella
