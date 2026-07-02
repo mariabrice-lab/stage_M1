@@ -2,6 +2,12 @@
 
 # Résultats
 
-## Premier résultat
+## Diversité et essences d’arbres
 
-{{< lipsum 20 >}}
+Dans l’analyse préliminaire de nos trois parcelles nous observons différentes variations dans les indices de diversité respectifs. Sans surprise, la parcelle 16 est la plus diversifiée, son abondance et son nombre d’espèce est significativement supérieure aux 2 autres. La parcelle 6 est légèrement plus diversifiée que la 15 avec un indice de Shannon d’environ 4.61 contre 4.53 alors que les nombres d'individus est nettement inférieur, cela nous suggère une meilleure répartition des abondances entre espèces. Se concentrer sur l’indice de Simpson est bien plus pertinent en milieu tropical car c’est un milieu très hétérogène.
+
+![](data/indices_div.csv)
+
+Les nombres de hill nous donnent de précieuses indications, en effet ils sont très inférieur à la richesse spécifique et la différence entre le nombre de Hill pour les deux ordres de diversité est flagrante. Cela nous montre que les communauté tropicale sont très hétérogènes en abondances, avec un forte binarité entre espèces très abondantes et espèces rare.
+
+Le graphique rank-abondance de la parcelle 16 nous confirme cette hypothèse, avec une distribution à longue traîne (fig1). Les 5 espèces les plus abondantes représentent 21.9 % des individus et si on agrandit aux 20premières, elles représentes 49.2 %. Les 5 sont fortement représentées au sein de nos 3 parcelles : Lecythidaceae, Fabaceae, Chrysobalanaceae, Annonaceae et Sapotaceae, pour des pourcentages allant de 17.3 % à 5.8 %. Les genres dominants des parcelle 6 et 15 sont quasiment identiques, La parcelle 16 se différencie des deux précédentes,(tableau 2) ce qui est très probablement du a sa position plus éloignée, on sait que la forêt guyanaise à des composition très variables d’essence d’arbres(\@Hans ter Steege et al. (2013) ) et une diversité Bêta très élevée.
