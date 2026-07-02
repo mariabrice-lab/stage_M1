@@ -10,7 +10,7 @@ Afin de mieux appréhender la diversité tropicale, @wiegand2007 Pose les bases 
 
 ## État de l'art
 
-###  Forêts de Guyane
+### Forêts de Guyane
 
 Les forêts tropicales représente 45% des forêts du globe. La Guyane françaises, elle, en est couverte à 96% @fao2025 et compte quelque 1700 essence d'arbres. Ces forêts appartiennent au “bouclier Guyanais”,aussi appelé “plateau des guyanes” c’est l’un des plus ancien massif montagneux de la planète. Il se compose de trois cratons précambrien formant de nombreux reliefs érodés et est caractérisé par des sols acides et pauvres en micronutriments @molino2022. Situé au nord-est du continent sud-américain, il traverse 6 pays : le Venezuela, le Guyana, le Brésil, le Suriname, la Colombie et la Guyane française (objets de notre études). La géologie du bouclier varie en fonction du pays, ainsi au Venezuela on trouve des hauts plateaux avec des reliefs culminant à 3000m alors que l’altitude en Guyane française est comprise entre 0 et 300m. De plus au cours de son histoire géologique, des pénétration d’eau dans les terres (du à l’élévation du niveaux des mers lors des périodes de réchauffement climatiques) ont participes à l’isolation du plateau des guyanes du bassin amazonien expliquant en partie son taux d’endémisme élevé (on en retrouve une soixantaine clairement identifiée rien qu’en Guyane française @geyer2020 .
 
@@ -20,7 +20,7 @@ La préservation des forêts de Guyane française est remarquables, 95% de ses f
 
 La forêt guyanais est décrite comme une mosaïque d’écosystèmes, si bien que chaque hectare se caractérise par une cohorte d’espèces qui peut être radicalement différent de l’hectare voisin @geyer2020 . On y retrouve de nombreux habitat allant des mangroves (avec seulement une dizaine d’espèces d’arbres) aux forêts des plateaux élevés, en passant par les forêt des basses vallées fluviales, forêts des collines irrégulières, forêts littorales sur cordons sableux, …La répartition en abondance et au sein des famille est très hétéroclite, les huit familles prédominantes (50% des espèce) sont : les Leguminosae, Lauraceae, Myrtaceae, Sapotaceae, Chrysobalanaceae, Annonaceae, Melastomataceae et Rubiaceae @molino2022 . D’un autre coté on retrouve une quarantaine de famille qui ne compte que 5 espèces ou moins.
 
-###  Techniques d'évaluation de la biodiversité
+### Techniques d'évaluation de la biodiversité
 
 Définie comme “Variabilité des organismes vivants de toute origine y compris, entre autres, les écosystèmes terrestres, marins et autres écosystèmes aquatiques et les complexes écologiques dont ils font partie; cela comprend la diversité au sein des espèces et entre espèces ainsi que celle des écosystèmes” lors de la conférence sur la diversité biologique des nations unies de 1992 @NationUnies_convention_1992, la biodiversité est le socle de l’écologie actuelle.
 
@@ -34,7 +34,7 @@ Dans le cadre de notre stage on mobilisé 2 mesures de diversité qui sont la ba
 
 - L’abondance soit le nombre d’individus par espèce
 
--  La richesse spécifiques soit le nombres d’espèces différentes
+- La richesse spécifiques soit le nombres d’espèces différentes
 
 Le milieu tropical est particulier car il est très dense, ce qui rend la délimitation des parcelles et la circulation sur le terrain difficile. De plus l’identification est rendue difficile par l’extrême diversité des taxons, le manque de caractères et description des espèces et les nombreuses espèces qu’il reste à identifier.
 
@@ -42,11 +42,11 @@ Il existe de nombreux indicateurs adapté à l’évaluation de la biodiversité
 
 Les courbes d’accumulation attestent elles aussi de la diversité d’une localité @gotelli2001. Elles sont utilisées pour faire une approximation du nombre d’espèces d’un échantillon sans avoir à en conaitres chaque individus. Pour cela, on accroît petit à petit le nombre d’individus mesurés créant ainsi une courbe d’accumulation qui atteint bien souvent un plateau. Dans notre stage, ces courbes d’accumulation on été quelque peu transformées selon une démarche développée par @wiegand2007 pour rendre compte de l’effet d’une espèces sur la diversité environnante (voir mat & med pour développement).
 
-##  Objectifs du stage  
+## Objectifs du stage
 
-Le stage à pour objectif de comprendre les apports des mesures d’accumulation de la diversité à la compréhension des processus d’assemblage des communautés dans la forêt guyanaise. Par comprendre on entend d’abord un travail bibliographique afin de s’approprier les notions développé par \@Wiegand puis une application de ses notions sur des jeux de données complexes des forêt tropicales. On cherchera à approfondir ces méthodes de calcul de courbes d’accumulation avec l’intégration d’indices de diversité complexes, tel que Simpson ou des notion de distance phylogénétique et fonctionnelle. Grace à ces courbes d’accumulation spécifique, on cherche à attester du potentiel “accumulateur” ou “repoussoir” de diversité des principales espèces guyanaises. Autrement dit, si une espèce a tendance à rassembler de nombreuses espèces différence dans son voisinage et donc “favoriser la diversité” ou si celle-ci a plutôt tendance à produire une diversité locale faible. Enfin on cherchera des applications possibles dans le domaine de la préservation, de l’économie ou même du social.
+Le stage à pour objectif de comprendre les apports des mesures d’accumulation de la diversité à la compréhension des processus d’assemblage des communautés dans la forêt guyanaise. Par comprendre on entend d’abord un travail bibliographique afin de s’approprier les notions développé par @wiegand2007 puis une application de ses notions sur des jeux de données complexes des forêt tropicales. On cherchera à approfondir ces méthodes de calcul de courbes d’accumulation avec l’intégration d’indices de diversité complexes, tel que Simpson ou des notion de distance phylogénétique et fonctionnelle. Grace à ces courbes d’accumulation spécifique, on cherche à attester du potentiel “accumulateur” ou “repoussoir” de diversité des principales espèces guyanaises. Autrement dit, si une espèce a tendance à rassembler de nombreuses espèces différence dans son voisinage et donc “favoriser la diversité” ou si celle-ci a plutôt tendance à produire une diversité locale faible. Enfin on cherchera des applications possibles dans le domaine de la préservation, de l’économie ou même du social.
 
-##  Plan général de la démarche  
+## Plan général de la démarche
 
 La première partie du stage consista en un travail bibliographique. Les notions de diversité inhérentes aux forêts tropicales humides furent passées en revue, avec un zoom sur le cas des forêts de Guyane française. On se renseigna aussi brièvement sur les différentes manières de mesurer la biodiversité (indicateurs, inventaires, indices, taxonomie, …) . Et enfin le sujet spécifique des courbes d’accumulation par espèce et locales, abrégé “ISAR”, fut abordé en prenant appuis sur les articles développant ces mêmes mesures : @wiegand2007 et @wiegand2017 .
 
