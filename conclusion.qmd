@@ -1,3 +1,17 @@
 # Conclusion
 
-a voir les espece de plantes, on sait que les arbres structure la forêt, de ce fait nombreuses essence d'épiphytes relay on them. Création de micro environnement dans le rayon des arbres. Accumulation de la diversité des herbacées differentes selon l'espèce d'arbre? Etude difficile...
+Lors de ce stage, nous avons cherché à analyser la structuration spatiale de la diversité des forêts tropicales guyanaises. Nous avons pour cela utilisé la méthode des ISAR sur les 3 parcelles les plus préservées du dispositif de Paracou. L'association d'indice de diversité tel que la richesse spécifique, la diversité de Simpson ou encore les nombres de Hill avec les analyse spatiales fournie par les ISAR nous ont donné des outils utiles mais insuffisant pour comprendre les relations entre la répartition spatiale des individus et la diversité à l'échelle locale réduite.
+
+Les résultats montrent une forte hétérogénéité entre parcelles, avec une parcelle 16 exceptionnelle par sa taille mais aussi par sa diversité. Des courbes rank-abondance montre que la forêt guyanaise n'est pas exempte d'une distribution classique de forêts tropicales ou les nombres de Hill sont grandement inférieurs à la richesse spécifique. On y retrouve quelques espèces ultra dominantes et de nombreuses espèces rares, representées par quelques individus.
+
+Les ISARs révèlent des dynamiques spatiales cohérentes à l’échelle des trois parcelles. Sur un faible rayon (\~10 m), la diversité locale reste faible, suggérant une forte agrégation spatiale des individus. Cependant entre 10 et 30 m, on voit une augmentation significative de la diversité. On peut conclure quand à une structure non aléatoire des communautés d'arbres.
+
+A l'aide d'une classification entre "accumulatrice" de biodiversité et "repoussoir" on à observer les effets propre a chaque espèce sur la diversité locale. Les proportions oscillent entre neutralité et "accumulatrice" mais des variations significative entre parcelles viennent suggérer des microenvironnement très hétérogènes ou une méthode d'analyse améliorable.
+
+L’étude de *Dicorynia guianensis* illustre cette complexité. Globalement neutre, cette espèce présente néanmoins des pics locaux d’accumulation de diversité, et une distribution agrégée visible spatialement. Cela souligne l’importance du contexte spatial et de l’échelle d’observation dans l’interprétation des ISARs.
+
+L'indice de Simpson appliqué au ISARs va dans le sens des analyses de richesse spécifiques. Une batterie de test supplémentaire serait nécessaire pour conclure quand à l'utilité avérée de prendre en compte l'abondance, témoignage de la structure particulière des forêts tropicales.
+
+Dans l’ensemble, cette étude met en évidence une forte structuration spatiale de la diversité à fine échelle. L'equilibre entre agrégation, hétérogénéité des communautés et interactions interspécifiques en est la cause. Elle confirme l’intérêt des approches ISAR pour l’étude des processus d’assemblage, tout en soulignant certaines limites liées au coût computationnel et à la mise au point de méthode d'analyse sur la base d'un classement des espèces en fonction de leur effet sur la diversité de leur voisinage.
+
+Ces résultats ouvrent des perspectives pour la gestion forestière, notamment pour les espèces exploitées comme *Dicorynia guianensis*. Une meilleure connaissance des répartition spatiales et du rôle des espèces dans leur voisinage est la clef pour une gestion durable des ressource forestières tropicales.
