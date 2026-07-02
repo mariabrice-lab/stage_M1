@@ -45,7 +45,7 @@ avec :\
 
 Il mobilise donc la notion d’abondance, qui représente le nombre d’individus par espèces. Absente dans la richesse spécifique, elle apporte une dimension essentielle à l’analyse, particulière dans les foret tropicales qui sont fortement hétérogène en composition, avec des espèces ultras dominantes et des taxons représente par 1 ou 2 individus.
 
-###  **Nombres de Hill**
+### **Nombres de Hill**
 
 Les nombres de Hill ou "nombre effectif d’espèces" nous a servi à exprimer les résultats . Il les rends interprétables instinctivement en traduisant un indice de diversité par une communauté hypothétique équivalente où chaque espèce serai en proportion équiprobable @chao2013. Pour la diversité d'ordre 0 ou richesse spécifique, le nombre de Hill correspond exactement à cette même richesse. Pour la diversité d'ordre 2, soit Simpson, il correspond à :
 
@@ -69,7 +69,7 @@ où :
 
 - $P_{ij}(0,r)$ est la probabilité que l'espèce $j$ soit absente d'un disque de rayon $r$ centré sur un individu de l'espèce cible $i$.
 
-###  **Processus ponctuels**
+### **Processus ponctuels**
 
 Les processus ponctuels désignent des motifs ou des patrons de répartition des points dans l’espace. Les données de Paracou se prêtent parfaitement à un analyse de ce type. En effet on peut obtenir des objets de type wmppp : un pattern de point sur 2 dimensions associé à un tableau de \$marks caractérisant chaque point par des “pointWeight”, ici surface terrière et “PointType” : espèce. Ce type d’objet convient parfaitement à l’analyse des processus ponctuels par comparaison.
 

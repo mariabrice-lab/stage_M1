@@ -1,11 +1,21 @@
 # Résumé {.unnumbered}
 
-Ce modèle vous aide à produire un document conforme au Guide de rédaction "Rédiger un mémoire de stage: check-list avant soumission".
+Les forêts tropicales jouent un rôle majeur dans le maintien de la biodiversité mondiale, mais leurs mécanismes d’assemblage restent encore mal compris. Le rapport de stage qui va vous être présenté, avance des pistes sur l'analyse de la structuration spatiales de la biodiversité des forêt tropicales de Guyane. Les données de 2015, des inventaires de trois parcelles (6,15 et 16) du dispositif de Paracou qui n'ont point subit de perturbations anthropiques furent utilisées pour ce travail.
 
-L'ordre des sections et les styles ne doivent pas être modifiés. Ce modèle DOIT être utilisé lors de la création de votre document de mémoire de stage. En cas de difficulté d'utilisation, contactez l'équipe pédagogique.
+L’objectif du stage était de mesurer l’apport des courbes d’accumulation spatiale spécifiques (ISAR, Individual Species-Area Relationships) dans la compréhension des interactions entre espèces et de leur contribution à la diversité locale en milieu tropical. L'ISAR recréer une courbe d'accumulation de la diversité autour d'un individu d'une telle espèces en agrandissant petit à petit son voisinage jusqu'à un rayon r =30m. La comparaison avec une hypothèse h0 permet de conclure sur la présence de pattern spatiaux. structures observées à une hypothèse nulle de type “random location”. Les analyses ont été réalisées sous R, à l'aide packages comme *divent*, permettant de calculer des indices de diversité ou encore des courbes d'accumulation spatiales.
+
+une certaine hétérogénéité entre les parcelles est observée : la parcelle 16 présentant la plus grande richesse spécifique et la plus forte variabilité des abondances. Les courbes ISAR mettent en évidence une structuration spatiale non aléatoire, avec des espèces “accumulatrices”, neutres ou “repoussantes”. L’indice de Simpson confirme ces tendances en accentuant le rôle des espèces dominantes. Un manque de données et d'analyse ne permet pas de conclure sur une tendance à l'accumulation ou à la répulsion chez les espèces tropicales.
+
+Ainsi ce stage à pu confirmer les hypothèses pré-existantes en forêt tropicale et rend compte d'une organisation spatiale complexe des communautés. Avec agrégation locale et forte hétérogénéité population à des échelles étonnamment réduites. Les ISAR sont un outils efficace et qui à de l'avenir dans l'étude de la biodiversité spatiale.
 
 ::: {lang="en-GB"}
 ## Abstract {.unnumbered}
 
-Include an English version of the abstract.
+Tropical forests play a major role in maintaining global biodiversity, yet their assembly mechanisms remain poorly understood. The internship report presented here explores spatial patterns in the structure of biodiversity in tropical forests of French Guiana. Data from 2015 forest inventories of three permanent plots (6, 15 and 16) from the Paracou research station, which have not been subject to anthropogenic disturbance, were used for this work.
+
+The aim of the internship was to assess the contribution of spatial accumulation curves (ISAR, Individual Species-Area Relationships) to understanding species interactions and their role in local diversity in tropical environments. The ISAR approach reconstructs a diversity accumulation curve around a focal individual by progressively increasing its neighborhood radius up to r = 30 m. Comparison with a null hypothesis (random location) allows the detection of spatial patterns. Analyses were conducted in R using packages such as *divent*, which enable the computation of diversity indices and spatial accumulation curves.
+
+Some heterogeneity between plots was observed, with plot 16 showing the highest species richness and the greatest variability in abundances. ISAR curves highlight a non-random spatial structure, with species classified as “accumulators”, neutral, or “repellers”. The Simpson index confirms these trends by emphasizing the role of dominant species. However, limited data and analyses do not allow definitive conclusions regarding general accumulation or repulsion patterns among tropical species.
+
+Overall, this internship confirms previously suggested hypotheses in tropical forest ecology and highlights a complex spatial organization of communities, combining local aggregation with strong population heterogeneity at surprisingly small spatial scales. ISAR appears to be an effective tool with strong potential for studying spatial biodiversity patterns.
 :::
