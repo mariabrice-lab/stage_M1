@@ -260,7 +260,7 @@ Paracou2015 %>%
   ungroup()
 ```
 
-tableau des 5genres les plus abondants dans chaque parcelle étudiée
+tableau des 5 genres les plus abondants dans chaque parcelle étudiée
 :::
 
 ## ISARS
@@ -338,10 +338,10 @@ acre_16 %>%
   slice(1:10)
 ```
 
-Tableau du classement des espèces e la parcelle 16 en fonction de leur tendance d'influence de la biodiversité locale.
+10 premières ligne du tableau du classement des espèces de la parcelle 16 en fonction de leur tendance d'influence de la biodiversité locale.
 :::
 
-### Isars d’ordre 2
+### ISARs d’ordre 2
 
 Pour aller plus loin dans l’analyse les isars de la parcelle 16 ont été calculés en utilisant cette fois l’indice de diversité de Simpson. Fortement pondéré par les espèces dominantes, cet indice semblait plus adapté pour caractériser les dynamiques spatiales, dans un contexte tropical où la structure de communauté est très hétérogène.
 
