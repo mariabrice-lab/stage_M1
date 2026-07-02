@@ -43,41 +43,35 @@ Pour une figure enregistrée dans un fichier (comme la @fig-BioGET), il est poss
 
 ![Logo de BioGET](images/logo_bioget.png){#fig-BioGET}
 
-## Tableaux
 
-Les tableaux comme @tbl-nom_tableau doivent être placés dans une division, comme les figures.
 
-::: {#tbl-nom_tableau}
+
+
+a partir de la c'est mes vrais annexes
+
+::: {#tbl-classement16}
 ```{r}
-#| label: nom_tableau
-library("gt")
-# Formatage du tableau mtcars
-mtcars %>% 
-  # Transformation des noms de lignes en une colonne
-  as_tibble(rownames = "Modèle") %>% 
-  # Conservation des 5 premières colonnes
-  select(1:5) %>% 
-  # Conservation des 4 premières lignes
-  slice(1:4) %>% 
-  # Formatage par gt
-  gt() %>% 
-  # Nom des colonnes
-  cols_label(
-    mpg = "Autonomie",
-    cyl = "Nombre de cylindres",
-    disp = "Cylindrée",
-    hp = "Puissance"
-  )
+load("data/acre_16.csv")
+acre_16 
 ```
-
-Caractéristiques de plusieurs modèles de voitures : autonomie en miles par gallon d'essence, nombre de cylindres du moteurs, cylindrée en pouces cubes et puissance en chevaux.
+tableau du classement des espèces de la parcelle 16 en fonction de leur tendance d'influence de la biodiversité locale.
 :::
 
-## Équations
+::: {#tbl-classement6}
+```{r}
+load("data/acre_6.csv")
+acre_6
+```
+tableau du classement des espèces de la parcelle 6 en fonction de leur tendance d'influence de la biodiversité locale.
+:::
 
-Les équations en ligne sont entourées par un simple `$`, alors que les équations numérotées le sont par `$$` et sont nommées pour permettre leur référencement (@eq-cercle):
-
-$$A = \pi r^2$$ {#eq-cercle}
+::: {#tbl-classement15}
+```{r}
+load("data/acre_15.csv")
+acre_15
+```
+tableau du classement des espèces de la parcelle 15 en fonction de leur tendance d'influence de la biodiversité locale.
+:::
 
 ## Bibliographie
 
