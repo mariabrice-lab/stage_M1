@@ -401,6 +401,10 @@ isar ordre de diversité 0, de l'angélique, parcelle 16
 
 Pour ce qui est de la répartition spatiale, les figures nous confirme le caractère agrégatif de sa répartition. On voit clairement des paquet d’angéliques sur chaque parcelle.
 
+
+
+Les données des courbes d’accumulation spatiale spécifique couplées à des données GPS permettent de conclure sur les possibles mesures a adopter pour exploiter cette essence en prenant en compte la biodiversité. L’espèce étant neutre son exploitation ne ferait a priori pas de dommages majeur aux écosystèmes, mais le pic vers les 15-20m de regain de diversité nous amène à nous questionner sur le choix spatial des tronc à égaler. Une bonne gestion de la forêt passe par la connaissance des dynamique d’évolution des population forestières et des interactions interespèces influant sur la biodiversité locale. @kokou1994 et @bonnier2025.
+
 ::: {#fig-maps6}
 ```{r}
 maps_localisation("Dicorynia guianensis",p2015_6_wmppp)
@@ -419,10 +423,8 @@ Localisation des individus de l'espèce angélique (*Dicorynia guianensis*) sur 
 
 ::: {#fig-maps16}
 ```{r}
-ang16<- maps_localisation("Dicorynia guianensis",p2015_16_wmppp)
+maps_localisation("Dicorynia guianensis",p2015_16_wmppp)
 ```
 
 Localisation des individus de l'espèce angélique (*Dicorynia guianensis*) sur la parcelle 16
 :::
-
-Les données des courbes d’accumulation spatiale spécifique couplées à des données GPS permettent de conclure sur les possibles mesures a adopter pour exploiter cette essence en prenant en compte la biodiversité. L’espèce étant neutre son exploitation ne ferait a priori pas de dommages majeur aux écosystèmes, mais le pic vers les 15-20m de regain de diversité nous amène à nous questionner sur le choix spatial des tronc à égaler. Une bonne gestion de la forêt passe par la connaissance des dynamique d’évolution des population forestières et des interactions interespèces influant sur la biodiversité locale. @kokou1994 et @bonnier2025.

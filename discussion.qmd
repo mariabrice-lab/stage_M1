@@ -1,3 +1,43 @@
 {{< include common.qmd >}}
 
 # Discussion
+
+## Efficacité de la méthode
+
+### Avantages
+
+Au cours de cette étude nous avons pour la première fois utilisé les théories de @wiegand2007 sur des données de forêt guyanaise. Des analyse avaient été effectué dans les forêts situées sur les “Barro colorado iland” au Panama et à Shinharaja au sri Lanka. Ces deux études avaient été réalisées certes dans des forêts tropicales mais aussi sur des îles. Nous avons ici les premiers ISARs de forêt continentales tropicales. A nuancer car le bouclier guyanais, lieu de notre étude, au vu de son histoire géologique, se comporte presque comme une île. On y retrouve en effet grand nombre d’espèce endémique et les population d’arbres sont génétiquement différente des forêts du bassin Amazonien. @HansterSteege2000
+
+@wiegand2007 utilise un langage de code et un logiciel de traitement bien à lui. Ce stage à permis l’application aisée de ces méthodes avec un langage utilisé par la majorité des scientifique. Nous nous sommes grandement appuyé sur le package *divent* @marcon pour créer une fonction relativement simple capable de calculer des isars et de les rendre interprétable graphiquement. Les différentes fonctions et protocoles créer ne se limite pas aux forêt guyanaises et sont applicable à nimporte quel autre jeu de données sylvicole. Nous avons ainsi créer une méthode facilement reproductible.
+
+### Inconvénients 
+
+**Bien** que la méthode soit reproductible, elle prend, il faut se le dire, beaucoup de temps. Les calculs des ISARs sont complexes, de part le nombre de paramètres, le nombres de données traitées, et les correction d’effet de bords. Pour l’hypothèse h0 “random location”, on manque de solidité statistique car seulement 100 simulations ont étés effectuées. Pour chaque simulation, la fonction recalcule les isars individuel. Si 100 simulations durait déjà 24h, imaginez avec 1000 simulations. Le calcul pour l'ordre de diversité de Simpson est encore plus long (+48h), car il fait intervenir, en plus, les abondances, là ou la richesse spécifique n’utilisait que le nombre d’espèces. De ce fait la diversité d’ordre 2 n’a pas été calculé pour les parcelles 6 et 15.
+
+Les classement des espèces en fonction de leurs capacités à influencer la diversité locale est discutable. Obtenu par lecture graphique, il est sujet à beaucoup de subjectivité. L’expérimentateur (moi en l’occurrence) à le plein pouvoir sur ce classement, il classe à l’aide de fourchette qui à lui même determiné au vu de son observation des nombreuses courbes d’ISAR. Ce classement manuel, varie avec l’humeur, la fatigue ou même l’étape de l’analyse. On observe d’ailleurs que la données à une même espèce varie d’une parcelle à l’autre. Les proportions d’espèces dites “accumulatrices” sont significativement différentes (cf résultats) entre les parcelles étudiées. Cependant, il est impossible au vu de nos connaissances actuelles de conjecturer quant à la cause de ces différentes. Elles pourraient être dues aux composition spécifiques et aux dynamiques spatiales changeante dans cette mosaïque forestière. Mais l’hypothèse la plus probable résides dans la méthode approximative de classement.
+
+Enfin, pour dernière critique, on notera que l’indice afficher par les sorties de la fonction *accum_sp_hill* est difficilement interprétable. Censé correspondre au nombre de Hill, il a sûrement été normalisé sans qu’aucune explication en transparaisse sur Rstudio. Ces représentations graphique des ISAR gagneraient grandement à être plus explicite avec les vraies valeurs du nombre de Hill ou à défaut des différents indices de diversité.
+
+### Améliorations  
+
+Afin d’améliorer la vitesse de calcul, il serait judicieux de se munir d’ordinateurs plus puissant ou de les déléguer à un datacentre. Le temps de calcul de ISAR étant le plus gros frein de notre étude, une fois ce problème réglé, le champs des possibles devient presque infini. Plus de simulations, des parcelles plus grandes et nombreuses, plus de temps pour analyser proprement les résultats, …
+
+Dans notre calcul nous avions choisi 30m car la bibliographie nous l’indiquait comme un rayon pertinent. Cette distance pourrait être agrandie ( si problème de temps de calcul à trouvé sa solution). Lors de notre étude graphique des ISARs, aucun plateau d’accumulation n’a été atteint, la distance *r* à laquelle ce plateau commence serait une données qui pourrait apporter beaucoup aux futures analyses de la structuration de la diversité spatiale en forêt tropicale.
+
+On a vu que les ISARs sont calculés selon un rayon croissant autour d’un individu, calcul qui reste le même peu importe la densité des parcelles( vous voyez ou l’on veut en venir? ). Une parcelle à densité élevée va avoir un nombre beaucoup plus important d’individus dans un rayon de 30m autour d’un individu focal. Comparer les ISARs issus de deux parcelle qui n’ont pas une densité d’arbres équivalente pourrait induire des biais dans l’analyse. Il faudrait pondérer les calculs des ISARs par la densité relative des parcelles afin d’obtenir des mesures d’indices de diversité qui soient comparables.
+
+On l’a vu précédemment, la méthode pour classer les différentes espèces n’est pas des plus rigoureuse. L’analyse gagnerait en fiabilité si une méthodes statistiques venaient appuyer la démarche de classement. Un système de classe plus sophistiqué pourrait voir le jour avec des sous-classe d’espèces accumulatrices, qui serait, par exemple, faiblement supérieur à l’intervalle dans les distances proches puis qui s'éloigneraient fortement de l’intervalle en deuxième partie de courbe, ou encore des espèces qui seraient à la fois repoussoir et accumulatrices. Il ne suffit pas de regarder l’ISAR global, des distinctions plus fines à l’échelle de la dizaine de mètres gagneraient à être faites.
+
+## Possible applications
+
+### Extension à d’autres types de forêts et structure spatiale
+
+L’approche ISAR pourrait être intéressante à appliquer à d’autres types de forêts que celles étudiées ici en Guyane. Les résultats obtenus dans une forêt tropicale humide comme Paracou sont probablement très dépendants du contexte écologique local, notamment des conditions climatiques, des sols et de l’histoire des peuplements. Dans d’autres types de forêts, comme les forêts tempérées ou plus sèches, on peut s’attendre à des structures spatiales assez différentes, avec des dynamiques de dispersion et de compétition qui ne produisent pas forcément les mêmes patrons de diversité. Dans ce sens, les ISAR permettent surtout de comparer des structures spatiales à différentes échelles, mais les résultats ne sont pas forcément généralisables d’un écosystème à un autre.
+
+### Application aux forêts tropicales perturbées et restauration
+
+Une autre perspective intéressante serait d’appliquer cette méthode à des forêts tropicales perturbées. Dans les zones exploitées ou fragmentées, la structure des populations est souvent modifiée, avec des changements dans les processus de dispersion et dans les interactions entre espèces. Les ISAR pourraient alors servir à quantifier ces modifications, en comparant par exemple des zones intactes et des zones dégradées. On pourrait aussi envisager un suivi dans le temps afin de voir si les communautés retrouvent progressivement une organisation spatiale similaire à celle des forêts peu perturbées. Cela pourrait être utile dans des contextes de restauration écologique ou de gestion forestière durable.
+
+### Espèces d’intérêt économique et gestion forestière
+
+Enfin, cette approche pourrait aussi être appliquée à des espèces d’intérêt économique ou écologique particulier, comme certaines essences exploitées en Guyane. L’intérêt serait de mieux comprendre leur rôle dans la structure de la diversité locale, c’est-à-dire si elles sont associées à une forte ou faible diversité autour d’elles. Cela pourrait donner des éléments supplémentaires pour la gestion forestière, notamment dans une logique d’exploitation raisonnée et de conservation. Mieux connaître la structure spatiale de ces espèces permettrait en effet de mieux anticiper les effets de leur prélèvement sur la biodiversité globale des peuplements.
